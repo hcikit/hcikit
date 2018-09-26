@@ -1,0 +1,133 @@
+body {
+  --color-light-red: rgb(223, 186, 177);
+  --color-dark-red: rgb(238, 205, 205);
+  --color-orange: rgb(248, 230, 208);
+  --color-yellow: rgb(253, 242, 208);
+  --color-green: rgb(220, 233, 213);
+  --color-turqoise: rgb(211, 223, 226);
+  --color-light-blue: rgb(204, 218, 245);
+  --color-dark-blue: rgb(210, 226, 241);
+  --color-purple: rgb(216, 210, 231);
+  --color-magenta: rgb(230, 210, 219);
+  --color-mac: rgb(249, 249, 249);
+  --color-mac-border: rgb(197, 197, 197);
+}
+
+.linear-menu-bar {
+  /* --linear-menu-width: 230px; */
+  --linear-menu-bar-padding: 2px;
+  --main-font-size: 16px;
+  font-family: "Lucida Grande", "Helvetica", "Arial", "sans-serif";
+}
+
+.linear-menu-bar * {
+  box-sizing: border-box;
+}
+
+.linear-menu-bar {
+  background-color: var(--color-mac);
+  border-color: var(--color-mac-border);
+  border-width: 0 0 1px 0;
+  border-style: solid;
+
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+
+  box-sizing: border-box;
+  display: flex;
+  /* flex: 1 1 0;*/
+}
+
+.linear-menu {
+  background-color: inherit;
+
+  max-width: 450px;
+  cursor: default;
+  position: relative;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  /* width: var(--linear-menu-width); */
+  user-select: none;
+  font-size: 0;
+  flex: 1 1 0;
+}
+
+.linear-menu .menu {
+  display: none;
+  position: absolute;
+  width: 100%;
+  background-color: inherit;
+
+  /* margin-top: var(--linear-menu-bar-padding); */
+}
+
+.linear-menu.active .menu {
+  display: block;
+}
+
+.linear-menu .title {
+  padding-top: var(--linear-menu-bar-padding);
+  padding-bottom: var(--linear-menu-bar-padding);
+  padding-left: 15px;
+  font-size: var(--main-font-size);
+}
+
+.menu {
+  background-color: inherit;
+
+  display: flex;
+  /* width: var(--linear-menu-width); */
+  border-radius: 0 0 5px 5px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgb(197, 197, 197);
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  /* z-index: 5; */
+}
+.menu:before {
+  z-index: -1;
+  box-shadow: 0px 0px 10px 0px rgb(197, 197, 197);
+  right: 0;
+  bottom: 0;
+  left: 0;
+  top: 0;
+}
+
+.linear-submenu {
+  color: 202, 196, 195;
+}
+
+.item {
+  background-color: inherit;
+
+  padding-left: 20px;
+  padding-right: 10px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  clear: both;
+  display: inline-block;
+  width: 100%;
+  font-size: var(--main-font-size);
+}
+.label {
+  float: left;
+}
+
+.item:hover,
+.linear-menu.active > .title {
+  filter: brightness(80%);
+}
+
+.disabled,
+.divider {
+  color: rgb(231, 231, 231s);
+}
+
+.shortcut {
+  float: right;
+}

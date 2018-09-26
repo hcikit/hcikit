@@ -1,0 +1,337 @@
+/*
+
+New Dimensions: 
+
+Keys that aren't 31x30:
+
+space 167
+command 36, 37
+vert arrow keys 30x15
+shift: 70, 71
+return 52
+caps-lock: 55
+tab: 42
+delete 42
+
+power: 31x15
+escape: 42x15
+
+Everything else is 31x30
+
+Gaps: 3
+
+*/
+
+/*
+
+Scaled x2 Dimensions: 
+
+Keys that aren't 62x60:
+
+space 334
+command 72, 74
+vert arrow keys 60x30
+shift: 140, 142
+return 104
+caps-lock: 110
+
+tab: 84
+delete 84
+
+function: 31x15
+escape: 42x15
+
+Everything else is 62x60
+
+Gaps: 6
+
+*/
+
+/*
+    Increase padding on stuff like delete etc.  
+*/
+
+/* rgb(250, 249, 248) */
+
+/* TODOLATER: Fix the key padding by adding an additional container to using padding: inherit. https://stackoverflow.com/questions/17115344/absolute-positioning-ignoring-padding-of-parent
+
+*/
+
+.letter .label {
+  text-transform: uppercase;
+}
+
+.windows-laptop #space {
+  width: 288px;
+}
+.mac #space {
+  width: 402px;
+}
+
+.windows #space {
+  width: 492px;
+}
+
+.surface #space {
+  width: 356px;
+}
+
+.windows .symbol,
+.surface .symbol,
+.windows-laptop .symbol,
+.arrow .symbol {
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+  font-size: 35px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.arrow .symbol {
+  font-size: 15px;
+}
+
+.symbol {
+  white-space: pre-line;
+}
+
+.keymap {
+  --keymap-primary: rgb(98, 101, 107);
+  font-family: "Lucida Grande", "Helvetica", "Arial", "sans-serif";
+}
+
+.button {
+  color: var(--keymap-primary);
+  display: inline-block;
+  border-style: solid;
+  border-color: var(--keymap-primary);
+  box-sizing: border-box;
+  box-shadow: 2px 2px 5px var(--keymap-primary);
+  cursor: pointer;
+  background-color: white;
+}
+
+#f:after,
+#j:after {
+  content: "";
+  border-width: 3px 0 0 0;
+  height: 0px;
+  width: 10px;
+  margin-top: 50px;
+  border-style: solid;
+  display: inline-block;
+  opacity: 0.5;
+}
+
+.button:hover {
+  opacity: 1;
+}
+
+.keymap {
+  user-select: none;
+}
+
+.keymap .button {
+  visibility: hidden;
+}
+
+.button .pressed {
+  visibility: visible;
+}
+
+.keymap .modifier {
+  visibility: visible;
+}
+
+.active .button {
+  visibility: visible;
+}
+
+/*
+    Widths
+*/
+
+.arrow {
+  font-family: "arial";
+}
+.button {
+  border-radius: 6px;
+  /* border-width: 0.2vw; */
+  border-width: 1px;
+  height: 60px;
+  width: 62px;
+  margin-right: 6px;
+  overflow: hidden;
+  margin-bottom: 6px;
+  vertical-align: top;
+  position: relative;
+
+  font-size: 10px;
+  /* white-space: nowrap; */
+
+  /* overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  word-break: break-word;
+  hyphens: auto; */
+}
+.command::first-letter {
+  text-transform: uppercase;
+}
+/** SUBMENUS **/
+
+.submenu::after {
+  /* content: 'arrow_drop_down';  */
+  content: "keyboard_arrow_down";
+  font-family: "Material Icons";
+  font-size: 20px;
+}
+
+/** COMMANDS **/
+
+.command,
+.submenu {
+  position: absolute;
+
+  margin-bottom: 10px;
+  margin-top: 5px;
+  text-align: center;
+  bottom: 0;
+
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+/** SYMBOLS **/
+
+.symbol {
+  position: absolute;
+  margin-left: 6px;
+  margin-right: 6px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  font-size: 16px;
+}
+
+#right-command .symbol,
+#right-option .symbol {
+  top: 0;
+  left: 0;
+}
+
+#control .symbol,
+#left-command .symbol,
+#left-option .symbol {
+  top: 0;
+  right: 0;
+}
+
+.modifier .label {
+  bottom: 0;
+  left: 0;
+}
+
+/** LABELS **/
+
+.keymap .label {
+  position: absolute;
+  margin-left: 6px;
+  margin-right: 6px;
+  margin-bottom: 5px;
+}
+
+.letter .label {
+  top: 0;
+  right: 0;
+}
+
+#tab,
+#delete {
+  width: 84px;
+}
+
+#tab .label,
+#caps-lock .label,
+#left-shift .label,
+#fn .label,
+#right-command .label,
+#right-option .label {
+  bottom: 0;
+  left: 0;
+}
+
+#delete .label,
+#right-shift .label,
+#return .label,
+#control .label,
+#left-command .label,
+#left-option .label,
+#right-alt .label,
+#right-meta .label,
+#right-ctrl .label {
+  bottom: 0;
+  right: 0;
+}
+
+/** WIDTHS **/
+
+#caps-lock {
+  width: 110px;
+}
+
+#return {
+  width: 104px;
+}
+
+#left-shift {
+  width: 140px;
+}
+
+#right-shift {
+  width: 142px;
+}
+
+#left-command {
+  width: 72px;
+}
+
+#right-command {
+  width: 74px;
+}
+
+#space {
+  width: 334px;
+}
+
+.letter {
+  text-align: center;
+}
+
+.button:last-child {
+  margin-right: 0;
+}
+
+.faded {
+  opacity: 0.3;
+}
+
+.row {
+  margin: auto;
+}
+
+.containerscontainer {
+  position: fixed;
+  display: inline-block;
+
+  transform-origin: bottom left;
+  left: 0;
+  bottom: 0;
+}
+
+.container {
+  margin: 10px;
+  width: 968px;
+}

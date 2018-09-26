@@ -1,13 +1,19 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
+import Experiment from "excurse";
 
-import ExampleComponent from 'excurse'
+const configuration = {
+  InformationScreen: {
+    content: "<h1>Hello world</h1>"
+  },
+  task: "InformationScreen"
+};
 
 export default class App extends Component {
-  render () {
+  render() {
     return (
       <div>
-        <ExampleComponent text='Modern React component module' />
+        <Experiment configuration={configuration} />
       </div>
-    )
+    );
   }
 }

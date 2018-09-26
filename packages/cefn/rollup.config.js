@@ -4,6 +4,7 @@ import external from 'rollup-plugin-peer-deps-external'
 import postcss from 'rollup-plugin-postcss'
 import resolve from 'rollup-plugin-node-resolve'
 import url from 'rollup-plugin-url'
+import builtins from 'rollup-plugin-node-builtins'
 
 import pkg from './package.json'
 
@@ -21,7 +22,9 @@ export default {
       sourcemap: true
     }
   ],
+  globals: { 'styled-components': 'styled' },
   plugins: [
+    builtins(),
     external(),
     postcss({
       modules: true
@@ -29,9 +32,35 @@ export default {
     url(),
     babel({
       exclude: 'node_modules/**',
-      plugins: [ 'external-helpers' ]
+      plugins: ['external-helpers']
     }),
     resolve(),
-    commonjs()
+    commonjs({
+      namedExports: {
+        'node_modules/lodash/lodash.js': [
+          'throttle',
+          'uniqBy',
+          'filter',
+          'map',
+          'isEqual',
+          'mapValues',
+          'noop',
+          'last',
+          'sum',
+          'pickBy',
+          'merge'
+        ],
+        'node_modules/react-is/index.js': ['isValidElementType'],
+        'node_modules/@material-ui/core/styles/index.js': [
+          'createGenerateClassName',
+          'createMuiTheme',
+          'createStyles',
+          'jssPreset',
+          'MuiThemeProvider',
+          'withStyles',
+          'withTheme'
+        ]
+      }
+    })
   ]
 }
