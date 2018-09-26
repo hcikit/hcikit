@@ -2,12 +2,13 @@ import Shortcuts from './Shortcuts'
 import { mount } from 'enzyme'
 import React from 'react'
 import { mergeCommandHierarchy } from './CommandHierarchies'
-import { createStore } from 'redux'
-import reducer from '../../reducers'
-
+import { createStore, combineReducers } from 'redux'
+import ShortcutsReducer from './Shortcuts.reducers'
 let state = () => wrapper.find('Shortcuts').instance()
 let wrapper
 let handlers = {}
+
+let reducer = combineReducers({ Shortcuts: ShortcutsReducer })
 
 describe('integration tests', () => {
   beforeEach(() => {

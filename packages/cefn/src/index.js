@@ -21,6 +21,7 @@ import configureStore from './core/configureStore'
 
 // TODO: we shouldn't have to rely on s3 for upload. instead we should let users pass in their own upload function
 
+// TODO: register components
 let store
 export default class Experiment extends React.Component {
   static propTypes = {

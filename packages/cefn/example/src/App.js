@@ -5,7 +5,13 @@ const configuration = {
   InformationScreen: {
     content: "<h1>Hello world</h1>"
   },
-  task: "InformationScreen"
+  // tasks: ["Buttons"],
+  participant: "yo",
+  children: [
+    {
+      task: "InformationScreen"
+    }
+  ]
 };
 
 export default class App extends Component {

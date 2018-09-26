@@ -38,7 +38,7 @@ export default Configuration => {
 
   let store = {}
   let reducer = combineReducers({
-    ConfigurationReducer
+    Configuration: ConfigurationReducer
   })
 
   if (process.env.NODE_ENV !== 'production') {

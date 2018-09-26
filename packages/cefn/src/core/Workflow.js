@@ -34,9 +34,14 @@ export const getComponentAsLoadable = (componentName, currentProps = {}) => {
   }
 
   if (!components[componentName]) {
+    importComponent[componentName]().then(console.log)
     components[componentName] = Loadable({
       loader: () => importComponent[componentName](),
       loading: () => <div>Loading...</div>,
+      render(loaded, props) {
+        const PipConversion = loaded.default
+        return <PipConversion {...props} />
+      },
       delay: 300
     })
   }

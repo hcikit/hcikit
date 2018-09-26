@@ -5,11 +5,12 @@ import {
   getGlobalProps,
   getComponentAsLoadable,
   getComponentProps,
-  getAllPropsForComponent
+  getAllPropsForComponent,
+  getCurrentProps
 } from './Workflow'
 import { connect } from 'react-redux'
 
-import { UploadOnError } from './UploadOnError'
+// import { UploadOnError } from './UploadOnError'
 
 export const App = ({
   task,
@@ -24,16 +25,19 @@ export const App = ({
     tasks = [...tasks, task]
   }
 
-  if (task) {
+  if (tasks.length > 0) {
     // TODO: Check if the proptypes require a component, if so try resolving one.
     return (
-      <UploadOnError onLog={onLog} configuration={configuration}>
+      // <UploadOnError onLog={onLog} configuration={configuration}>
+      <React.Fragment>
         {tasks.map(task => {
           let globalProps = getGlobalProps(configuration)
           let Task = getComponentAsLoadable(
             task,
             getAllPropsForComponent(task, configuration)
           )
+
+          console.log(Task)
 
           return (
             <Task
@@ -44,9 +48,11 @@ export const App = ({
             />
           )
         })}
-      </UploadOnError>
+      </React.Fragment>
+      // </UploadOnError>
     )
   } else {
+    // TODO: shouls we be requiring that there be a participant property?
     return (
       <div>
         <h1>You've completed the experiment!</h1>;
