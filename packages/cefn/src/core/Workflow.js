@@ -123,9 +123,8 @@ export function getCurrentProps(configuration, props = {}) {
     properties = merge(props, properties)
 
     return getCurrentProps(configuration.children[nextLevelIndex], properties)
-  }
-  // Base case: return all of the props
-  else {
+  } else {
+    // Base case: return all of the props
     return merge(props, configuration)
   }
 }
@@ -154,9 +153,8 @@ export function advanceWorkflow(config) {
       config.index = nextLevelIndex + 1
       return config.index >= config.children.length
     }
-  }
-  // Base case: at a leaf node, we don't have a list of steps, so we're always done
-  else {
+  } else {
+    // Base case: at a leaf node, we don't have a list of steps, so we're always done
     return true
   }
 }

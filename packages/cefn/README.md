@@ -13,18 +13,20 @@ npm install --save excurse
 ## Usage
 
 ```jsx
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-import MyComponent from 'excurse'
+import MyComponent from "excurse";
 
 class Example extends Component {
-  render () {
-    return (
-      <MyComponent />
-    )
+  render() {
+    return <MyComponent />;
   }
 }
 ```
+
+## Contributing
+
+This package is bundled using `create-react-library`
 
 ## License
 
