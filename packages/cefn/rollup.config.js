@@ -5,7 +5,6 @@ import postcss from 'rollup-plugin-postcss'
 import resolve from 'rollup-plugin-node-resolve'
 import url from 'rollup-plugin-url'
 import builtins from 'rollup-plugin-node-builtins'
-
 import pkg from './package.json'
 
 export default {
@@ -22,7 +21,7 @@ export default {
       sourcemap: true
     }
   ],
-  globals: { 'styled-components': 'styled' },
+  'output.globals': { 'styled-components': 'styled' },
   plugins: [
     builtins(),
     external(),
@@ -31,8 +30,7 @@ export default {
     }),
     url(),
     babel({
-      exclude: 'node_modules/**',
-      plugins: ['external-helpers']
+      exclude: 'node_modules/**'
     }),
     resolve(),
     commonjs({
@@ -48,18 +46,23 @@ export default {
           'last',
           'sum',
           'pickBy',
-          'merge'
+          'merge',
+          'range'
         ],
-        'node_modules/react-is/index.js': ['isValidElementType'],
-        'node_modules/@material-ui/core/styles/index.js': [
-          'createGenerateClassName',
-          'createMuiTheme',
-          'createStyles',
-          'jssPreset',
-          'MuiThemeProvider',
-          'withStyles',
-          'withTheme'
-        ]
+
+        'node_modules/react-redux/node_modules/react-is/index.js': [
+          'isValidElementType'
+        ],
+        'node_modules/react-is/index.js': ['isValidElementType']
+        // 'node_modules/@material-ui/core/styles/index.js': [
+        //   'createGenerateClassName',
+        //   'createMuiTheme',
+        //   'createStyles',
+        //   'jssPreset',
+        //   'MuiThemeProvider',
+        //   'withStyles',
+        //   'withTheme'
+        // ]
       }
     })
   ]

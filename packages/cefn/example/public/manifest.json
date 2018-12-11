@@ -1,6 +1,6 @@
 {
-  "short_name": "excurse",
-  "name": "excurse",
+  "short_name": "cefn",
+  "name": "cefn",
   "start_url": "./index.html",
   "display": "standalone",
   "theme_color": "#000000",

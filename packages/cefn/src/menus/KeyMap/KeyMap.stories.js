@@ -1,85 +1,85 @@
-import React from "react";
+import React from 'react'
 
-import { storiesOf } from "@storybook/react";
-import { withKnobs, number } from "@storybook/addon-knobs";
-import { action } from "@storybook/addon-actions";
+import { storiesOf } from '@storybook/react'
+import { withKnobs, number } from '@storybook/addon-knobs'
+import { action } from '@storybook/addon-actions'
 
-import KeyMap, { Key } from "./KeyMap";
-import { all_hierarchies } from "../Shortcuts/CommandHierarchies";
-import configureStore from "../../configureStore";
-import { Provider } from "react-redux";
+import KeyMap, { Key } from './KeyMap'
+import { all_hierarchies } from '../Shortcuts/CommandHierarchies'
+import configureStore from '../../core/configureStore'
+import { Provider } from 'react-redux'
 
-const store = configureStore({});
+const store = configureStore({})
 
-storiesOf("menus/KeyMap", module)
+storiesOf('menus/KeyMap', module)
   .addDecorator(story => <Provider store={store}>{story()}</Provider>)
   .addDecorator(withKnobs)
-  .add("knob", () => (
+  .add('knob', () => (
     <KeyMap
-      onResponse={action("Command")}
+      onResponse={action('Command')}
       commandHierarchy={all_hierarchies}
-      delay={number("Delay", 500)}
+      delay={number('Delay', 500)}
     />
   ))
-  .add("500ms", () => (
+  .add('500ms', () => (
     <KeyMap
-      onResponse={action("Command")}
+      onResponse={action('Command')}
       commandHierarchy={all_hierarchies}
       delay={500}
     />
   ))
-  .add("no delay", () => (
-    <KeyMap onResponse={action("Command")} commandHierarchy={all_hierarchies} />
+  .add('no delay', () => (
+    <KeyMap onResponse={action('Command')} commandHierarchy={all_hierarchies} />
   ))
-  .add("windows", () => (
+  .add('windows', () => (
     <KeyMap
-      layoutName="windows"
+      layoutName='windows'
       demo
-      onResponse={action("Command")}
+      onResponse={action('Command')}
       commandHierarchy={all_hierarchies}
     />
   ))
 
-  .add("windows-laptop", () => (
+  .add('windows-laptop', () => (
     <KeyMap
-      layoutName="windows-laptop"
+      layoutName='windows-laptop'
       demo
-      onResponse={action("Command")}
+      onResponse={action('Command')}
       commandHierarchy={all_hierarchies}
     />
   ))
-  .add("surface", () => (
+  .add('surface', () => (
     <KeyMap
-      layoutName="surface"
+      layoutName='surface'
       demo
-      onResponse={action("Command")}
+      onResponse={action('Command')}
       commandHierarchy={all_hierarchies}
     />
   ))
-  .add("macbook", () => (
+  .add('macbook', () => (
     <KeyMap
-      layoutName="macbook"
+      layoutName='macbook'
       demo
-      onResponse={action("Command")}
+      onResponse={action('Command')}
       commandHierarchy={all_hierarchies}
     />
   ))
-  .add("mac", () => (
+  .add('mac', () => (
     <KeyMap
-      layoutName="mac"
+      layoutName='mac'
       demo
-      onResponse={action("Command")}
+      onResponse={action('Command')}
       commandHierarchy={all_hierarchies}
     />
-  ));
+  ))
 
-storiesOf("menus/KeyMap/Key", module)
-  .add("nothing", () => <Key label="a" type="letter" />)
-  .add("modifier", () => (
-    <Key type="modifier" label="control" id="control" synmbol="^" />
+storiesOf('menus/KeyMap/Key', module)
+  .add('nothing', () => <Key label='a' type='letter' />)
+  .add('modifier', () => (
+    <Key type='modifier' label='control' id='control' synmbol='^' />
   ))
-  .add("command", () => <Key command="search" label="g" id="g" />)
-  .add("long command", () => (
-    <Key command="search for all files" label="g" id="g" type="letter" />
+  .add('command', () => <Key command='search' label='g' id='g' />)
+  .add('long command', () => (
+    <Key command='search for all files' label='g' id='g' type='letter' />
   ))
-  .add("submenu", () => <Key submenu="Go to" label="g" id="g" type="letter" />);
+  .add('submenu', () => <Key submenu='Go to' label='g' id='g' type='letter' />)

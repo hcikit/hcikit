@@ -1,20 +1,29 @@
 {
-  "name": "excurse-example",
-  "homepage": "https://blainelewis1.github.io/excurse",
+  "name": "cefn-example",
+  "homepage": "https://blainelewis1.github.io/cefn",
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "excurse": "file:..",
+    "@material-ui/core": "^3.1.1",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "react-scripts": "^1.1.4"
+    "react-scripts": "^2.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "eslintConfig": {
+    "extends": "react-app"
   }
 }
