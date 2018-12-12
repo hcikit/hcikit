@@ -31,6 +31,7 @@ To install the development version, clone the package from github.
 ```bash
 git clone https://github.com/blainelewis1/cefn
 cd cefn
+npm install
 npm build
 ```
 
