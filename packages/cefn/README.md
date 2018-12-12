@@ -32,7 +32,7 @@ To install the development version, clone the package from github.
 git clone https://github.com/blainelewis1/cefn
 cd cefn
 npm install
-npm build
+npm run build
 ```
 
 Then install the package from your local package to test. The package must be built.
