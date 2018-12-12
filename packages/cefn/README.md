@@ -17,9 +17,20 @@ import React, { Component } from "react";
 
 import Experiment from "cefn";
 
+config = {
+  InformationScreen: 
+"
+# Experiment name
+
+Complete the experiment by clicking on the red circles.
+",
+
+  task: "InformationScreen"
+}
+
 class Example extends Component {
   render() {
-    return <MyComponent />;
+    return <Experiment config={config} />;
   }
 }
 ```
