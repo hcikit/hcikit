@@ -30,14 +30,18 @@ To install the development version, clone the package from github.
 
 ```bash
 git clone https://github.com/blainelewis1/cefn
+cd cefn
+npm build
 ```
 
-Then install the package from your local package to test
+Then install the package from your local package to test. The package must be built.
 
 ```bash
 cd my-project
 npm install --save ../cefn
 ```
+
+If you're creating a new task then make sure you have the framework running with npm start to ensure it constantly gets compiled. There is also a working example in the example folder.
 
 ## Contributing
 
