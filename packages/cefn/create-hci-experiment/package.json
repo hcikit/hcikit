@@ -1,0 +1,19 @@
+{
+  "name": "chci",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.376.0",
+    "chalk": "^2.4.1",
+    "commander": "^2.19.0",
+    "inquirer": "^6.2.1",
+    "lodash": "^4.17.11",
+    "yargs": "^12.0.5"
+  }
+}

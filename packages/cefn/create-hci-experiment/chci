@@ -1,0 +1,275 @@
+#!/usr/bin/env node
+/* eslint-disable no-unused-expressions */
+
+const chalk = require('chalk')
+const AWS = require('aws-sdk')
+const inquirer = require('inquirer')
+const _ = require('lodash')
+const pkg = require('./package.json')
+
+const yargs = require('yargs')
+
+// TODO: this should come from config...
+AWS.config.region = 'us-east-2'
+
+const s3 = new AWS.S3()
+const cognito = new AWS.CognitoIdentity()
+const iam = new AWS.IAM()
+
+// TODO: .pkgConf('chci') will load the required pieces from package.json such as the bucketname or project name
+
+yargs
+  .option('dry-run', {
+    alias: 'd',
+    type: 'boolean'
+  })
+  .command({
+    command: 's3',
+    describe: 'S3 utilities for creating HCI experiments.',
+    builder: yargs => {
+      yargs
+        .command({
+          command: 'website <name>',
+          aliases: ['w'],
+          desc:
+            'Creates a bucket to store the static website properly configured.',
+          handler: argv => {
+            createWebsiteBucket(argv.name)
+          }
+        })
+        .command({
+          command: 'uploads <name>',
+          aliases: ['u'],
+          desc:
+            'Creates a bucket to store the experiment uploads without authentication.',
+          handler: argv => {
+            createUploadsBucket(argv.name)
+          }
+        })
+        .command({
+          command: 'delete-website <name>',
+          aliases: ['du'],
+          desc:
+            'Creates a bucket to store the experiment uploads without authentication.',
+          handler: argv => {
+            deleteWebsite(argv.name)
+          }
+        })
+        .command({
+          command: 'delete-uploads <name>',
+          aliases: ['du'],
+          desc: 'Deletes the bucket to store the experiment uploads.',
+          handler: argv => {
+            deleteUploads(argv.name)
+          }
+        })
+    }
+  })
+  .strict()
+  .help('-h')
+  .completion()
+  .version(pkg.version).argv
+
+async function createWebsiteBucket(name, logger) {
+  console.log(`Creating bucket ${chalk.green(name)}...`)
+  await s3.createBucket({ Bucket: name }).promise()
+  console.log(`${chalk.green(name)} created!`)
+
+  console.log(`Converting ${chalk.green(name)} to website bucket...`)
+  await s3
+    .putBucketWebsite({
+      Bucket: name,
+      WebsiteConfiguration: {
+        ErrorDocument: {
+          Key: 'index.html'
+        },
+        IndexDocument: {
+          Suffix: 'index.html'
+        }
+      }
+    })
+    .promise()
+
+  console.log(`Applying bucket policy to ${chalk.green(name)}...`)
+  await s3
+    .putBucketPolicy({
+      Bucket: name,
+      Policy: JSON.stringify({
+        Version: '2012-10-17',
+        Statement: [
+          {
+            Sid: 'PublicReadGetObject',
+            Effect: 'Allow',
+            Principal: '*',
+            Action: ['s3:GetObject'],
+            Resource: [`arn:aws:s3:::${name}/*`]
+          }
+        ]
+      })
+    })
+    .promise()
+
+  console.log(`Setup complete!`)
+  console.log(`http://${name}.s3-website-${s3.config.region}.amazonaws.com/`)
+}
+
+async function createUploadsBucket(name) {
+  name = `${name}-uploads`
+
+  console.log(`Creating bucket ${chalk.green(name)}...`)
+  await s3.createBucket({ Bucket: name }).promise()
+
+  console.log(`Updating CORS policy for ${chalk.green(name)}...`)
+  s3.putBucketCors({
+    Bucket: name,
+    CORSConfiguration: {
+      CORSRules: [
+        {
+          AllowedOrigins: ['*'],
+          AllowedMethods: ['PUT', 'POST'],
+          AllowedHeaders: ['*'],
+          ExposeHeaders: ['ETag']
+        }
+      ]
+    }
+  })
+    .promise()
+    .then(() => console.log(`Updated CORS policy for ${chalk.green(name)}`))
+
+  const cognitoName = name.replace(/[^\w]/g, '_')
+  console.log(`Creating cognito pool ${chalk.blue(cognitoName)}...`)
+
+  const cognitoIdentityPool = await cognito
+    .createIdentityPool({
+      AllowUnauthenticatedIdentities: true,
+      IdentityPoolName: cognitoName
+    })
+    .promise()
+
+  console.log(`Cognito pool ${chalk.blue(cognitoName)} created!`)
+
+  var RoleName = `Cognito_${cognitoIdentityPool.IdentityPoolName}Unauth_Role`
+  var IdentityPoolId = cognitoIdentityPool.IdentityPoolId
+
+  console.log(`Creating role for congito users ${chalk.yellow(RoleName)}...`)
+  const Role = await iam
+    .createRole({
+      RoleName,
+      AssumeRolePolicyDocument: JSON.stringify({
+        Version: '2012-10-17',
+        Statement: [
+          {
+            Effect: 'Allow',
+            Principal: { Federated: 'cognito-identity.amazonaws.com' },
+            Action: 'sts:AssumeRoleWithWebIdentity',
+            Condition: {
+              StringEquals: {
+                'cognito-identity.amazonaws.com:aud': IdentityPoolId
+              },
+              'ForAnyValue:StringLike': {
+                'cognito-identity.amazonaws.com:amr': 'unauthenticated'
+              }
+            }
+          }
+        ]
+      })
+    })
+    .promise()
+
+  console.log(`Creating policy for bucket access...`)
+  console.log(`Assigning role to cognito pool...`)
+  await Promise.all([
+    cognito
+      .setIdentityPoolRoles({
+        IdentityPoolId,
+        Roles: {
+          unauthenticated: Role.Role.Arn
+        }
+      })
+      .promise(),
+    iam
+      .putRolePolicy({
+        RoleName,
+        PolicyName: 'S3',
+        PolicyDocument: JSON.stringify({
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Effect: 'Allow',
+              Action: ['s3:PutObject', 's3:PutObjectAcl'],
+              Resource: `arn:aws:s3:::${name}/*`
+            }
+          ]
+        })
+      })
+      .promise()
+  ])
+
+  console.log('Uploads bucket setup complete!')
+}
+// // TODO: have something check if AWS and whatnot is setup properly
+
+async function deleteUploads(name) {
+  name = `${name}-uploads`
+
+  const answer = await inquirer.prompt([
+    {
+      name: 'confirm',
+      type: 'confirm',
+      message: chalk.red(
+        'This is a destructive action! It deletes the uploads bucket, pool and IAM role.'
+      )
+    }
+  ])
+
+  if (answer.confirm) {
+    s3.deleteBucket({ Bucket: name })
+      .promise()
+      .then(() => console.log(chalk.green(`Deleted bucket ${name}.`)))
+
+    const IdentityPoolName = name.replace(/[^\w]/g, '_')
+    var RoleName = `Cognito_${IdentityPoolName}Unauth_Role`
+
+    const pools = await cognito.listIdentityPools({ MaxResults: 60 }).promise()
+    const IdentityPoolId = _.find(pools.IdentityPools, {
+      IdentityPoolName
+    }).IdentityPoolId
+
+    cognito
+      .deleteIdentityPool({ IdentityPoolId })
+      .promise()
+      .then(() =>
+        console.log(chalk.green(`Deleted cognito pool ${IdentityPoolName}.`))
+      )
+
+    iam
+      .deleteRolePolicy({
+        RoleName,
+        PolicyName: 'S3'
+      })
+      .promise()
+      .then(() => {
+        console.log(chalk.green(`Role Policy deleted.`))
+        iam
+          .deleteRole({ RoleName })
+          .promise()
+          .then(() => console.log(chalk.green(`Deleted IAM Role ${RoleName}.`)))
+      })
+  }
+}
+
+async function deleteWebsite(name) {
+  const answer = await inquirer.prompt([
+    {
+      name: 'confirm',
+      type: 'confirm',
+      message: chalk.red(
+        'This is a destructive action! It deletes the website bucket.'
+      )
+    }
+  ])
+
+  if (answer.confirm) {
+    s3.deleteBucket({ Bucket: name }).promise()
+  }
+}
