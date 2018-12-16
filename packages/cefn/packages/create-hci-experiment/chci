@@ -17,7 +17,7 @@ const cognito = new AWS.CognitoIdentity()
 const iam = new AWS.IAM()
 
 // TODO: .pkgConf('chci') will load the required pieces from package.json such as the bucketname or project name
-
+// TODO: should drop the experiment name into the bucket for deployment etc
 yargs
   .option('dry-run', {
     alias: 'd',
