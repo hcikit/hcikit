@@ -15,8 +15,31 @@ import {
   Icon,
   Divider
 } from '@material-ui/core'
-import { CSVtoArray } from '../../Utils'
 import { uniqBy } from 'lodash'
+
+// Return array of string values, or NULL if CSV string not well formed.
+// https://stackoverflow.com/a/8497474/1036813
+export function CSVtoArray(text) {
+  var reValid = /^\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*(?:,\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*)*$/
+  var reValue = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g
+  // Return NULL if input string is not well formed CSV string.
+  if (!reValid.test(text)) return null
+  var a = [] // Initialize array to receive values.
+  text.replace(
+    reValue, // "Walk" the string using replace with callback.
+    function(m0, m1, m2, m3) {
+      // Remove backslash from \' in single quoted values.
+      if (m1 !== undefined) a.push(m1.replace(/\\'/g, "'"))
+      // Remove backslash from \" in double quoted values.
+      else if (m2 !== undefined) a.push(m2.replace(/\\"/g, '"'))
+      else if (m3 !== undefined) a.push(m3)
+      return '' // Return empty string.
+    }
+  )
+  // Handle special case of empty last value.
+  if (/,\s*$/.test(text)) a.push('')
+  return a
+}
 
 const styles = theme => ({
   rightIcon: {
