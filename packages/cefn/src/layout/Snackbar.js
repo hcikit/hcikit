@@ -1,25 +1,25 @@
-import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import Button from "@material-ui/core/Button";
+import React from 'react'
+import PropTypes from 'prop-types'
+import classNames from 'classnames'
+import Button from '@material-ui/core/Button'
 // import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 // import ErrorIcon from "@material-ui/icons/Error";
 // import InfoIcon from "@material-ui/icons/Info";
 // import CloseIcon from "@material-ui/icons/Close";
-import green from "@material-ui/core/colors/green";
-import amber from "@material-ui/core/colors/amber";
-import Snackbar from "@material-ui/core/Snackbar";
-import SnackbarContent from "@material-ui/core/SnackbarContent";
+import green from '@material-ui/core/colors/green'
+import amber from '@material-ui/core/colors/amber'
+import Snackbar from '@material-ui/core/Snackbar'
+import SnackbarContent from '@material-ui/core/SnackbarContent'
 // import WarningIcon from "@material-ui/icons/Warning";
-import { withStyles } from "@material-ui/core/styles";
-import { Icon, IconButton } from "@material-ui/core";
+import { withStyles } from '@material-ui/core/styles'
+import { Icon, IconButton } from '@material-ui/core'
 
 const variantIcon = {
-  success: "check circle",
-  warning: "warning",
-  error: "error",
-  info: "info"
-};
+  success: 'check circle',
+  warning: 'warning',
+  error: 'error',
+  info: 'info'
+}
 
 const styles1 = theme => ({
   success: {
@@ -42,20 +42,20 @@ const styles1 = theme => ({
     marginRight: theme.spacing.unit
   },
   message: {
-    display: "flex",
-    alignItems: "center"
+    display: 'flex',
+    alignItems: 'center'
   }
-});
+})
 
 function MySnackbarContent(props) {
-  const { classes, className, message, onClose, variant, ...other } = props;
+  const { classes, className, message, onClose, variant, ...other } = props
 
   return (
     <SnackbarContent
       className={classNames(classes[variant], className)}
-      aria-describedby="client-snackbar"
+      aria-describedby='client-snackbar'
       message={
-        <span id="client-snackbar" className={classes.message}>
+        <span id='client-snackbar' className={classes.message}>
           <Icon className={classNames(classes.icon, classes.iconVariant)}>
             {variantIcon[variant]}
           </Icon>
@@ -64,9 +64,9 @@ function MySnackbarContent(props) {
       }
       action={[
         <IconButton
-          key="close"
-          aria-label="Close"
-          color="inherit"
+          key='close'
+          aria-label='Close'
+          color='inherit'
           className={classes.close}
           onClick={onClose}
         >
@@ -75,7 +75,7 @@ function MySnackbarContent(props) {
       ]}
       {...other}
     />
-  );
+  )
 }
 
 MySnackbarContent.propTypes = {
@@ -83,36 +83,36 @@ MySnackbarContent.propTypes = {
   className: PropTypes.string,
   message: PropTypes.node,
   onClose: PropTypes.func,
-  variant: PropTypes.oneOf(["success", "warning", "error", "info"]).isRequired
-};
+  variant: PropTypes.oneOf(['success', 'warning', 'error', 'info']).isRequired
+}
 
-export const MySnackbarContentWrapper = withStyles(styles1)(MySnackbarContent);
+export const MySnackbarContentWrapper = withStyles(styles1)(MySnackbarContent)
 
 const styles2 = theme => ({
   margin: {
     margin: theme.spacing.unit
   }
-});
+})
 
 class CustomizedSnackbars extends React.Component {
   state = {
     open: false
-  };
+  }
 
   handleClick = () => {
-    this.setState({ open: true });
-  };
+    this.setState({ open: true })
+  }
 
   handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
+    if (reason === 'clickaway') {
+      return
     }
 
-    this.setState({ open: false });
-  };
+    this.setState({ open: false })
+  }
 
   render() {
-    const { classes } = this.props;
+    const { classes } = this.props
 
     return (
       <div>
@@ -121,8 +121,8 @@ class CustomizedSnackbars extends React.Component {
         </Button>
         <Snackbar
           anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
+            vertical: 'bottom',
+            horizontal: 'left'
           }}
           open={this.state.open}
           autoHideDuration={6000}
@@ -130,37 +130,37 @@ class CustomizedSnackbars extends React.Component {
         >
           <MySnackbarContentWrapper
             onClose={this.handleClose}
-            variant="success"
-            message="This is a success message!"
+            variant='success'
+            message='This is a success message!'
           />
         </Snackbar>
         <MySnackbarContentWrapper
-          variant="error"
+          variant='error'
           className={classes.margin}
-          message="This is an error message!"
+          message='This is an error message!'
         />
         <MySnackbarContentWrapper
-          variant="warning"
+          variant='warning'
           className={classes.margin}
-          message="This is a warning message!"
+          message='This is a warning message!'
         />
         <MySnackbarContentWrapper
-          variant="info"
+          variant='info'
           className={classes.margin}
-          message="This is an information message!"
+          message='This is an information message!'
         />
         <MySnackbarContentWrapper
-          variant="success"
+          variant='success'
           className={classes.margin}
-          message="This is a success message!"
+          message='This is a success message!'
         />
       </div>
-    );
+    )
   }
 }
 
 CustomizedSnackbars.propTypes = {
   classes: PropTypes.object.isRequired
-};
+}
 
-export default withStyles(styles2)(CustomizedSnackbars);
+export default withStyles(styles2)(CustomizedSnackbars)

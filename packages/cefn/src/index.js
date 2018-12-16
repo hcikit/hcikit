@@ -28,6 +28,9 @@ export default class Experiment extends React.Component {
 //   store.attachReducers({ [component.displayName]: reducer })
 // }
 
+// TODO: We need two impoortant documentations: how to create and register a new component
+// TODO: How to use the experiment component and how the config works and special parameters
+
 // TODO: background tasks would be nice. Could be like middleware, where you have some function called on the task object whenever we increment and then it gets the chance to increment. Could implement non linear workflows that way. Or filtering ones.
 
 // TODO: integration tests.

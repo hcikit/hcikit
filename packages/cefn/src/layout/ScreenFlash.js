@@ -1,26 +1,31 @@
-import React from "react";
-import styled, { keyframes } from "styled-components";
-import { isEqual } from "lodash";
+import React from 'react'
+import styled, { keyframes } from 'styled-components'
+import { isEqual } from 'lodash'
+import PropTypes from 'prop-types'
 
 export class ScreenFlash extends React.Component {
-  state = { displayed: false };
+  propTypes = {
+    times: PropTypes.number
+  }
+
+  state = { displayed: false }
   componentWillReceiveProps(newProps) {
     if (!isEqual(newProps.times, this.props.times)) {
-      this.interval = setInterval(this.resetState, 500);
-      this.setState({ displayed: true });
+      this.interval = setInterval(this.resetState, 500)
+      this.setState({ displayed: true })
     }
   }
 
   componentWillUnmount() {
-    clearInterval(this.interval);
+    clearInterval(this.interval)
   }
 
   resetState = () => {
-    this.setState({ displayed: false });
-  };
+    this.setState({ displayed: false })
+  }
 
   render() {
-    return this.state.displayed && <Flash />;
+    return this.state.displayed && <Flash />
   }
 }
 
@@ -31,7 +36,7 @@ const flashAnimation = keyframes`
   to {
     opacity: 0;
   }
-`;
+`
 
 const Flash = styled.div`
   position: absolute;
@@ -42,4 +47,4 @@ const Flash = styled.div`
   opacity: 0.5;
   animation: ${flashAnimation} 0.5s;
   background: red;
-`;
+`

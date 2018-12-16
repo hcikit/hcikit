@@ -39,8 +39,8 @@ export function stimuliFromMenu(menu) {
 export function compoundTask(level, ...tasks) {
   let biggest = max(tasks.map(task => task.length))
 
-  tasks = tasks.map(
-    task => (Array.isArray(task) ? task : Array(biggest).fill(task))
+  tasks = tasks.map(task =>
+    Array.isArray(task) ? task : Array(biggest).fill(task)
   )
 
   let result = zip(...tasks).map(taskInstances => ({
