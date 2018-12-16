@@ -47,7 +47,8 @@ export default {
           'sum',
           'pickBy',
           'merge',
-          'range'
+          'range',
+          'pick'
         ],
 
         'node_modules/react-redux/node_modules/react-is/index.js': [

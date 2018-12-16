@@ -79,6 +79,7 @@ export function getOS() {
   return 'Unknown'
 }
 
+// TODO: there has to be a better way to do this.
 export function getBrowserInfo() {
   return {
     browserName: navigator.appName,

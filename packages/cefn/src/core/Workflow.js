@@ -12,7 +12,6 @@ let importComponent = {
   ConsentForm: () => import('../tasks/ConsentForm'),
   GoogleFormQuestionnaire: () => import('../tasks/GoogleFormQuestionnaire'),
   UploadToS3: () => import('../tasks/UploadToS3'),
-  FittsChoice: () => import('../tasks/FittsChoice'),
   InformationScreen: () => import('../tasks/InformationScreen'),
   KeyboardChooser: () => import('../tasks/KeyboardChooser'),
   ExperimentProgress: () => import('../tasks/ExperimentProgress'),
@@ -26,6 +25,18 @@ let importComponent = {
       ({ ExposeHK }) => ExposeHK
     ),
   Buttons: () => import('../menus/Buttons')
+}
+
+/**
+ *
+ * registerTask("MyTask", () => import('./myComponent'))
+ *
+ * @param {string} componentName, the name of the component for lookup in configuration
+ * @param {function} component, a function that returns a promise for the component
+
+ */
+export const registerTask = (componentName, component) => {
+  importComponent[componentName] = component
 }
 
 // TODO: prefetch the next five components we need or so. should remove lag. Or iterate the config at the start

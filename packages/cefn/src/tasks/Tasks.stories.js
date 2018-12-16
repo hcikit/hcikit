@@ -12,7 +12,6 @@ import MouseCenteringTask from './MouseCenteringTask'
 import ConsentForm from './ConsentForm'
 
 import { FittsDisplay } from './Fitts'
-import FittsChoice from './FittsChoice'
 
 storiesOf('tasks/MouseCenteringTask', module).add('task', () => (
   <MouseCenteringTask onAdvanceWorkflow={action('advanceWorkflow')} />
@@ -87,16 +86,5 @@ storiesOf('tasks/FittsDisplay', module).add('form', () => (
     width={10}
     targetIndex={0}
     onClick={action('onClick')}
-  />
-))
-
-storiesOf('tasks/FittsChoice', module).add('choice', () => (
-  <FittsChoice
-    numTargets={9}
-    targetIndex={0}
-    lDistance={30}
-    lWidth={20}
-    rDistance={40}
-    rWidth={10}
   />
 ))

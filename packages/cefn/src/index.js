@@ -23,6 +23,9 @@ export default class Experiment extends React.Component {
   }
 }
 
+export { registerTask } from './core/Workflow'
+export * from './tasks'
+
 // export function registerComponent(component, reducer) {
 //   importComponent[component.displayName] = component
 //   store.attachReducers({ [component.displayName]: reducer })
