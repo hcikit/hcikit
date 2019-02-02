@@ -1,7 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
-
-import { editConfig } from '../core/Workflow.actions'
 import { Row } from '../menus/KeyMap/KeyMap'
 import { bottomRows } from '../menus/KeyMap/KeyMapConstants'
 import Button from '@material-ui/core/Button'
@@ -44,7 +41,4 @@ export class KeyboardChooser extends React.Component {
   }
 }
 
-export default connect(
-  undefined,
-  { onEditConfig: editConfig }
-)(KeyboardChooser)
+export default KeyboardChooser

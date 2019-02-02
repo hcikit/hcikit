@@ -1,6 +1,6 @@
 {
-  "name": "cefn",
-  "version": "1.0.0",
+  "name": "@blainelewis1/cefn",
+  "version": "1.0.2",
   "description": "An experimental framework for running Human Computer Interaction experiments.",
   "author": "blainelewis1",
   "license": "MIT",

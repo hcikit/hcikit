@@ -6,6 +6,9 @@ import App from './core/App'
 import configureStore from './core/configureStore'
 
 let store
+/**
+ * This component takes a configuration that allows you to run an experiment.
+ */
 export default class Experiment extends React.Component {
   static propTypes = {
     configuration: PropTypes.object
@@ -25,14 +28,8 @@ export default class Experiment extends React.Component {
 
 export { registerTask } from './core/Workflow'
 export * from './tasks'
-
-// export function registerComponent(component, reducer) {
-//   importComponent[component.displayName] = component
-//   store.attachReducers({ [component.displayName]: reducer })
-// }
-
-// TODO: We need two impoortant documentations: how to create and register a new component
-// TODO: How to use the experiment component and how the config works and special parameters
+export * from './Utils'
+export * from './designUtils'
 
 // TODO: background tasks would be nice. Could be like middleware, where you have some function called on the task object whenever we increment and then it gets the chance to increment. Could implement non linear workflows that way. Or filtering ones.
 
@@ -45,9 +42,6 @@ export * from './tasks'
 // TODO: when losing focus we should grey out the screen, or whenever we can't capture keyboard shortcuts. Implement this as a auxillary task you can add in addition
 
 // TODO: rethink how we do multiple sessions, especially when we start thinking about localstorage.
-// TODO: this entire file should just be <ExperimentFramework config={config} /> then the user registers components they might need as well.
 // TODO: add helvetica back in as a font....
 
 // TODO: we shouldn't have to rely on s3 for upload. instead we should let users pass in their own upload function
-
-// TODO: register components

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Experiment from "cefn";
+import Experiment from "@blainelewis1/cefn";
 
 
 const configuration = {

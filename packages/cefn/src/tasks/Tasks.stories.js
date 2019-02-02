@@ -11,7 +11,7 @@ import GoogleFormQuestionnaire from './GoogleFormQuestionnaire'
 import MouseCenteringTask from './MouseCenteringTask'
 import ConsentForm from './ConsentForm'
 
-import { FittsDisplay } from './Fitts'
+import Fitts from './Fitts'
 
 storiesOf('tasks/MouseCenteringTask', module).add('task', () => (
   <MouseCenteringTask onAdvanceWorkflow={action('advanceWorkflow')} />
@@ -79,8 +79,8 @@ storiesOf('tasks/UploadToS3', module)
     <UploadToS3Display onAdvanceWorkflow={action('onAdvanceWorkflow')} />
   ))
 
-storiesOf('tasks/FittsDisplay', module).add('form', () => (
-  <FittsDisplay
+storiesOf('tasks/Fitts', module).add('form', () => (
+  <Fitts
     numTargets={9}
     distance={20}
     width={10}

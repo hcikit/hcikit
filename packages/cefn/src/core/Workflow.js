@@ -9,6 +9,7 @@ let importComponent = {
   MouseCenteringTask: () => import('../tasks/MouseCenteringTask'),
   DisplayTextTask: () => import('../tasks/DisplayTextTask'),
   MousePositioner: () => import('../tasks/MousePositioner'),
+  Fitts: () => import('../tasks/Fitts'),
   ConsentForm: () => import('../tasks/ConsentForm'),
   GoogleFormQuestionnaire: () => import('../tasks/GoogleFormQuestionnaire'),
   UploadToS3: () => import('../tasks/UploadToS3'),

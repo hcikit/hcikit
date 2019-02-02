@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import styled from "styled-components";
-import { centered } from "../layout";
+import React, { Component } from 'react'
+import styled from 'styled-components'
+import { centered } from '../layout'
 
 const Content = styled.span`
   display: table-cell;
   vertical-align: middle;
-`;
+`
 
 const MouseCenterer = styled.div`
   width: 70px;
@@ -20,20 +20,20 @@ const MouseCenterer = styled.div`
   font-weight: bold;
   display: table;
   ${centered};
-`;
+`
 
 export default class MouseCenteringTask extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       mouseOver: false
-    };
-    this.buttonRef = React.createRef();
+    }
+    this.buttonRef = React.createRef()
   }
 
   componentDidMount() {
-    document.addEventListener("keydown", this.handleKey, false);
-    const box = this.buttonRef.current.getBoundingClientRect();
+    document.addEventListener('keydown', this.handleKey, false)
+    const box = this.buttonRef.current.getBoundingClientRect()
 
     if (
       window.mousex > box.left &&
@@ -41,38 +41,38 @@ export default class MouseCenteringTask extends Component {
       window.mousey > box.top &&
       window.mousey < box.bottom
     ) {
-      this.setState({ mouseOver: true });
+      this.setState({ mouseOver: true })
     }
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKey, false);
+    document.removeEventListener('keydown', this.handleKey, false)
   }
 
   render() {
-    let content = this.state.mouseOver ? "Press the spacebar" : "Mouse here";
+    let content = this.state.mouseOver ? 'Press the spacebar' : 'Mouse here'
     return (
       <MouseCenterer
         innerRef={this.buttonRef}
         onMouseOver={() => {
-          this.setState({ mouseOver: true });
+          this.setState({ mouseOver: true })
         }}
         onMouseOut={() => {
-          this.setState({ mouseOver: false });
+          this.setState({ mouseOver: false })
         }}
       >
         <Content>{content}</Content>
       </MouseCenterer>
-    );
+    )
   }
 
   handleKey = e => {
-    if (e.key === " " && this.state.mouseOver) {
-      this.props.onAdvanceWorkflow();
+    if (e.key === ' ' && this.state.mouseOver) {
+      this.props.onAdvanceWorkflow()
     }
-  };
+  }
 
   handleClick = e => {
-    this.setState({ hasClicked: true });
-  };
+    this.setState({ hasClicked: true })
+  }
 }

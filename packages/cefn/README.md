@@ -18,7 +18,7 @@ import React, { Component } from "react";
 import Experiment from "cefn";
 
 config = {
-  InformationScreen: 
+  InformationScreen:
 "
 # Experiment name
 
@@ -34,6 +34,22 @@ class Example extends Component {
   }
 }
 ```
+
+## Usage:
+
+To create a new task, use the "registerTask" function like:
+
+```
+registerTask("MyTask", () => import("./MyTask"));
+```
+
+Basically this is a taskname to map to the config and then a function that returns a promise of a task component.
+
+Tasks are passed 3 actions:
+
+`onAdvanceWorkflow` which continues to the next task, trial or other object.
+`onLog` which allows you to log a key value pair, with a timestamp.
+`onEditConfig` which places a new property on the top level of the config. Useful for calibration tasks.
 
 ## Development
 

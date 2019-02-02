@@ -1,35 +1,35 @@
-import React from "react";
-import { CenteredPaper } from "../layout";
-import Loadable from "react-loadable";
+import React from 'react'
+import { CenteredPaper } from '../layout'
+import Loadable from 'react-loadable'
 
-//TODO: should upload using dependency injection depending which upload method they choose....
+// TODO: should upload using dependency injection depending which upload method they choose....
 const UploadToS3 = Loadable({
-  loader: () => import("../tasks/UploadToS3"),
+  loader: () => import('../tasks/UploadToS3'),
   loading: () => <div>Loading...</div>
-});
+})
 
 export class UploadOnError extends React.Component {
   constructor(props) {
-    super(props);
-    this.state = { hasError: false };
+    super(props)
+    this.state = { hasError: false }
   }
 
   componentDidCatch(error, info) {
-    this.setState({ hasError: true });
+    this.setState({ hasError: true })
     this.props.onLog(
-      "javascriptError",
+      'javascriptError',
       JSON.stringify(error, Object.getOwnPropertyNames(error))
-    );
-    this.props.onLog("javscriptErrorInfo", info);
+    )
+    this.props.onLog('javscriptErrorInfo', info)
   }
 
   render() {
     if (this.state.hasError) {
-      let configuration = this.props.configuration;
+      let configuration = this.props.configuration
 
       return (
         <React.Fragment>
-          <CenteredPaper axis="both" width="inherit">
+          <CenteredPaper axis='both' width='inherit'>
             <div>
               <h1>Something went wrong.</h1>
               <p>
@@ -55,9 +55,9 @@ export class UploadOnError extends React.Component {
             }
           />
         </React.Fragment>
-      );
+      )
     }
 
-    return this.props.children;
+    return this.props.children
   }
 }

@@ -48,7 +48,11 @@ export default {
           'pickBy',
           'merge',
           'range',
-          'pick'
+          'pick',
+          'flatten',
+          'flatMap',
+          'zip',
+          'max'
         ],
 
         'node_modules/react-redux/node_modules/react-is/index.js': [

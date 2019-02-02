@@ -1,5 +1,5 @@
 import React from 'react'
-import { advanceWorkflow, log } from './Workflow.actions'
+import { advanceWorkflow, log, editConfig } from './Workflow.actions'
 import {
   withRawConfiguration,
   getGlobalProps,
@@ -52,7 +52,7 @@ export const App = ({
       // </UploadOnError>
     )
   } else {
-    // TODO: shouls we be requiring that there be a participant property?
+    // TODO: should we be requiring that there be a participant property?
     return (
       <div>
         <h1>You've completed the experiment!</h1>;
@@ -79,7 +79,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   onAdvanceWorkflow: advanceWorkflow,
-  onLog: log
+  onLog: log,
+  onEditConfig: editConfig
 }
 
 export default withRawConfiguration(

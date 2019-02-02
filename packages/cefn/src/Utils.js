@@ -1,5 +1,3 @@
-import { Object } from 'es6-shim'
-
 /**
  * Shuffles array in place. ES6 version
  * @param {Array} a An array containing the items.
