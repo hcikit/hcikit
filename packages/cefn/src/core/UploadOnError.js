@@ -4,8 +4,8 @@ import Loadable from 'react-loadable'
 
 // TODO: should upload using dependency injection depending which upload method they choose....
 const UploadToS3 = Loadable({
-  loader: () => import('../tasks/UploadToS3'),
-  loading: () => <div>Loading...</div>
+  // loader: () => import('../tasks/UploadToS3'),
+  // loading: () => <div>Loading...</div>
 })
 
 export class UploadOnError extends React.Component {
@@ -19,7 +19,7 @@ export class UploadOnError extends React.Component {
     this.props.onLog(
       'javascriptError',
       JSON.stringify(error, Object.getOwnPropertyNames(error))
-    )
+    ) 
     this.props.onLog('javscriptErrorInfo', info)
   }
 

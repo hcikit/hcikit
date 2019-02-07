@@ -1,4 +1,5 @@
 import babel from 'rollup-plugin-babel'
+import json from 'rollup-plugin-json'
 import commonjs from 'rollup-plugin-commonjs'
 import external from 'rollup-plugin-peer-deps-external'
 import postcss from 'rollup-plugin-postcss'
@@ -21,7 +22,6 @@ export default {
       sourcemap: true
     }
   ],
-  'output.globals': { 'styled-components': 'styled' },
   plugins: [
     builtins(),
     external(),
@@ -33,6 +33,7 @@ export default {
       exclude: 'node_modules/**'
     }),
     resolve(),
+    json(),
     commonjs({
       namedExports: {
         'node_modules/lodash/lodash.js': [
@@ -58,7 +59,11 @@ export default {
         'node_modules/react-redux/node_modules/react-is/index.js': [
           'isValidElementType'
         ],
-        'node_modules/react-is/index.js': ['isValidElementType']
+        'node_modules/react-is/index.js': [
+          'isValidElementType',
+          'isElement',
+          'ForwardRef'
+        ]
         // 'node_modules/@material-ui/core/styles/index.js': [
         //   'createGenerateClassName',
         //   'createMuiTheme',

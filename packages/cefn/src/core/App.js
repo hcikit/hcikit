@@ -3,7 +3,7 @@ import { advanceWorkflow, log, editConfig } from './Workflow.actions'
 import {
   withRawConfiguration,
   getGlobalProps,
-  getComponentAsLoadable,
+  getTask,
   getComponentProps,
   getAllPropsForComponent,
   getCurrentProps
@@ -18,7 +18,8 @@ export const App = ({
   configuration,
   onLog,
   onAdvanceWorkflow,
-  getComponentAsLoadable
+  onEditConfig,
+  getTask
 }) => {
   // TODO: currently order matters, should it?
   if (task) {
@@ -32,17 +33,19 @@ export const App = ({
       <React.Fragment>
         {tasks.map(task => {
           let globalProps = getGlobalProps(configuration)
-          let Task = getComponentAsLoadable(
-            task,
-            getAllPropsForComponent(task, configuration)
-          )
+          let Task = getTask(task, getAllPropsForComponent(task, configuration))
 
-          console.log(Task)
+          if (!Task) {
+            console.log(`Component ${task} isn't registered.`)
+            return <div>Sorry an error occurred!!</div>
+          }
 
           return (
             <Task
               onAdvanceWorkflow={onAdvanceWorkflow}
-              getComponentAsLoadable={getComponentAsLoadable}
+              onLog={onLog}
+              onEditConfig={onEditConfig}
+              getTask={getTask}
               {...getComponentProps(task, configuration)}
               {...globalProps}
             />
@@ -72,8 +75,7 @@ const mapStateToProps = state => {
   let props = getGlobalProps(state.Configuration)
   return {
     ...props,
-    getComponentAsLoadable: componentName =>
-      getComponentAsLoadable(componentName, props)
+    getTask: taskName => getTask(taskName, props)
   }
 }
 

@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 
 import App from './core/App'
 import configureStore from './core/configureStore'
+import * as tasks from './tasks'
+import { registerTask } from './core/Workflow'
 
 let store
 /**
@@ -26,10 +28,14 @@ export default class Experiment extends React.Component {
   }
 }
 
-export { registerTask } from './core/Workflow'
+export { registerTask }
 export * from './tasks'
 export * from './Utils'
 export * from './designUtils'
+
+export function registerAll() {
+  Object.keys(tasks).forEach(key => registerTask(key, tasks[key]))
+}
 
 // TODO: background tasks would be nice. Could be like middleware, where you have some function called on the task object whenever we increment and then it gets the chance to increment. Could implement non linear workflows that way. Or filtering ones.
 

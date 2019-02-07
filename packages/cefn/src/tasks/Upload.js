@@ -1,5 +1,4 @@
 import React from 'react'
-// import { S3, config, CognitoIdentityCredentials } from 'aws-sdk'
 
 import Typography from '@material-ui/core/Typography'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -8,11 +7,7 @@ import Button from '@material-ui/core/Button'
 import { CenteredPaper, CenteredText } from '../layout'
 import { withRawConfiguration } from '../core/Workflow'
 
-let S3 = {}
-let config = {}
-let CognitoIdentityCredentials = {}
-
-export const UploadToS3Display = ({
+export const UploadDisplay = ({
   error,
   participant,
   log,
@@ -58,23 +53,7 @@ export const UploadToS3Display = ({
   )
 }
 
-class UploadToS3 extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {}
-
-    config.region = this.props.AWS_REGION
-    config.credentials = new CognitoIdentityCredentials({
-      IdentityPoolId: this.props.AWS_COGNITO_IDENTITY_POOL_ID
-    })
-
-    this.s3 = new S3({
-      apiVersion: '2006-03-01',
-      params: { Bucket: this.props.AWS_S3_BUCKET }
-    })
-  }
-
+class Upload extends React.Component {
   UNSAFE_componentWillMount() {
     if (this.props.fireAndForget) {
       this.attemptUploadWithRetries(1)
@@ -88,7 +67,8 @@ class UploadToS3 extends React.Component {
     let logs = { ...this.props.configuration }
     logs.events = window.logs
 
-    this.uploadJSONFile(this.props.s3FileName, logs)
+    this.props
+      .upload(this.props.filename, logs)
       .then(() => {
         if (!this.props.fireAndForget) {
           this.props.onAdvanceWorkflow()
@@ -96,7 +76,7 @@ class UploadToS3 extends React.Component {
         }
       })
       .catch(err => {
-        this.props.onLog('s3 error', err)
+        this.props.onLog('upload error', err)
 
         if (retries > 0) {
           this.attemptUploadWithRetries(retries - 1)
@@ -106,33 +86,12 @@ class UploadToS3 extends React.Component {
       })
   }
 
-  // https://blog.mturk.com/tutorial-how-to-create-hits-that-ask-workers-to-upload-files-using-amazon-cognito-and-amazon-s3-38acb1108633
-  uploadJSONFile(fileName, data) {
-    return new Promise((resolve, reject) => {
-      this.s3.upload(
-        {
-          Key: fileName,
-          Body: JSON.stringify(data),
-          ContentType: 'json',
-          ACL: 'bucket-owner-full-control'
-        },
-        (err, data) => {
-          if (err) {
-            reject(err, data)
-          } else {
-            resolve(data)
-          }
-        }
-      )
-    })
-  }
-
   render() {
     if (this.state.done) {
       return null
     }
     return (
-      <UploadToS3Display
+      <UploadDisplay
         log={JSON.stringify(this.props.configuration)}
         participant={this.props.configuration.participant}
         onClick={this.props.onAdvanceWorkflow}
@@ -143,4 +102,8 @@ class UploadToS3 extends React.Component {
   }
 }
 
-export default withRawConfiguration(UploadToS3)
+let ConnectedUpload = withRawConfiguration(Upload)
+
+export default ({ upload, ...props }) => (
+  <ConnectedUpload upload={upload} {...props} />
+)

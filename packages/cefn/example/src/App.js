@@ -1,14 +1,34 @@
 import React, { Component } from "react";
-import Experiment from "@blainelewis1/cefn";
+import Experiment, { registerAll, registerTask } from "@blainelewis1/cefn";
 
+registerAll();
+registerTask(
+  "CustomTask",
+  ({ text, onLog, onEditConfig, onAdvanceWorkflow }) => {
+    return (
+      <div
+        onClick={() => {
+          onLog("hello", "world");
+          onEditConfig("content", "<h1>Hello world</h1>");
+          onAdvanceWorkflow();
+        }}
+      >
+        {text}
+      </div>
+    );
+  }
+);
 
 const configuration = {
-  InformationScreen: {
-    content: "<h1>Hello world</h1>"
+  CustomTask: {
+    text: "This is a custom task. Click the paragraph to continue"
   },
   // tasks: ["Buttons"],
   participant: "yo",
   children: [
+    {
+      task: "CustomTask"
+    },
     {
       task: "InformationScreen"
     }
@@ -17,11 +37,6 @@ const configuration = {
 
 export default class App extends Component {
   render() {
-    return (
-      // <Button>
-      // HELLO
-      <Experiment configuration={configuration} />
-      // </Button>
-    );
+    return <Experiment configuration={configuration} />;
   }
 }
