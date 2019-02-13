@@ -5,8 +5,7 @@ import {
   getGlobalProps,
   getTask,
   getComponentProps,
-  getAllPropsForComponent,
-  getCurrentProps
+  getAllPropsForComponent
 } from './Workflow'
 import { connect } from 'react-redux'
 
@@ -21,14 +20,13 @@ export const App = ({
   onEditConfig,
   getTask
 }) => {
-  // TODO: currently order matters, should it?
   if (task) {
     tasks = [...tasks, task]
   }
 
   if (tasks.length > 0) {
-    // TODO: Check if the proptypes require a component, if so try resolving one.
     return (
+      // TODO: pass in upload function to create upload on error.
       // <UploadOnError onLog={onLog} configuration={configuration}>
       <React.Fragment>
         {tasks.map(task => {
@@ -55,12 +53,11 @@ export const App = ({
       // </UploadOnError>
     )
   } else {
-    // TODO: should we be requiring that there be a participant property?
     return (
       <div>
         <h1>You've completed the experiment!</h1>;
         <a
-          download={`${configuration.participant}.json`}
+          download={`${configuration.participant || 'log'}.json`}
           href={`data:text/json;charset=utf-8,${JSON.stringify(configuration)}`}
         >
           Download experiment log
@@ -70,8 +67,8 @@ export const App = ({
   }
 }
 
-// TODO: probably need to refactor this, have the full config passed to app and app choose how to use it.
 const mapStateToProps = state => {
+  // TODOL get Task doesn't handle all props..
   let props = getGlobalProps(state.Configuration)
   return {
     ...props,

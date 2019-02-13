@@ -6,8 +6,7 @@ import { zip, max, flatten, flatMap } from 'lodash'
 // TODO: log things like page refreshes.
 // TODO: create a metadata field to scope things for easy removal when parsing.
 
-// TODO: configs are suuuper volatiile because of the random aspect, if you change the order of anything it wrecks everything.
-// TODO: Maybe we reseed the random all the time to fix that?
+// TODO: configs are suuuper volatiile because of the random aspect, if you change the order of anything it wrecks everything. Maybe we reseed the random all the time to fix that?
 
 export function trialsWithDistribution(frequencies, stimuli) {
   let result = flatten(

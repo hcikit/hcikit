@@ -2,6 +2,7 @@ import { logAction, log, LOG, LOG_ACTION } from './Workflow.actions'
 import { createStore, combineReducers } from 'redux'
 import throttle from 'lodash/throttle'
 import ConfigurationReducer from './Workflow.reducers'
+import { getReducers } from './Workflow'
 
 const STATE_KEY = 'state'
 
@@ -37,9 +38,9 @@ export default Configuration => {
   }
 
   let store = {}
-  let reducer = combineReducers({
-    Configuration: ConfigurationReducer
-  })
+  let reducers = getReducers()
+  reducers['Configuration'] = ConfigurationReducer
+  let reducer = combineReducers(reducers)
 
   if (process.env.NODE_ENV !== 'production') {
     store = createStore(

@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.1.1",
+    "aws-sdk": "^2.401.0",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",

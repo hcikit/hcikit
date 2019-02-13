@@ -16,6 +16,7 @@ export default class Experiment extends React.Component {
     configuration: PropTypes.object
   }
   componentWillMount() {
+    // TODO: if we use uploading as middleware we could pass as a prop
     store = configureStore(this.props.configuration)
   }
 
@@ -33,7 +34,9 @@ export * from './tasks'
 export * from './Utils'
 export * from './designUtils'
 
+// TODO:  this might force them all to be importwe.d.. Not sure how tree shaking works...
 export function registerAll() {
+  console.log(tasks)
   Object.keys(tasks).forEach(key => registerTask(key, tasks[key]))
 }
 
@@ -49,5 +52,3 @@ export function registerAll() {
 
 // TODO: rethink how we do multiple sessions, especially when we start thinking about localstorage.
 // TODO: add helvetica back in as a font....
-
-// TODO: we shouldn't have to rely on s3 for upload. instead we should let users pass in their own upload function

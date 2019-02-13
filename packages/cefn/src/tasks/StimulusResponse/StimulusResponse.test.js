@@ -161,6 +161,4 @@ describe('StimulusResponse', () => {
 
     expect(mocks.onAdvanceWorkflow).toHaveBeenCalled()
   })
-
-  // TODO: Somehow testing logging would be nice
 })

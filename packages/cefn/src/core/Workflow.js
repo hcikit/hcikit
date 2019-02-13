@@ -1,46 +1,26 @@
 import { connect } from 'react-redux'
 import { merge, pickBy } from 'lodash'
-import Loadable from 'react-loadable'
-import React from 'react'
-
-let components = {}
-let tasks = {
-  // StimulusResponse: () => import('../tasks/StimulusResponse')
-  // MouseCenteringTask: () => import('../tasks/MouseCenteringTask'),
-  // DisplayTextTask: () => import('../tasks/DisplayTextTask'),
-  // MousePositioner: () => import('../tasks/MousePositioner'),
-  // Fitts: () => import('../tasks/Fitts'),
-  // ConsentForm: () => import('../tasks/ConsentForm'),
-  // GoogleFormQuestionnaire: () => import('../tasks/GoogleFormQuestionnaire'),
-  // UploadToS3: () => import('../tasks/UploadToS3'),
-  // InformationScreen: () => import('../tasks/InformationScreen'),
-  // KeyboardChooser: () => import('../tasks/KeyboardChooser'),
-  // ExperimentProgress: () => import('../tasks/ExperimentProgress'),
-  // KeyMap: () => import('../menus/KeyMap/KeyMap'),
-  // LinearMenuBar: () =>
-  //   import('../menus/LinearMenuBar/LinearMenuBar').then(
-  //     ({ LinearMenuBar }) => LinearMenuBar
-  //   ),
-  // ExposeHK: () =>
-  //   import('../menus/LinearMenuBar/LinearMenuBar').then(
-  //     ({ ExposeHK }) => ExposeHK
-  //   ),
-  // Buttons: () => import('../menus/Buttons')
-}
+let tasks = {}
+let reducers = {}
 
 /**
  *
- * registerTask("MyTask", () => import('./myComponent'))
+ * registerTask("MyTask", MyTask))
  *
  * @param {string} taskName, the name of the component for lookup in configuration
- * @param {function} task, a function that returns a promise for the component
+ * @param {function} task, the component
 
  */
-export const registerTask = (taskName, task) => {
+export const registerTask = (taskName, task, reducer = undefined) => {
+  // TODO: for a first pass of adding reducers, store them in an object for calling with  combine reducers
   tasks[taskName] = task
+  if (reducer) {
+    reducers[taskName] = reducer
+  }
 }
 
-// TODO: prefetch the next five components we need or so. should remove lag. Or iterate the config at the start
+export const getReducers = () => reducers
+
 // TODO: consider using something that supports passing them in better, so that I can just pass a component in during a test without using workflow...
 export const getTask = (taskName, currentProps = {}) => {
   if (typeof currentProps[taskName] === 'string') {

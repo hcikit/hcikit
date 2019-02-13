@@ -54,6 +54,11 @@ export const UploadDisplay = ({
 }
 
 class Upload extends React.Component {
+  state = {
+    done: false,
+    error: null
+  }
+
   UNSAFE_componentWillMount() {
     if (this.props.fireAndForget) {
       this.attemptUploadWithRetries(1)
@@ -77,7 +82,7 @@ class Upload extends React.Component {
       })
       .catch(err => {
         this.props.onLog('upload error', err)
-
+        console.log(err)
         if (retries > 0) {
           this.attemptUploadWithRetries(retries - 1)
         } else {
@@ -104,6 +109,6 @@ class Upload extends React.Component {
 
 let ConnectedUpload = withRawConfiguration(Upload)
 
-export default ({ upload, ...props }) => (
-  <ConnectedUpload upload={upload} {...props} />
-)
+export default upload => props => {
+  return <ConnectedUpload upload={upload} {...props} />
+}

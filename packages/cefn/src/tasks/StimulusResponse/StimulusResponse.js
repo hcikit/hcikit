@@ -1,22 +1,22 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { attempt } from "./StimulusResponse.actions";
-import { CenteredPaper } from "../../layout";
-import { ScreenFlash } from "../../layout/ScreenFlash";
-import { LinearTimer } from "../../layout/LinearTimer";
-import PropTypes from "prop-types";
-import { last } from "lodash";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { attempt } from './StimulusResponse.actions'
+import { CenteredPaper } from '../../layout'
+import { ScreenFlash } from '../../layout/ScreenFlash'
+import { LinearTimer } from '../../layout/LinearTimer'
+import PropTypes from 'prop-types'
+import { last } from 'lodash'
 
-import styled from "styled-components";
+import styled from 'styled-components'
 
 const stimulusTypes = {
   ImageStimulus,
   TextStimulus
-};
+}
 
 const StimulusWrapper = styled.div`
   position: absolute;
-  top: ${({ position }) => (position === "top" ? "25%" : "50%")};
+  top: ${({ position }) => (position === 'top' ? '25%' : '50%')};
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 10px;
@@ -29,17 +29,17 @@ const StimulusWrapper = styled.div`
         border-style: solid;
         border-width: 10px;
         border-color:  var(--color-${color});`
-    );
+    )
   }};
-`;
+`
 
-//TODO: Still don't love this tbh
+// TODO: Still don't love this tbh
 export function TextStimulus({ stimulus, position, color }) {
   return (
     <StimulusWrapper color={color} position={position}>
-      <p className="text-stimulus">{stimulus}</p>
+      <p className='text-stimulus'>{stimulus}</p>
     </StimulusWrapper>
-  );
+  )
 }
 export function ImageStimulus({
   stimulus,
@@ -52,10 +52,10 @@ export function ImageStimulus({
     <StimulusWrapper color={color} position={position}>
       <img
         src={`${stimulusImagePath}/${stimulus}.${stimulusImageExtension}`}
-        alt=""
+        alt=''
       />
     </StimulusWrapper>
-  );
+  )
 }
 
 export class StimulusResponse extends Component {
@@ -65,24 +65,24 @@ export class StimulusResponse extends Component {
     continueOnError: PropTypes.bool,
     responseInput: PropTypes.oneOfType([PropTypes.element, PropTypes.string])
       .isRequired
-  };
+  }
   static defaultProps = {
     continueOnError: true,
     flashOnError: false,
     delayOnError: 0
-  };
+  }
 
   render() {
-    let ResponseInput = this.props.getComponentAsLoadable("ResponseInput");
+    let ResponseInput = this.props.getTask('ResponseInput')
 
-    //TODO: use the input instead.
-    let StimulusType = stimulusTypes[this.props.stimulusType] || TextStimulus;
+    // TODO: use the input instead.
+    let StimulusType = stimulusTypes[this.props.stimulusType] || TextStimulus
 
     const errorAttempts = this.props.attempts.filter(
       attempt => !attempt.correct
-    );
-    const lastAttemptTime = (last(errorAttempts) || { time: -Infinity }).time;
-    const showError = Date.now() - this.props.delayOnError >= lastAttemptTime;
+    )
+    const lastAttemptTime = (last(errorAttempts) || { time: -Infinity }).time
+    const showError = Date.now() - this.props.delayOnError >= lastAttemptTime
 
     return (
       <div>
@@ -97,51 +97,51 @@ export class StimulusResponse extends Component {
             />
           </React.Fragment>
         ) : (
-          <CenteredPaper width="inherit" axis="both">
+          <CenteredPaper width='inherit' axis='both'>
             <h1>Incorrect</h1>
             <LinearTimer length={this.props.delayOnError} />
           </CenteredPaper>
         )}
       </div>
-    );
+    )
   }
 
   validateResponse(response, attributes = {}) {
     const isCorrect =
-      JSON.stringify(response) === JSON.stringify(this.props.stimulus);
+      JSON.stringify(response) === JSON.stringify(this.props.stimulus)
 
-    attributes.correct = isCorrect;
+    attributes.correct = isCorrect
 
-    this.props.onAttempt(attributes);
-    this.forceUpdate();
+    this.props.onAttempt(attributes)
+    this.forceUpdate()
 
     if (isCorrect) {
-      this.props.onAdvanceWorkflow();
+      this.props.onAdvanceWorkflow()
     } else {
       if (this.props.continueOnError && !this.props.delayOnError) {
-        this.props.onAdvanceWorkflow();
+        this.props.onAdvanceWorkflow()
       } else {
-        this.timeOut = setTimeout(this.onErrorTimeout, this.props.delayOnError);
+        this.timeOut = setTimeout(this.onErrorTimeout, this.props.delayOnError)
       }
     }
   }
 
   onErrorTimeout = () => {
     if (this.props.continueOnError) {
-      this.props.onAdvanceWorkflow();
+      this.props.onAdvanceWorkflow()
     }
 
-    this.forceUpdate();
-  };
+    this.forceUpdate()
+  }
 }
 
 export const ConnectedStimulusResponse = connect(
   state => {
-    return state.StimulusResponse;
+    return state.StimulusResponse
   },
   {
     onAttempt: attempt
   }
-)(StimulusResponse);
+)(StimulusResponse)
 
-export default ConnectedStimulusResponse;
+export default ConnectedStimulusResponse

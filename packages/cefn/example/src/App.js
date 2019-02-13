@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import Experiment, { registerAll, registerTask } from "@blainelewis1/cefn";
+import Experiment, {
+  registerAll,
+  registerTask,
+  createUpload
+} from "@blainelewis1/cefn";
+import AWS from "aws-sdk";
 
 registerAll();
 registerTask(
@@ -23,7 +28,6 @@ const configuration = {
   CustomTask: {
     text: "This is a custom task. Click the paragraph to continue"
   },
-  // tasks: ["Buttons"],
   participant: "yo",
   children: [
     {
@@ -31,9 +35,51 @@ const configuration = {
     },
     {
       task: "InformationScreen"
+    },
+    {
+      task: "S3Upload",
+      filename: "hello"
+    },
+    {
+      task: "StimulusResponse"
     }
   ]
 };
+
+const S3Upload = createUpload(
+  createS3Uploader("us-east-2", "test", "testingBucket")
+);
+
+registerTask("S3Upload", S3Upload);
+console.log(S3Upload);
+
+export function createS3Uploader(
+  AWS_REGION,
+  AWS_COGNITO_IDENTITY_POOL_ID,
+  AWS_S3_BUCKET
+) {
+  AWS.config.region = AWS_REGION;
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: AWS_COGNITO_IDENTITY_POOL_ID
+  });
+
+  let s3 = new AWS.S3({
+    apiVersion: "2006-03-01",
+    params: { Bucket: AWS_S3_BUCKET }
+  });
+  // https://blog.mturk.com/tutorial-how-to-create-hits-that-ask-workers-to-upload-files-using-amazon-cognito-and-amazon-s3-38acb1108633
+  return function(fileName, data) {
+    console.log(fileName, data);
+    return s3
+      .upload({
+        Key: fileName,
+        Body: JSON.stringify(data),
+        ContentType: "json",
+        ACL: "bucket-owner-full-control"
+      })
+      .promise();
+  };
+}
 
 export default class App extends Component {
   render() {
