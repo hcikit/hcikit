@@ -34,6 +34,8 @@ export * from './tasks'
 export * from './Utils'
 export * from './designUtils'
 
+export * from './layout'
+
 // TODO:  this might force them all to be importwe.d.. Not sure how tree shaking works...
 export function registerAll() {
   console.log(tasks)
