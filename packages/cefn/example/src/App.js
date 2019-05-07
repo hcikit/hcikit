@@ -4,9 +4,11 @@ import Experiment, {
   registerTask,
   createUpload
 } from "@blainelewis1/cefn";
+import TaskWithReducer, { reducer } from "./TaskWithReducer";
 import AWS from "aws-sdk";
 
 registerAll();
+registerTask("TaskWithReducer", TaskWithReducer, reducer);
 registerTask(
   "CustomTask",
   ({ text, onLog, onEditConfig, onAdvanceWorkflow }) => {
@@ -30,6 +32,12 @@ const configuration = {
   },
   participant: "yo",
   children: [
+    {
+      task: "CustomTask"
+    },
+    {
+      task: "TaskWithReducer"
+    },
     {
       task: "CustomTask"
     },
@@ -69,7 +77,6 @@ export function createS3Uploader(
   });
   // https://blog.mturk.com/tutorial-how-to-create-hits-that-ask-workers-to-upload-files-using-amazon-cognito-and-amazon-s3-38acb1108633
   return function(fileName, data) {
-    console.log(fileName, data);
     return s3
       .upload({
         Key: fileName,
