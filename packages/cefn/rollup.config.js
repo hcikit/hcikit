@@ -56,9 +56,13 @@ export default {
           'max'
         ],
 
+        'node_modules/react-dom/index.js': ['unstable_batchedUpdates'],
+
         'node_modules/react-redux/node_modules/react-is/index.js': [
-          'isValidElementType'
+          'isValidElementType',
+          'isContextConsumer'
         ],
+
         'node_modules/react-is/index.js': [
           'isValidElementType',
           'isElement',

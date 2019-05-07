@@ -1,11 +1,14 @@
 import React from 'react'
 import { CenteredPaper } from '../layout'
-import Loadable from 'react-loadable'
 
-const UploadToS3 = Loadable({
-  // loader: () => import('../tasks/UploadToS3'),
-  // loading: () => <div>Loading...</div>
-})
+// const UploadToS3 = Loadable({
+// loader: () => import('../tasks/UploadToS3'),
+// loading: () => <div>Loading...</div>
+// })
+
+const UploadToS3 = () => {
+  ;<div>Broken</div>
+}
 
 export class UploadOnError extends React.Component {
   constructor(props) {
