@@ -85,6 +85,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.3",
+    "react-scripts": "^3.0.1",
     "react-styleguidist": "^9.1.2",
     "rollup": "^1.11.3",
     "rollup-plugin-babel": "^4.3.2",

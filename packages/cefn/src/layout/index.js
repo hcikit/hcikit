@@ -30,7 +30,7 @@ export const CenteredDiv = styled.div`
 export { LinearTimer } from './LinearTimer'
 
 export { ScreenFlash } from './ScreenFlash'
-export { default as SnackBar } from './SnackBar'
+// export { default as SnackBar } from './SnackBar'
 
 // icon: {
 //   fontSize: 20,
