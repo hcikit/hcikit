@@ -82,6 +82,10 @@
     "eslint-plugin-standard": "^4.0.0",
     "gh-pages": "^2.0.1",
     "node-eval": "^2.0.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.0.3",
+    "react-styleguidist": "^9.1.2",
     "rollup": "^1.11.3",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^9.3.4",
@@ -91,7 +95,8 @@
     "rollup-plugin-peer-deps-external": "^2.2.0",
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-url": "^2.2.1",
-    "styled-components": "^4.2.0"
+    "styled-components": "^4.2.0",
+    "webpack": "^4.32.1"
   },
   "dependencies": {
     "classnames": "^2.2.6",

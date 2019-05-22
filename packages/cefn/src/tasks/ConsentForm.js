@@ -24,16 +24,21 @@ import { CenteredPaper } from '../layout'
 import PropTypes from 'prop-types'
 
 // TODOLATER: needs stars beside required consents.
-
+/**
+ * This component creates a consent form, it allows for multiple consent questions and renders the letter in markdown.
+ */
 export default class ConsentForm extends React.Component {
   static propTypes = {
+    /** A string, possible in Markdown, describing what the user is participating to. */
     letter: PropTypes.string,
+    /** Each question has a label and a boolean if it is required to continue. */
     questions: PropTypes.arrayOf(
       PropTypes.shape({
         required: PropTypes.bool,
         label: PropTypes.string
       })
     ),
+    /**  @ignore */
     onAdvanceWorkflow: PropTypes.func
   }
   constructor(props) {
@@ -45,8 +50,8 @@ export default class ConsentForm extends React.Component {
   }
 
   requiredFieldNotFilled() {
-    let requiredNotFilled = this.props.questions.map(
-      question => (question.required ? !this.state[question.label] : true)
+    let requiredNotFilled = this.props.questions.map(question =>
+      question.required ? !this.state[question.label] : true
     )
 
     return !requiredNotFilled.some(val => !val)

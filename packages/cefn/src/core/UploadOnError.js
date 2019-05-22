@@ -7,7 +7,7 @@ import { CenteredPaper } from '../layout'
 // })
 
 const UploadToS3 = () => {
-  ;<div>Broken</div>
+  return <div>Broken</div>
 }
 
 export class UploadOnError extends React.Component {
