@@ -1,11 +1,11 @@
-import React from 'react'
+import React from "react";
 
-import Typography from '@material-ui/core/Typography'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Button from '@material-ui/core/Button'
+import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Button from "@material-ui/core/Button";
+import { withRawConfiguration } from "@hcikit/workflow";
 
-import { CenteredNicePaper, CenteredText } from '../components'
-import { withRawConfiguration } from '../core/Workflow'
+import { CenteredNicePaper, CenteredText } from "../components";
 
 export const UploadDisplay = ({
   error,
@@ -14,7 +14,7 @@ export const UploadDisplay = ({
   experimenter,
   onClick
 }) => {
-  let contents
+  let contents;
 
   if (!error) {
     contents = (
@@ -23,7 +23,7 @@ export const UploadDisplay = ({
         <br />
         <CircularProgress size={100} />
       </div>
-    )
+    );
   } else {
     contents = (
       <div>
@@ -39,61 +39,61 @@ export const UploadDisplay = ({
           Download experiment log
         </a>
         <br />
-        <Button variant='contained' color='primary' onClick={onClick}>
+        <Button variant="contained" color="primary" onClick={onClick}>
           Continue
         </Button>
       </div>
-    )
+    );
   }
 
   return (
     <CenteredNicePaper centerX centerY>
       <CenteredText>{contents}</CenteredText>
     </CenteredNicePaper>
-  )
-}
+  );
+};
 
 class Upload extends React.Component {
   state = {
     done: false,
     error: null
-  }
+  };
 
   UNSAFE_componentWillMount() {
     if (this.props.fireAndForget) {
-      this.attemptUploadWithRetries(1)
-      this.props.onAdvanceWorkflow()
+      this.attemptUploadWithRetries(1);
+      this.props.onAdvanceWorkflow();
     } else {
-      this.attemptUploadWithRetries(3)
+      this.attemptUploadWithRetries(3);
     }
   }
 
   attemptUploadWithRetries(retries) {
-    let logs = { ...this.props.configuration }
-    logs.events = window.logs
+    let logs = { ...this.props.configuration };
+    logs.events = window.logs;
 
     this.props
       .upload(this.props.filename, logs)
       .then(() => {
         if (!this.props.fireAndForget) {
-          this.props.onAdvanceWorkflow()
-          this.setState({ done: true })
+          this.props.onAdvanceWorkflow();
+          this.setState({ done: true });
         }
       })
       .catch(err => {
-        this.props.onLog('upload error', err)
-        console.log(err)
+        this.props.onLog("upload error", err);
+        console.log(err);
         if (retries > 0) {
-          this.attemptUploadWithRetries(retries - 1)
+          this.attemptUploadWithRetries(retries - 1);
         } else {
-          this.setState({ error: true })
+          this.setState({ error: true });
         }
-      })
+      });
   }
 
   render() {
     if (this.state.done) {
-      return null
+      return null;
     }
     return (
       <UploadDisplay
@@ -103,12 +103,12 @@ class Upload extends React.Component {
         experimenter={this.props.experimenter}
         error={this.state.error}
       />
-    )
+    );
   }
 }
 
-let ConnectedUpload = withRawConfiguration(Upload)
+let ConnectedUpload = withRawConfiguration(Upload);
 
 export default upload => props => {
-  return <ConnectedUpload upload={upload} {...props} />
-}
+  return <ConnectedUpload upload={upload} {...props} />;
+};

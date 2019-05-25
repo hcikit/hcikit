@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { CenteredNicePaper } from "@blainelewis1/cefn";
+import { CenteredNicePaper, withGridItem } from "@hcikit/tasks";
 import { Typography } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 
@@ -44,13 +44,15 @@ const TaskWithReducer = ({
   );
 };
 
-export default connect(
-  state => ({
-    value: state.TaskWithReducer
-  }),
-  {
-    onIncrement: increment,
-    onDecrement: decrement,
-    onReset: reset
-  }
-)(TaskWithReducer);
+export default withGridItem(
+  connect(
+    state => ({
+      value: state.TaskWithReducer
+    }),
+    {
+      onIncrement: increment,
+      onDecrement: decrement,
+      onReset: reset
+    }
+  )(TaskWithReducer)
+);

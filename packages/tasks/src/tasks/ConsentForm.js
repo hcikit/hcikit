@@ -1,16 +1,16 @@
-import React from 'react'
-import marked from 'marked'
-import Button from '@material-ui/core/Button'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import Typography from '@material-ui/core/Typography'
+import React from "react";
+import marked from "marked";
+import Button from "@material-ui/core/Button";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import Typography from "@material-ui/core/Typography";
 
-import FormGroup from '@material-ui/core/FormGroup'
-import FormHelperText from '@material-ui/core/FormHelperText'
-import FormControl from '@material-ui/core/FormControl'
-import { CenteredNicePaper } from '../components'
-import PropTypes from 'prop-types'
-import { withGridItem } from '../'
+import FormGroup from "@material-ui/core/FormGroup";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import { CenteredNicePaper } from "../components";
+import PropTypes from "prop-types";
+import { withGridItem } from "../withGridItem";
 
 // TODOLATER: needs stars beside required consents.
 // TODOLATER: needs testing too, not convinced it works properly
@@ -30,32 +30,32 @@ class ConsentForm extends React.Component {
     ),
     /**  @ignore */
     onAdvanceWorkflow: PropTypes.func
-  }
+  };
   constructor(props) {
-    super(props)
-    this.state = {}
+    super(props);
+    this.state = {};
   }
   handleChange = name => event => {
-    this.setState({ [name]: event.target.checked })
-  }
+    this.setState({ [name]: event.target.checked });
+  };
 
   requiredFieldNotFilled() {
     let requiredNotFilled = this.props.questions.map(question =>
       question.required ? !this.state[question.label] : true
-    )
+    );
 
-    return !requiredNotFilled.some(val => !val)
+    return !requiredNotFilled.some(val => !val);
   }
 
   handleSubmit = () => {
     if (!this.requiredFieldNotFilled()) {
-      this.props.onAdvanceWorkflow()
+      this.props.onAdvanceWorkflow();
     }
-  }
+  };
 
   render() {
-    let { letter, questions } = this.props
-    let error = this.requiredFieldNotFilled()
+    let { letter, questions } = this.props;
+    let error = this.requiredFieldNotFilled();
 
     return (
       <CenteredNicePaper>
@@ -71,28 +71,28 @@ class ConsentForm extends React.Component {
                     control={
                       <Checkbox
                         onChange={this.handleChange(question.label)}
-                        color='primary'
+                        color="primary"
                       />
                     }
                     label={question.label}
                   />
                 </FormGroup>
-              )
+              );
             })}
             <FormHelperText>Required consent not given.</FormHelperText>
 
             <Button
               onClick={this.handleSubmit}
-              variant='contained'
-              color='primary'
+              variant="contained"
+              color="primary"
             >
               Submit
             </Button>
           </FormGroup>
         </FormControl>
       </CenteredNicePaper>
-    )
+    );
   }
 }
 
-export default withGridItem(ConsentForm, 'task')
+export default withGridItem(ConsentForm, "task");

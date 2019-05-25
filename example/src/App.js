@@ -1,13 +1,10 @@
 import React, { Component } from "react";
-import Experiment, {
-  registerAll,
-  registerTask,
-  createUpload
-} from "@blainelewis1/cefn";
+import Experiment, { registerTask } from "@hcikit/workflow";
+import { createUpload, registerAll } from "@hcikit/tasks";
 import TaskWithReducer, { reducer } from "./TaskWithReducer";
 import AWS from "aws-sdk";
 
-registerAll();
+registerAll(registerTask);
 registerTask("TaskWithReducer", TaskWithReducer, reducer);
 registerTask(
   "CustomTask",
@@ -36,26 +33,6 @@ const configuration = {
       task: "InformationScreen",
       shortcutEnabled: true,
       centerY: true,
-      content: "# Hello World"
-    },
-    {
-      task: "InformationScreen",
-      shortcutEnabled: true,
-      centerY: false,
-      centerX: false,
-      content: "# Hello World"
-    },
-    {
-      task: "InformationScreen",
-      shortcutEnabled: true,
-      centerY: false,
-      centerX: true,
-      content: "# Hello World"
-    },
-    {
-      task: "InformationScreen",
-      shortcutEnabled: true,
-      centerY: true,
       centerX: false,
       content: "# Hello World"
     },
@@ -67,7 +44,7 @@ const configuration = {
       task: "ConsentForm",
       letter: `# Consent Form
 
-The consent form uses markdown to create a letter, and it automatically generates as many checkboxes as needed to consent.`,
+    The consent form uses markdown to create a letter, and it automatically generates as many checkboxes as needed to consent.`,
       questions: [
         {
           label:

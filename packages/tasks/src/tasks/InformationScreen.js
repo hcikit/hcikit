@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
-import marked from 'marked'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import { CenteredNicePaper } from '../components'
-import PropTypes from 'prop-types'
-import { withGridItem } from '../core/App'
+import React, { useEffect } from "react";
+import marked from "marked";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import { CenteredNicePaper } from "../components";
+import PropTypes from "prop-types";
+import { withGridItem } from "../withGridItem";
 
 /**
  * Creates a screen with information or instructions and a continue button.
@@ -19,30 +19,30 @@ const InformationScreen = ({
   centerX,
   centerY,
   shortcutEnabled,
-  key = 'Enter'
+  key = "Enter"
 }) => {
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === key && shortcutEnabled) {
-        onAdvanceWorkflow()
+        onAdvanceWorkflow();
       }
     }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  })
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  });
 
   return (
     <CenteredNicePaper centerX={centerX} centerY={centerY}>
       <Typography dangerouslySetInnerHTML={{ __html: marked(content) }} />
       <br />
       {withContinue && (
-        <Button color='primary' onClick={onAdvanceWorkflow}>
+        <Button color="primary" onClick={onAdvanceWorkflow}>
           continue {shortcutEnabled && `(${key})`}
         </Button>
       )}
     </CenteredNicePaper>
-  )
-}
+  );
+};
 
 InformationScreen.propTypes = {
   centerX: PropTypes.bool,
@@ -53,6 +53,6 @@ InformationScreen.propTypes = {
   shortcutEnabled: PropTypes.bool,
   /* The KeyboardEvent.key value to use as a shortcut */
   key: PropTypes.string
-}
+};
 
-export default withGridItem(InformationScreen)
+export default withGridItem(InformationScreen);
