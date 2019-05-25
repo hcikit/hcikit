@@ -24,13 +24,19 @@ export const NicePaper = styled(Paper)`
 `
 
 export const FlexCenter = styled.div`
+  height: 100%;
+  width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: ${({ centerY }) => (centerY ? 'center' : 'flex-start')};
+  justify-content: ${({ centerX }) => (centerX ? 'center' : 'flex-start')};
 `
 
-export const CenteredNicePaper = ({ children }) => (
-  <FlexCenter>
+export const CenteredNicePaper = ({
+  children,
+  centerX = true,
+  centerY = false
+}) => (
+  <FlexCenter centerX={centerX} centerY={centerY}>
     <NicePaper>{children}</NicePaper>
   </FlexCenter>
 )
@@ -39,7 +45,9 @@ CenteredNicePaper.propTypes = {
   children: propTypes.oneOfType([
     propTypes.arrayOf(propTypes.node),
     propTypes.node
-  ]).isRequired
+  ]).isRequired,
+  centerX: propTypes.bool,
+  centerY: propTypes.bool
 }
 
 export const CenteredText = styled.div`
