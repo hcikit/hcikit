@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { CenteredPaper } from "@blainelewis1/cefn";
+import { CenteredNicePaper } from "@blainelewis1/cefn";
 import { Typography } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 
@@ -33,14 +33,14 @@ const TaskWithReducer = ({
   onAdvanceWorkflow
 }) => {
   return (
-    <CenteredPaper>
+    <CenteredNicePaper>
       <Typography variant="h1">{value}</Typography>
       <Button onClick={onDecrement}>-</Button>
       <Button onClick={onReset}>RESET</Button>
       <Button onClick={onIncrement}>+</Button>
       <br />
       <Button onClick={onAdvanceWorkflow}>Continue</Button>
-    </CenteredPaper>
+    </CenteredNicePaper>
   );
 };
 

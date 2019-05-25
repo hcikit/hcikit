@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { attempt } from './StimulusResponse.actions'
-import { CenteredPaper } from '../../components'
+import { CenteredNicePaper } from '../../components'
 import { ScreenFlash } from '../../components/ScreenFlash'
 import { LinearTimer } from '../../components/LinearTimer'
 import PropTypes from 'prop-types'
@@ -58,6 +58,7 @@ export function ImageStimulus({
   )
 }
 
+// TODO: this doesn't use the gridlayout yet
 export class StimulusResponse extends Component {
   static propTypes = {
     delayOnError: PropTypes.number,
@@ -97,10 +98,10 @@ export class StimulusResponse extends Component {
             />
           </React.Fragment>
         ) : (
-          <CenteredPaper width='inherit' axis='both'>
+          <CenteredNicePaper centerX centerY>
             <h1>Incorrect</h1>
             <LinearTimer length={this.props.delayOnError} />
-          </CenteredPaper>
+          </CenteredNicePaper>
         )}
       </div>
     )

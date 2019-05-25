@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { centered } from '../components'
 
 const Content = styled.span`
   display: table-cell;
@@ -19,7 +18,10 @@ const MouseCenterer = styled.div`
   cursor: default;
   font-weight: bold;
   display: table;
-  ${centered};
+  osition: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `
 
 export default class MouseCenteringTask extends Component {

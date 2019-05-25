@@ -33,6 +33,37 @@ const configuration = {
   participant: "yo",
   children: [
     {
+      task: "InformationScreen",
+      shortcutEnabled: true,
+      centerY: true,
+      content: "# Hello World"
+    },
+    {
+      task: "InformationScreen",
+      shortcutEnabled: true,
+      centerY: false,
+      centerX: false,
+      content: "# Hello World"
+    },
+    {
+      task: "InformationScreen",
+      shortcutEnabled: true,
+      centerY: false,
+      centerX: true,
+      content: "# Hello World"
+    },
+    {
+      task: "InformationScreen",
+      shortcutEnabled: true,
+      centerY: true,
+      centerX: false,
+      content: "# Hello World"
+    },
+    {
+      task: "DisplayText",
+      content: "Hello"
+    },
+    {
       task: "ConsentForm",
       letter: `# Consent Form
 
@@ -48,9 +79,7 @@ The consent form uses markdown to create a letter, and it automatically generate
     {
       task: "CustomTask"
     },
-    {
-      task: "InformationScreen"
-    },
+
     {
       task: "TaskWithReducer"
     }
