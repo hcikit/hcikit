@@ -25,13 +25,21 @@ export const reducer = (state = 0, action) => {
   }
 };
 
-const TaskWithReducer = ({ value, onIncrement, onDecrement, onReset }) => {
+const TaskWithReducer = ({
+  value,
+  onIncrement,
+  onDecrement,
+  onReset,
+  onAdvanceWorkflow
+}) => {
   return (
     <CenteredPaper>
       <Typography variant="h1">{value}</Typography>
       <Button onClick={onDecrement}>-</Button>
       <Button onClick={onReset}>RESET</Button>
       <Button onClick={onIncrement}>+</Button>
+      <br />
+      <Button onClick={onAdvanceWorkflow}>Continue</Button>
     </CenteredPaper>
   );
 };

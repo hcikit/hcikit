@@ -52,10 +52,6 @@ The consent form uses markdown to create a letter, and it automatically generate
       task: "InformationScreen"
     },
     {
-      task: "S3Upload",
-      filename: "hello"
-    },
-    {
       task: "TaskWithReducer"
     }
   ]
