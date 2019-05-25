@@ -4,7 +4,7 @@ import marked from 'marked'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 
-import { CenteredPaper } from '../layout'
+import { CenteredPaper } from '../components'
 
 export default ({ content, withContinue = true, onAdvanceWorkflow }) => {
   return (

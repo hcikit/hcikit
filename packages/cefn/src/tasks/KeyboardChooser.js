@@ -4,7 +4,7 @@ import { bottomRows } from '../menus/KeyMap/KeyMapConstants'
 import Button from '@material-ui/core/Button'
 
 import '../menus/KeyMap/KeyMap.css'
-import { CenteredPaper } from '../layout'
+import { CenteredPaper } from '../components'
 
 export class KeyboardChooser extends React.Component {
   render() {

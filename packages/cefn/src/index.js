@@ -29,21 +29,24 @@ export default class Experiment extends React.Component {
   }
 }
 
-export { registerTask }
+export { withGridItem } from './core/App'
+export { registerTask } from './core/Workflow'
+
 export * from './tasks'
 export * from './Utils'
 export * from './designUtils'
 
-export * from './layout'
+export * from './components'
 
 // TODO:  this might force them all to be imported.. Not sure how tree shaking works... This should probably be in a file all by itself.
+// TODO: this doesn't actually work for the reducer based ones
 export function registerAll() {
   Object.keys(tasks).forEach(key => registerTask(key, tasks[key]))
 }
 
 // TODO: background tasks would be nice. Could be like middleware, where you have some function called on the task object whenever we increment and then it gets the chance to increment. Could implement non linear workflows that way. Or filtering ones.
 
-// TODO: integration tests.
+// TODO: integration tests, ones that you can train to run a single task and string them together.
 
 // TODO: we could render the html using the "server" I think we could do it statically at build. And then we just call hydrate instead. This would improve the bundle size a lot.
 
@@ -53,3 +56,5 @@ export function registerAll() {
 
 // TODO: rethink how we do multiple sessions, especially when we start thinking about localstorage.
 // TODO: add helvetica back in as a font....
+
+// TODO: need a task that automatically logs when changing tabs

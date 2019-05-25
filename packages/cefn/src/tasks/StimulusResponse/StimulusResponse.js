@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { attempt } from './StimulusResponse.actions'
-import { CenteredPaper } from '../../layout'
-import { ScreenFlash } from '../../layout/ScreenFlash'
-import { LinearTimer } from '../../layout/LinearTimer'
+import { CenteredPaper } from '../../components'
+import { ScreenFlash } from '../../components/ScreenFlash'
+import { LinearTimer } from '../../components/LinearTimer'
 import PropTypes from 'prop-types'
 import { last } from 'lodash'
 

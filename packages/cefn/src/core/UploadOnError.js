@@ -1,5 +1,5 @@
 import React from 'react'
-import { CenteredPaper } from '../layout'
+import { CenteredPaper } from '../components'
 
 // const UploadToS3 = Loadable({
 // loader: () => import('../tasks/UploadToS3'),

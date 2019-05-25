@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { centered } from '../layout'
+import { centered } from '../components'
 
 const Content = styled.span`
   display: table-cell;

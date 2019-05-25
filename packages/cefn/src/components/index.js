@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 import Paper from '@material-ui/core/Paper'
+import React from 'react'
+import propTypes from 'prop-types'
 
 export const CenteredPaper = styled(Paper)`
   position: absolute;
@@ -13,6 +15,32 @@ export const CenteredPaper = styled(Paper)`
   width: ${props => props.width || '800px'};
   padding: 20px;
 `
+
+export const NicePaper = styled(Paper)`
+  max-width: 800px;
+  width: 100%;
+  margin: 20px;
+  padding: 20px;
+`
+
+export const FlexCenter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+export const CenteredNicePaper = ({ children }) => (
+  <FlexCenter>
+    <NicePaper>{children}</NicePaper>
+  </FlexCenter>
+)
+
+CenteredNicePaper.propTypes = {
+  children: propTypes.oneOfType([
+    propTypes.arrayOf(propTypes.node),
+    propTypes.node
+  ]).isRequired
+}
 
 export const CenteredText = styled.div`
   text-align: center;

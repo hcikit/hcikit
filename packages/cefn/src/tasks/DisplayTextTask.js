@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Button from '@material-ui/core/Button'
-import { CenteredDiv, CenteredText } from '../layout'
+import { CenteredDiv, CenteredText } from '../components'
 
 export default class DisplayTextTask extends Component {
   render() {

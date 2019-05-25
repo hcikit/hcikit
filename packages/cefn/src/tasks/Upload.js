@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Button from '@material-ui/core/Button'
 
-import { CenteredPaper, CenteredText } from '../layout'
+import { CenteredPaper, CenteredText } from '../components'
 import { withRawConfiguration } from '../core/Workflow'
 
 export const UploadDisplay = ({
