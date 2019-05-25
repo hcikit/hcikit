@@ -7,7 +7,7 @@
 ## Install
 
 ```bash
-npm install --save cefn
+npm install --save @blainelewis1/cefn
 ```
 
 ## Usage
@@ -62,7 +62,7 @@ npm install
 npm run build
 ```
 
-Then install the package from your local package to test. The package must be built.
+Then install the package from your local repository to test. The package must be built.
 
 ```bash
 cd my-project
@@ -70,6 +70,14 @@ npm install --save ../cefn
 ```
 
 If you're creating a new task then make sure you have the framework running with npm start to ensure it constantly gets compiled. There is also a working example in the example folder.
+
+Running examples is surprisingly complicated because we use peer dependencies. In order to run tests and build the styleguide we need to have our peer dependencies included as devDependencies. However, when you test the example using `npm install --save ../cefn` it uses the devDependencies and ends up with multiple copies of React which is very bad.
+
+The easiest way to overcome this is to first remove all `node_modules` in the root project. And then run `npm link --only=production` from inside the root folder. From the examples you and then `cd examples` and run `npm link @blainelewis1/cefn`
+
+This approach is problematic because you lose the ability to view the example while you actively develop.
+
+Another potential approach is to actually remove the dependencies from the example.
 
 ## Contributing
 
