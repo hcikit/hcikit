@@ -33,10 +33,17 @@ const configuration = {
   participant: "yo",
   children: [
     {
-      task: "CustomTask"
-    },
-    {
-      task: "TaskWithReducer"
+      task: "ConsentForm",
+      letter: `# Consent Form
+
+The consent form uses markdown to create a letter, and it automatically generates as many checkboxes as needed to consent.`,
+      questions: [
+        {
+          label:
+            "I consent of my free will to complete this example experiment",
+          required: true
+        }
+      ]
     },
     {
       task: "CustomTask"
@@ -49,7 +56,7 @@ const configuration = {
       filename: "hello"
     },
     {
-      task: "StimulusResponse"
+      task: "TaskWithReducer"
     }
   ]
 };
@@ -59,7 +66,6 @@ const S3Upload = createUpload(
 );
 
 registerTask("S3Upload", S3Upload);
-console.log(S3Upload);
 
 export function createS3Uploader(
   AWS_REGION,
