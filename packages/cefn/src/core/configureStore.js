@@ -79,5 +79,7 @@ export default Configuration => {
     }
   }
 
+  dispatch(log('start', Date.now(), false))
+
   return store
 }
