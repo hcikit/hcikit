@@ -5,367 +5,389 @@ import {
   log,
   logAction,
   getGlobalProps,
-  getComponentProps
-} from './Workflow'
-import deepFreeze from 'deep-freeze'
+  getComponentProps,
+  mergeArraysSpecial
+} from "./Workflow";
+import deepFreeze from "deep-freeze";
 
 const configuration = {
-  configprop: 'section',
-  nextLevel: 'sections',
+  configprop: "section",
+  nextLevel: "sections",
   index: 0,
   StimulusResponse: {
-    hello: 'world',
-    yolo: 'yoyololo'
+    hello: "world",
+    yolo: "yoyololo"
   },
   children: [
     {
-      nextLevel: 'blocks',
+      nextLevel: "blocks",
       index: 0,
-      sectionprop: 'section',
+      sectionprop: "section",
       children: [
         {
-          blockprop: 'section',
-          stimulus: 'overwritten',
-          nextLevel: 'trials',
+          blockprop: "section",
+          stimulus: "overwritten",
+          nextLevel: "trials",
           index: 0,
           children: [
             {
-              stimulus: 'bear'
+              stimulus: "bear"
             },
             {
-              stimulus: 'pig',
+              stimulus: "pig",
               StimulusResponse: {
-                hello: 'hello'
+                hello: "hello"
               }
             }
           ]
         },
         {
-          nextLevel: 'trials',
+          nextLevel: "trials",
           // Note: no index given
           children: [
             {
-              stimulus: 'bird'
+              stimulus: "bird"
             },
             {
-              stimulus: 'dog'
+              stimulus: "dog"
             }
           ]
         }
       ]
     }
   ]
-}
+};
 
-let config
+let config;
 
 beforeEach(() => {
-  config = JSON.parse(JSON.stringify(configuration))
-})
+  config = JSON.parse(JSON.stringify(configuration));
+});
 
-describe('advanceWorkflow', () => {
-  it('advances experiments', () => {
-    expect(getCurrentProps(config).stimulus).toEqual('bear')
-    advanceWorkflow(config)
+describe("mergeArraysSpecial", () => {
+  it("Overwrites arrays entirely.", () => {
+    let merged = mergeArraysSpecial(
+      { tasks: ["hello", "world"] },
+      { tasks: ["foo", "bar"] }
+    );
 
-    expect(getCurrentProps(config).stimulus).toEqual('pig')
+    expect(merged).toEqual({ tasks: ["foo", "bar"] });
+  });
+});
 
-    advanceWorkflow(config)
-    expect(getCurrentProps(config).stimulus).toEqual('bird')
+describe("advanceWorkflow", () => {
+  it("advances experiments", () => {
+    expect(getCurrentProps(config).stimulus).toEqual("bear");
+    advanceWorkflow(config);
 
-    advanceWorkflow(config)
-    expect(getCurrentProps(config).stimulus).toEqual('dog')
-  })
+    expect(getCurrentProps(config).stimulus).toEqual("pig");
 
-  it('ends gracefully', () => {
-    advanceWorkflow(config)
-    advanceWorkflow(config)
-    advanceWorkflow(config)
-    advanceWorkflow(config)
+    advanceWorkflow(config);
+    expect(getCurrentProps(config).stimulus).toEqual("bird");
 
-    expect(getCurrentProps(config)).toEqual(undefined)
-  })
+    advanceWorkflow(config);
+    expect(getCurrentProps(config).stimulus).toEqual("dog");
+  });
 
-  it('cant advance past end', () => {
-    advanceWorkflow(config)
-    advanceWorkflow(config)
-    advanceWorkflow(config)
-    advanceWorkflow(config)
-    advanceWorkflow(config)
+  it("ends gracefully", () => {
+    advanceWorkflow(config);
+    advanceWorkflow(config);
+    advanceWorkflow(config);
+    advanceWorkflow(config);
 
-    expect(getCurrentProps(config)).toEqual(undefined)
-  })
+    expect(getCurrentProps(config)).toEqual(undefined);
+  });
 
-  it('replaces the required objects', () => {
-    let c = { ...config }
-    advanceWorkflow(c)
+  it("cant advance past end", () => {
+    advanceWorkflow(config);
+    advanceWorkflow(config);
+    advanceWorkflow(config);
+    advanceWorkflow(config);
+    advanceWorkflow(config);
 
-    deepFreeze(config)
+    expect(getCurrentProps(config)).toEqual(undefined);
+  });
 
-    expect(config).not.toBe(c)
-    expect(config.children).not.toBe(c.children)
-    expect(config.children[1]).toBe(c.children[1])
-    expect(config.children[0]).not.toBe(c.children[0])
-    expect(config.children[0].children).not.toBe(c.children[0].children)
-    expect(config.children[0].children[1]).toBe(c.children[0].children[1])
-    expect(config.children[0].children[0]).not.toBe(c.children[0].children[0])
+  it("replaces the required objects", () => {
+    let c = { ...config };
+    advanceWorkflow(c);
+
+    deepFreeze(config);
+
+    expect(config).not.toBe(c);
+    expect(config.children).not.toBe(c.children);
+    expect(config.children[1]).toBe(c.children[1]);
+    expect(config.children[0]).not.toBe(c.children[0]);
+    expect(config.children[0].children).not.toBe(c.children[0].children);
+    expect(config.children[0].children[1]).toBe(c.children[0].children[1]);
+    expect(config.children[0].children[0]).not.toBe(c.children[0].children[0]);
     expect(config.children[0].children[0].children).not.toBe(
       c.children[0].children[0].children
-    )
+    );
     expect(config.children[0].children[0].children[1]).toBe(
       c.children[0].children[0].children[1]
-    )
+    );
     expect(config.children[0].children[0].children[0]).not.toBe(
       c.children[0].children[0].children[0]
-    )
-  })
-})
+    );
+  });
+});
 
-describe('getGlobalProps', () => {
-  it('ignores uppercase props', () => {
+describe("getGlobalProps", () => {
+  it("ignores uppercase props", () => {
     expect(getGlobalProps(config)).toEqual({
-      blockprop: 'section',
-      sectionprop: 'section',
-      configprop: 'section',
-      stimulus: 'bear'
-    })
-  })
-})
+      blockprop: "section",
+      sectionprop: "section",
+      configprop: "section",
+      stimulus: "bear"
+    });
+  });
+});
 
-describe('getComponentProps', () => {
-  it('ignores uppercase props', () => {
-    expect(getComponentProps('StimulusResponse', config)).toEqual({
-      hello: 'world',
-      yolo: 'yoyololo'
-    })
-  })
+describe("getComponentProps", () => {
+  it("ignores uppercase props", () => {
+    expect(getComponentProps("StimulusResponse", config)).toEqual({
+      hello: "world",
+      yolo: "yoyololo"
+    });
+  });
 
-  it('returns an object if there are no props', () => {
-    expect(getComponentProps('Stimulus', config)).toEqual({})
-  })
-})
+  it("returns an object if there are no props", () => {
+    expect(getComponentProps("Stimulus", config)).toEqual({});
+  });
+});
 
-describe('getCurrentProps', () => {
-  it('cascades properties from top to bottom', () => {
+describe("getCurrentProps", () => {
+  it("cascades properties from top to bottom", () => {
     expect(getCurrentProps(config)).toEqual({
-      blockprop: 'section',
-      sectionprop: 'section',
-      configprop: 'section',
-      stimulus: 'bear',
+      blockprop: "section",
+      sectionprop: "section",
+      configprop: "section",
+      stimulus: "bear",
       StimulusResponse: {
-        hello: 'world',
-        yolo: 'yoyololo'
+        hello: "world",
+        yolo: "yoyololo"
       }
-    })
-  })
+    });
+  });
 
-  it('handles object props properly', () => {
-    advanceWorkflow(config)
+  it("handles object props properly", () => {
+    advanceWorkflow(config);
     expect(getCurrentProps(config)).toEqual({
-      blockprop: 'section',
-      sectionprop: 'section',
-      configprop: 'section',
-      stimulus: 'pig',
+      blockprop: "section",
+      sectionprop: "section",
+      configprop: "section",
+      stimulus: "pig",
       StimulusResponse: {
-        hello: 'hello',
-        yolo: 'yoyololo'
+        hello: "hello",
+        yolo: "yoyololo"
       }
-    })
-  })
-})
+    });
+  });
 
-describe('log', () => {
-  it('logs to the correct place with timestamp', () => {
-    log(config, 'hello', 'world')
-    expect(config.children[0].children[0].children[0].hello).toEqual('world')
-  })
+  it("lists get over written", () => {
+    let config = {
+      tasks: ["hello", "world"],
+      children: [{ tasks: ["foo", "bar"] }]
+    };
+    let props = getCurrentProps(config);
 
-  it('logs with timestamp', () => {
-    let patch = Date.now
-    Date.now = () => 10
+    expect(props.tasks).toEqual(["foo", "bar"]);
+  });
+});
 
-    log(config, 'hello', 'world', true)
+describe("log", () => {
+  it("logs to the correct place with timestamp", () => {
+    log(config, "hello", "world");
+    expect(config.children[0].children[0].children[0].hello).toEqual("world");
+  });
+
+  it("logs with timestamp", () => {
+    let patch = Date.now;
+    Date.now = () => 10;
+
+    log(config, "hello", "world", true);
     expect(config.children[0].children[0].children[0].hello.value).toEqual(
-      'world'
-    )
+      "world"
+    );
 
     expect(config.children[0].children[0].children[0].hello.timestamp).toEqual(
       10
-    )
+    );
 
-    Date.now = patch
-  })
+    Date.now = patch;
+  });
 
-  it('logs after advancing correct place', () => {
-    advanceWorkflow(config)
-    log(config, 'hello', 'world', true)
+  it("logs after advancing correct place", () => {
+    advanceWorkflow(config);
+    log(config, "hello", "world", true);
     expect(config.children[0].children[0].children[1].hello.value).toEqual(
-      'world'
-    )
+      "world"
+    );
 
-    advanceWorkflow(config)
-    log(config, 'hello', 'world', true)
+    advanceWorkflow(config);
+    log(config, "hello", "world", true);
     expect(config.children[0].children[1].children[0].hello.value).toEqual(
-      'world'
-    )
+      "world"
+    );
 
-    advanceWorkflow(config)
-    log(config, 'hello', 'world', true)
+    advanceWorkflow(config);
+    log(config, "hello", "world", true);
     expect(config.children[0].children[1].children[1].hello.value).toEqual(
-      'world'
-    )
-  })
-  it('log replaces the required objects', () => {
-    let c = { ...config }
-    log(c, 'hello', 'world')
+      "world"
+    );
+  });
+  it("log replaces the required objects", () => {
+    let c = { ...config };
+    log(c, "hello", "world");
 
-    deepFreeze(config)
+    deepFreeze(config);
 
-    expect(config).not.toBe(c)
-    expect(config.children).not.toBe(c.children)
-    expect(config.children[1]).toBe(c.children[1])
-    expect(config.children[0]).not.toBe(c.children[0])
-    expect(config.children[0].children).not.toBe(c.children[0].children)
-    expect(config.children[0].children[1]).toBe(c.children[0].children[1])
-    expect(config.children[0].children[0]).not.toBe(c.children[0].children[0])
+    expect(config).not.toBe(c);
+    expect(config.children).not.toBe(c.children);
+    expect(config.children[1]).toBe(c.children[1]);
+    expect(config.children[0]).not.toBe(c.children[0]);
+    expect(config.children[0].children).not.toBe(c.children[0].children);
+    expect(config.children[0].children[1]).toBe(c.children[0].children[1]);
+    expect(config.children[0].children[0]).not.toBe(c.children[0].children[0]);
     expect(config.children[0].children[0].children).not.toBe(
       c.children[0].children[0].trials
-    )
+    );
     expect(config.children[0].children[0].children[1]).toBe(
       c.children[0].children[0].children[1]
-    )
+    );
     expect(config.children[0].children[0].children[0]).not.toBe(
       c.children[0].children[0].children[0]
-    )
-  })
-})
+    );
+  });
+});
 
-describe('logAction', () => {
-  it('logs to the correct place', () => {
-    logAction(config, 'hello')
+describe("logAction", () => {
+  it("logs to the correct place", () => {
+    logAction(config, "hello");
     expect(
       config.children[0].children[0].children[0].actions[0].action
-    ).toEqual('hello')
+    ).toEqual("hello");
 
-    logAction(config, 'world')
+    logAction(config, "world");
     expect(
       config.children[0].children[0].children[0].actions[0].action
-    ).toEqual('hello')
+    ).toEqual("hello");
     expect(
       config.children[0].children[0].children[0].actions[1].action
-    ).toEqual('world')
-  })
+    ).toEqual("world");
+  });
 
-  it('logs after advancing correct place', () => {
-    advanceWorkflow(config)
-    logAction(config, 'hello')
+  it("logs after advancing correct place", () => {
+    advanceWorkflow(config);
+    logAction(config, "hello");
     expect(
       config.children[0].children[0].children[1].actions[0].action
-    ).toEqual('hello')
+    ).toEqual("hello");
 
-    advanceWorkflow(config)
-    logAction(config, 'world')
+    advanceWorkflow(config);
+    logAction(config, "world");
     expect(
       config.children[0].children[1].children[0].actions[0].action
-    ).toEqual('world')
+    ).toEqual("world");
 
-    advanceWorkflow(config)
-    logAction(config, '!')
+    advanceWorkflow(config);
+    logAction(config, "!");
     expect(
       config.children[0].children[1].children[1].actions[0].action
-    ).toEqual('!')
-  })
-})
+    ).toEqual("!");
+  });
+});
 
-describe('flattenToLevel', () => {
-  it('flattens to one level', () => {
-    let flatConfigurations = flattenToLevel(config, 'sections')
-    expect(flatConfigurations).toHaveLength(1)
+describe("flattenToLevel", () => {
+  it("flattens to one level", () => {
+    let flatConfigurations = flattenToLevel(config, "sections");
+    expect(flatConfigurations).toHaveLength(1);
 
     const expected = {
-      configprop: 'section',
-      nextLevel: 'blocks',
+      configprop: "section",
+      nextLevel: "blocks",
       index: 0,
-      sectionprop: 'section',
+      sectionprop: "section",
       StimulusResponse: {
-        hello: 'world',
-        yolo: 'yoyololo'
+        hello: "world",
+        yolo: "yoyololo"
       },
       children: [
         {
-          blockprop: 'section',
-          stimulus: 'overwritten',
-          nextLevel: 'trials',
+          blockprop: "section",
+          stimulus: "overwritten",
+          nextLevel: "trials",
           index: 0,
           children: [
             {
-              stimulus: 'bear'
+              stimulus: "bear"
             },
             {
-              stimulus: 'pig',
+              stimulus: "pig",
               StimulusResponse: {
-                hello: 'hello'
+                hello: "hello"
               }
             }
           ]
         },
         {
-          nextLevel: 'trials',
+          nextLevel: "trials",
           // Note: no index given
           children: [
             {
-              stimulus: 'bird'
+              stimulus: "bird"
             },
             {
-              stimulus: 'dog'
+              stimulus: "dog"
             }
           ]
         }
       ]
-    }
-    expect(flatConfigurations[0]).toEqual(expected)
-  })
+    };
+    expect(flatConfigurations[0]).toEqual(expected);
+  });
 
-  it('flattens to multiple levels', () => {
-    let flatConfigurations = flattenToLevel(config, 'blocks')
-    expect(flatConfigurations).toHaveLength(2)
+  it("flattens to multiple levels", () => {
+    let flatConfigurations = flattenToLevel(config, "blocks");
+    expect(flatConfigurations).toHaveLength(2);
     expect(flatConfigurations[0]).toEqual({
-      configprop: 'section',
-      sectionprop: 'section',
-      blockprop: 'section',
-      stimulus: 'overwritten',
-      nextLevel: 'trials',
+      configprop: "section",
+      sectionprop: "section",
+      blockprop: "section",
+      stimulus: "overwritten",
+      nextLevel: "trials",
       index: 0,
       StimulusResponse: {
-        hello: 'world',
-        yolo: 'yoyololo'
+        hello: "world",
+        yolo: "yoyololo"
       },
       children: [
         {
-          stimulus: 'bear'
+          stimulus: "bear"
         },
         {
-          stimulus: 'pig',
+          stimulus: "pig",
           StimulusResponse: {
-            hello: 'hello'
+            hello: "hello"
           }
         }
       ]
-    })
-  })
+    });
+  });
 
   it("handles levels that aren't present", () => {
-    let flatConfigurations = flattenToLevel(config, 'thisIsNotTheNameOfALevel')
-    expect(flatConfigurations).toHaveLength(4)
+    let flatConfigurations = flattenToLevel(config, "thisIsNotTheNameOfALevel");
+    expect(flatConfigurations).toHaveLength(4);
     expect(flatConfigurations[0]).toEqual({
-      configprop: 'section',
-      sectionprop: 'section',
-      blockprop: 'section',
-      stimulus: 'bear',
+      configprop: "section",
+      sectionprop: "section",
+      blockprop: "section",
+      stimulus: "bear",
       StimulusResponse: {
-        hello: 'hello',
-        yolo: 'yoyololo'
+        hello: "hello",
+        yolo: "yoyololo"
       }
-    })
-  })
-})
+    });
+  });
+});

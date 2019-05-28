@@ -1,7 +1,18 @@
-import { connect } from 'react-redux'
-import { merge, pickBy } from 'lodash'
-let tasks = {}
-let reducers = {}
+import { connect } from "react-redux";
+import { mergeWith, pickBy } from "lodash";
+
+let tasks = {};
+let reducers = {};
+
+export function mergeArraysSpecial(object, source) {
+  return mergeWith(object, source, (value, srcValue) => {
+    if (Array.isArray(value)) {
+      return srcValue;
+    }
+  });
+}
+
+let merge = mergeArraysSpecial;
 
 /**
  *
@@ -13,40 +24,40 @@ let reducers = {}
  */
 export const registerTask = (taskName, task, reducer = undefined) => {
   // TODO: for a first pass of adding reducers, store them in an object for calling with  combine reducers
-  tasks[taskName] = task
+  tasks[taskName] = task;
   if (reducer) {
-    reducers[taskName] = reducer
+    reducers[taskName] = reducer;
   }
-}
+};
 
-export const getReducers = () => reducers
+export const getReducers = () => reducers;
 
 // TODO: consider using something that supports passing them in better, so that I can just pass a component in during a test without using workflow...
 export const getTask = (taskName, currentProps = {}) => {
-  if (typeof currentProps[taskName] === 'string') {
-    taskName = currentProps[taskName]
+  if (typeof currentProps[taskName] === "string") {
+    taskName = currentProps[taskName];
   }
 
-  return tasks[taskName]
-}
+  return tasks[taskName];
+};
 
 export const getComponentProps = (task, configuration) => {
-  return getCurrentProps(configuration)[task] || {}
-}
+  return getCurrentProps(configuration)[task] || {};
+};
 
 export const getGlobalProps = configuration => {
   return pickBy(
     getCurrentProps(configuration),
     (_, k) => k[0] !== k[0].toUpperCase()
-  )
-}
+  );
+};
 
 export const getAllPropsForComponent = (task, configuration) => {
   return merge(
     getGlobalProps(configuration),
     getComponentProps(task, configuration)
-  )
-}
+  );
+};
 
 // An experiment configuration object looks like this (for example):
 // let configuration = {
@@ -86,27 +97,27 @@ export const getAllPropsForComponent = (task, configuration) => {
 export function getCurrentProps(configuration, props = {}) {
   // Error catching: if we're finished the experiment, return undefined
   if (!configuration) {
-    return undefined
+    return undefined;
   }
 
   // Recursive case: return the union of the props at this level and the props at the next level
   // Prop values at this level are overwritten by values in the next level
-  if ('children' in configuration) {
-    const nextLevelIndex = configuration.index || 0
+  if ("children" in configuration) {
+    const nextLevelIndex = configuration.index || 0;
 
-    let properties = Object.assign({}, configuration)
+    let properties = Object.assign({}, configuration);
 
-    delete properties.nextLevel
-    delete properties.index
-    delete properties.children
-    delete properties.metadata
+    delete properties.nextLevel;
+    delete properties.index;
+    delete properties.children;
+    delete properties.metadata;
 
-    properties = merge(props, properties)
+    properties = merge(props, properties);
 
-    return getCurrentProps(configuration.children[nextLevelIndex], properties)
+    return getCurrentProps(configuration.children[nextLevelIndex], properties);
   } else {
     // Base case: return all of the props
-    return merge(props, configuration)
+    return merge(props, configuration);
   }
 }
 
@@ -115,28 +126,28 @@ export function getCurrentProps(configuration, props = {}) {
 export function advanceWorkflow(config) {
   // Error catching: if we went past the end of a list, don't keep advancing
   if (!config) {
-    return false
+    return false;
   }
 
   // Recursive case: move through this level's stage list
   // If we reach the end, return true so that the level above this knows we're finished
-  if ('children' in config) {
-    const nextLevelIndex = config.index || 0
+  if ("children" in config) {
+    const nextLevelIndex = config.index || 0;
     config.children = [
       ...config.children.slice(0, nextLevelIndex),
       {
         ...config.children[nextLevelIndex]
       },
       ...config.children.slice(nextLevelIndex + 1)
-    ]
+    ];
 
     if (advanceWorkflow(config.children[nextLevelIndex])) {
-      config.index = nextLevelIndex + 1
-      return config.index >= config.children.length
+      config.index = nextLevelIndex + 1;
+      return config.index >= config.children.length;
     }
   } else {
     // Base case: at a leaf node, we don't have a list of steps, so we're always done
-    return true
+    return true;
   }
 }
 
@@ -144,19 +155,20 @@ export function advanceWorkflow(config) {
 export function advanceWorkflowLevelTo(config, level, newValue) {
   // Error catching: if we went past the end of a list, don't keep advancing
   if (!config) {
-    return false
+    return false;
   }
 
-  if (config['nextLevel'] === level) {
-    config.index = newValue
+  if (config["nextLevel"] === level) {
+    config.index = newValue;
   } else if (config.children) {
-    return { ...advanceWorkflowLevelTo(config.children[config.index]) }
+    return { ...advanceWorkflowLevelTo(config.children[config.index]) };
   }
 }
 
+// TODO: this overwrites when things are logged multiple times
 export function log(config, key, value, withTimeStamp) {
-  while ('children' in config) {
-    const nextLevelIndex = config.index || 0
+  while ("children" in config) {
+    const nextLevelIndex = config.index || 0;
 
     config.children = [
       ...config.children.slice(0, nextLevelIndex),
@@ -164,22 +176,22 @@ export function log(config, key, value, withTimeStamp) {
         ...config.children[nextLevelIndex]
       },
       ...config.children.slice(nextLevelIndex + 1)
-    ]
-    config = config.children[nextLevelIndex]
+    ];
+    config = config.children[nextLevelIndex];
   }
   if (withTimeStamp) {
     config[key] = {
       value: value,
       timestamp: Date.now()
-    }
+    };
   } else {
-    config[key] = value
+    config[key] = value;
   }
 }
 
 export function logAction(config, action) {
-  while ('children' in config) {
-    const nextLevelIndex = config.index || 0
+  while ("children" in config) {
+    const nextLevelIndex = config.index || 0;
 
     config.children = [
       ...config.children.slice(0, nextLevelIndex),
@@ -187,12 +199,12 @@ export function logAction(config, action) {
         ...config.children[nextLevelIndex]
       },
       ...config.children.slice(nextLevelIndex + 1)
-    ]
-    config = config.children[nextLevelIndex]
+    ];
+    config = config.children[nextLevelIndex];
   }
 
   if (!config.actions) {
-    config.actions = []
+    config.actions = [];
   }
   config.actions = [
     ...config.actions,
@@ -200,50 +212,50 @@ export function logAction(config, action) {
       action: action,
       timestamp: Date.now()
     }
-  ]
+  ];
 }
 
 // Flatten the experiment props down to a given level.
 // Returns a list of all flattened configurations.
 export function flattenToLevel(config, level) {
-  if ('children' in config) {
+  if ("children" in config) {
     // Find our properties
-    let properties = Object.assign({}, config)
-    delete properties.children
-    delete properties.nextLevel
-    delete properties.index
+    let properties = Object.assign({}, config);
+    delete properties.children;
+    delete properties.nextLevel;
+    delete properties.index;
 
     // Get the flattened lists
-    let flattenedConfigList
+    let flattenedConfigList;
     if (config.nextLevel === level) {
       // Base case: we're at the right level
       // Just grab the list of configs below us
-      flattenedConfigList = config.children
+      flattenedConfigList = config.children;
     } else {
       // Recursive case: go deeper
-      flattenedConfigList = []
+      flattenedConfigList = [];
       config.children.forEach(subConfig =>
         flattenedConfigList.push(...flattenToLevel(subConfig, level))
-      )
+      );
     }
 
     // Apply our properties
     return flattenedConfigList.map(subConfig => {
-      let propertiesClone = Object.assign({}, properties)
-      return merge(propertiesClone, subConfig)
-    })
+      let propertiesClone = Object.assign({}, properties);
+      return merge(propertiesClone, subConfig);
+    });
   } else {
     // Edge case: we've run out of levels to flatten
     // Return a list with the entire config in it
-    return [config]
+    return [config];
   }
 }
 
 export const withConfigAsProps = connect(state => {
-  let configuration = getCurrentProps(state.Configuration)
-  return configuration
-})
+  let configuration = getCurrentProps(state.Configuration);
+  return configuration;
+});
 
 export const withRawConfiguration = connect(state => {
-  return { configuration: state.Configuration }
-})
+  return { configuration: state.Configuration };
+});
