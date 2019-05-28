@@ -1,46 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
+import { withGridItem } from "../withGridItem";
 
-export default class extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
+const GoogleFormQuestionnaire = ({
+  prefillParticipant,
+  formId,
+  participant
+}) => {
+  let src = `https://docs.google.com/forms/d/e/${formId}/viewform?embedded=true`;
+
+  const [hasLoaded, setHasLoaded] = useState();
+
+  if (prefillParticipant) {
+    src = `${src}&${prefillParticipant}=${participant}`;
   }
 
-  handleLoad = e => {
-    if (this.state.hasLoaded) {
+  function handleLoad() {
+    if (hasLoaded) {
       this.props.onAdvanceWorkflow();
     } else {
-      this.setState({ hasLoaded: true });
+      setHasLoaded(true);
     }
-  };
-
-  render() {
-    let { prefillParticipant, formId, participant } = this.props;
-
-    let src = `https://docs.google.com/forms/d/e/${formId}/viewform?embedded=true`;
-
-    if (prefillParticipant) {
-      src = `${src}&${prefillParticipant}=${participant}`;
-    }
-
-    return (
-      <iframe
-        style={{
-          width: "100%",
-          height: "100vh"
-        }}
-        ref="iframe"
-        title="Questionnaire"
-        src={src}
-        frameBorder="0"
-        marginHeight="0"
-        marginWidth="0"
-        onLoad={this.handleLoad}
-      >
-        Loading...
-      </iframe>
-    );
   }
-}
+  return (
+    <iframe
+      style={{
+        width: "100%",
+        height: "100vh"
+      }}
+      // ref='iframe'
+      title="Questionnaire"
+      src={src}
+      frameBorder="0"
+      marginHeight="0"
+      marginWidth="0"
+      onLoad={handleLoad}
+    >
+      Loading...
+    </iframe>
+  );
+};
 
-//entry.812855120
+export default withGridItem(GoogleFormQuestionnaire);
