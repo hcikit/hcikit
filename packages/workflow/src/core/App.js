@@ -17,9 +17,9 @@ const DefaultGridLayout = styled.div`
   grid-template-columns: 1fr;
   grid-template-rows: min-content 1fr min-content;
   grid-template-areas:
-    "header header header"
-    "task task task"
-    "footer footer footer";
+    "header"
+    "task"
+    "footer";
 `;
 
 export const App = ({
@@ -59,8 +59,8 @@ export const App = ({
               onLog={onLog}
               onEditConfig={onEditConfig}
               getTask={getTask}
-              {...getComponentProps(task, configuration)}
               {...globalProps}
+              {...getComponentProps(task, configuration)}
             />
           );
         })}

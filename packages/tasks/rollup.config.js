@@ -56,8 +56,6 @@ export default {
           "max"
         ],
 
-        "../../node_modules/react-dom/index.js": ["unstable_batchedUpdates"],
-
         "../../node_modules/react-redux/node_modules/react-is/index.js": [
           "isValidElementType",
           "isContextConsumer"
@@ -68,15 +66,6 @@ export default {
           "isElement",
           "ForwardRef"
         ]
-        // 'node_modules/@material-ui/core/styles/index.js': [
-        //   'createGenerateClassName',
-        //   'createMuiTheme',
-        //   'createStyles',
-        //   'jssPreset',
-        //   'MuiThemeProvider',
-        //   'withStyles',
-        //   'withTheme'
-        // ]
       }
     })
   ]
