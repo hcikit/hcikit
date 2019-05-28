@@ -12,6 +12,7 @@ let increment = () => ({ type: INCREMENT });
 let decrement = () => ({ type: DECREMENT });
 let reset = () => ({ type: RESET });
 
+// TODO: Match to docs
 export const reducer = (state = 0, action) => {
   switch (action.type) {
     case INCREMENT:
@@ -27,17 +28,17 @@ export const reducer = (state = 0, action) => {
 
 const TaskWithReducer = ({
   value,
-  onIncrement,
-  onDecrement,
-  onReset,
+  increment,
+  decrement,
+  reset,
   onAdvanceWorkflow
 }) => {
   return (
     <CenteredNicePaper>
       <Typography variant="h1">{value}</Typography>
-      <Button onClick={onDecrement}>-</Button>
-      <Button onClick={onReset}>RESET</Button>
-      <Button onClick={onIncrement}>+</Button>
+      <Button onClick={decrement}>-</Button>
+      <Button onClick={reset}>RESET</Button>
+      <Button onClick={increment}>+</Button>
       <br />
       <Button onClick={onAdvanceWorkflow}>Continue</Button>
     </CenteredNicePaper>
@@ -50,9 +51,9 @@ export default withGridItem(
       value: state.TaskWithReducer
     }),
     {
-      onIncrement: increment,
-      onDecrement: decrement,
-      onReset: reset
+      increment,
+      decrement,
+      reset
     }
   )(TaskWithReducer)
 );
