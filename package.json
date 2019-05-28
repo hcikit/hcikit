@@ -7,7 +7,6 @@
     "example"
   ],
   "devDependencies": {
-    "lerna": "^3.14.1",
     "@babel/core": "^7.4.4",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/plugin-proposal-decorators": "^7.4.4",
@@ -28,6 +27,7 @@
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.5",
     "cross-env": "^5.2.0",
     "deep-freeze": "0.0.1",
@@ -41,7 +41,10 @@
     "eslint-plugin-promise": "^4.1.1",
     "eslint-plugin-react": "^7.13.0",
     "eslint-plugin-standard": "^4.0.0",
+    "jest": "^24.8.0",
+    "lerna": "^3.14.1",
     "node-eval": "^2.0.0",
+    "react-test-renderer": "^16.8.6",
     "rollup": "^1.11.3",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^9.3.4",
