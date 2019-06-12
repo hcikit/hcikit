@@ -1,7 +1,6 @@
 {
   "name": "cefn-example",
   "homepage": "https://blainelewis1.github.io/cefn",
-  "version": "0.0.0",
   "license": "MIT",
   "private": true,
   "dependencies": {
