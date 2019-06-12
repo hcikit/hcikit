@@ -45,5 +45,6 @@
     "lodash": "^4.17.11",
     "marked": "^0.6.2",
     "prop-types": "^15.7.2"
-  }
+  },
+  "gitHead": "5cfb14b397c894b08e9afff3262ef9377ccdacc7"
 }

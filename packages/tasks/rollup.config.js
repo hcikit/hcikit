@@ -53,7 +53,8 @@ export default {
           "flatten",
           "flatMap",
           "zip",
-          "max"
+          "max",
+          "mergeWith"
         ],
 
         "../../node_modules/react-redux/node_modules/react-is/index.js": [
