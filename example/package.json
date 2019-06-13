@@ -1,20 +1,21 @@
 {
-  "name": "cefn-example",
-  "homepage": "https://blainelewis1.github.io/cefn",
+  "name": "@hcikit/example",
+  "version": "0.0.1",
+  "homepage": "https://hcikit.github.io",
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "aws-sdk": "^2.450.0",
-    "@hcikit/workflow": "^0.1.0",
-    "@hcikit/tasks": "^0.1.0",
-    "@material-ui/core": "^3.9.3",
+    "aws-sdk": "^2.474.0",
+    "@hcikit/workflow": "^0.1.1",
+    "@hcikit/tasks": "^0.1.1",
+    "@material-ui/core": "^4.1.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-redux": "^7.0.3",
-    "styled-components": "^4.2.0"
+    "react-redux": "^7.1.0",
+    "styled-components": "^4.3.1"
   },
   "devDependencies": {
-    "react-scripts": "^3.0.0"
+    "react-scripts": "^3.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

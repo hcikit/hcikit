@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { mergeWith, pickBy } from "lodash";
+import { mergeWith, pickBy } from "lodash-es";
 
 let tasks = {};
 let reducers = {};

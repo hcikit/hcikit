@@ -49,6 +49,7 @@ export const App = ({
           );
 
           if (!Task) {
+            // TODO: Better error messaging here.
             console.log(`Component ${task} isn't registered.`);
             return <div>Sorry an error occurred!!</div>;
           }

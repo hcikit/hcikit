@@ -1,5 +1,5 @@
 import React from "react";
-import { range, noop } from "lodash";
+import { range, noop } from "lodash-es";
 import styled from "styled-components";
 
 const Target = styled.circle`

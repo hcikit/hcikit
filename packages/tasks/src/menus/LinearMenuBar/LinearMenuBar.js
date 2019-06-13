@@ -5,7 +5,7 @@ import Shortcuts from "../Shortcuts/Shortcuts";
 import { connect } from "react-redux";
 import { openAllMenus, openMenu, closeAllMenus } from "./LinearMenuBar.actions";
 import { menuToCommandHierarchy } from "../Shortcuts/CommandHierarchies";
-import { noop } from "lodash";
+import { noop } from "lodash-es";
 
 const LinearItem = ({ command, shortcut, onClick }) => {
   return (

@@ -36,27 +36,6 @@ export default {
     json(),
     commonjs({
       namedExports: {
-        "../../node_modules/lodash/lodash.js": [
-          "throttle",
-          "uniqBy",
-          "filter",
-          "map",
-          "isEqual",
-          "mapValues",
-          "noop",
-          "last",
-          "sum",
-          "pickBy",
-          "merge",
-          "range",
-          "pick",
-          "flatten",
-          "flatMap",
-          "zip",
-          "max",
-          "mergeWith"
-        ],
-
         "../../node_modules/react-redux/node_modules/react-is/index.js": [
           "isValidElementType",
           "isContextConsumer"
@@ -68,6 +47,7 @@ export default {
           "ForwardRef"
         ]
       }
+      // include: [/node_modules\/prop-types/]
     })
   ]
 };

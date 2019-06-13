@@ -5,7 +5,7 @@ import {
   RESET_SHORTCUTS,
   DELAY_OVER
 } from "./Shortcuts.actions";
-import { some } from "lodash";
+import { some } from "lodash-es";
 
 export default (
   state = { modifiersPressed: {}, path: [], delayTimeOver: false },

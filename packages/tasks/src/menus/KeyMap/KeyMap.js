@@ -6,7 +6,7 @@ import { chordArrayToString } from "../Shortcuts/ShortcutUtils";
 import { connect } from "react-redux";
 import { layouts } from "./KeyMapConstants";
 import { resetShortcuts } from "../Shortcuts/Shortcuts.actions";
-import { throttle, noop } from "lodash";
+import { throttle, noop } from "lodash-es";
 import "./KeyMap.css";
 
 //TODOLATER: Include command icon?
