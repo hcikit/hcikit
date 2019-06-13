@@ -1,6 +1,6 @@
 {
   "name": "@hcikit/tasks",
-  "version": "0.1.2",
+  "version": "0.0.0",
   "description": "A set of components that act as experimental tasks for running HCI experiments",
   "author": "blainelewis1",
   "license": "MIT",
@@ -8,6 +8,9 @@
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist"
   ],
@@ -46,5 +49,5 @@
     "marked": "^0.6.2",
     "prop-types": "^15.7.2"
   },
-  "gitHead": "5cfb14b397c894b08e9afff3262ef9377ccdacc7"
+  "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86"
 }

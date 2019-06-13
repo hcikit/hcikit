@@ -1,6 +1,6 @@
 {
   "name": "@hcikit/workflow",
-  "version": "0.1.2",
+  "version": "0.0.0",
   "description": "A workflow manager for running experiments using React.",
   "author": "blainelewis1",
   "license": "MIT",
@@ -8,6 +8,9 @@
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist"
   ],
@@ -51,5 +54,5 @@
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.3"
   },
-  "gitHead": "5cfb14b397c894b08e9afff3262ef9377ccdacc7"
+  "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86"
 }
