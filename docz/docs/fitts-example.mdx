@@ -1,0 +1,9 @@
+# Fitts Example
+
+import Experiment, { registerTask } from "@hcikit/workflow";
+import { ConsentForm } from "@hcikit/tasks";
+
+<Props of={ConsentForm} />
+
+<Fitts width={10} numTargets={9} distance={30} targetIndex={1} />
+{/* <Experiment configuration={{ task: Fitts }} /> */}

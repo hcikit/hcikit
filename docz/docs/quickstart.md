@@ -4,7 +4,7 @@ HCI Kit is super easy to get started. We'll cover how to create your first exper
 
 First, make sure you've installed node so we can use NPM.
 
-To make things really easy we built a version of `create-react-app` but for hci experiments called. Simply run:
+To make things really easy we built a version of `create-react-app` but for hci experiments. Simply run:
 
 ```
 npx create-react-app my-project --scripts-version @hcikit/hci-scripts
@@ -97,6 +97,6 @@ Task and children are both special properties in the configuration. Children let
 }
 ```
 
-Task tells the Workflow which component it should render based on the string sent to registerTask.
+Task tells the Workflow which component it should render based on the string sent to registerTask. All leaf nodes need to have the task property set.
 
 The configuration understands inheritance, properties pass downwards automatically, but the lower properties override the ones above.
