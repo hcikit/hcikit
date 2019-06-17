@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-// import marked from "marked";
 import Markdown from "markdown-to-jsx";
 
 import Typography from "@material-ui/core/Typography";
