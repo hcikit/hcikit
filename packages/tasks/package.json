@@ -35,20 +35,25 @@
       "!src/experiments/*",
       "!src/setupTests.js",
       "!src/**/*.stories.js"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/(?!lodash-es).+\\.js$"
+    ],
+    "setupFilesAfterEnv": [
+      "./setupTests.js"
     ]
   },
   "peerDependencies": {
-    "@hcikit/workflow": "^0.1.0",
+    "@hcikit/workflow": "^0.0.0",
     "@material-ui/core": "^3.9.3",
     "react": "^16.8.6",
     "react-redux": "^7.0.3",
     "styled-components": "^4.2.0"
   },
   "dependencies": {
-    "classnames": "^2.2.6",
     "lodash-es": "^4.17.11",
     "marked": "^0.6.2",
-    "prop-types": "^15.7.2"
+    "prop-types": "^15.6.0"
   },
   "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86"
 }
