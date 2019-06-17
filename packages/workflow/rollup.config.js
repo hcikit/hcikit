@@ -47,7 +47,6 @@ export default {
           "ForwardRef"
         ]
       }
-      // include: [/node_modules\/prop-types/]
     })
   ]
 };
