@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
-import marked from "marked";
+// import marked from "marked";
+import Markdown from "markdown-to-jsx";
+
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { CenteredNicePaper } from "../components";
@@ -33,7 +35,9 @@ const InformationScreen = ({
 
   return (
     <CenteredNicePaper centerX={centerX} centerY={centerY}>
-      <Typography dangerouslySetInnerHTML={{ __html: marked(content) }} />
+      <Typography>
+        <Markdown children={content} />{" "}
+      </Typography>
       <br />
       {withContinue && (
         <Button color="primary" onClick={onAdvanceWorkflow}>

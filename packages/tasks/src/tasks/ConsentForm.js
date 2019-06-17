@@ -1,5 +1,6 @@
 import React from "react";
-import marked from "marked";
+import Markdown from "markdown-to-jsx";
+
 import Button from "@material-ui/core/Button";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -59,7 +60,9 @@ class ConsentForm extends React.Component {
 
     return (
       <CenteredNicePaper>
-        <Typography dangerouslySetInnerHTML={{ __html: marked(letter) }} />
+        <Typography>
+          <Markdown children={letter} />{" "}
+        </Typography>
         <FormControl required error={error}>
           <FormGroup>
             {questions.map(question => {

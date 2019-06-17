@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "lodash-es": "^4.17.11",
-    "marked": "^0.6.2",
+    "markdown-to-jsx": "^6.10.2",
     "prop-types": "^15.6.0"
   },
   "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86"
