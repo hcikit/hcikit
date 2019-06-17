@@ -26,21 +26,36 @@ export const reducer = (state = 0, action) => {
   }
 };
 
-const TaskWithReducer = ({
+const IncrementTask = ({
+  desiredValue,
   value,
   increment,
   decrement,
   reset,
   onAdvanceWorkflow
 }) => {
+  function checkAnswer() {
+    if (value === desiredValue) {
+      onAdvanceWorkflow();
+    }
+  }
+
+  console.log(value);
+
   return (
     <CenteredNicePaper>
-      <Typography variant="h1">{value}</Typography>
-      <Button onClick={decrement}>-</Button>
-      <Button onClick={reset}>RESET</Button>
-      <Button onClick={increment}>+</Button>
-      <br />
-      <Button onClick={onAdvanceWorkflow}>Continue</Button>
+      <div style={{ textAlign: "center" }}>
+        <Typography variant="h1">{value}</Typography>
+        <Button onClick={decrement}>-</Button>
+        <Button onClick={reset}>RESET</Button>
+        <Button onClick={increment}>+</Button>
+        <br />
+        <Typography variant="body1">
+          Set the value to {desiredValue} and then continue.
+        </Typography>
+        <br />
+        <Button onClick={checkAnswer}>Continue</Button>
+      </div>
     </CenteredNicePaper>
   );
 };
@@ -48,12 +63,12 @@ const TaskWithReducer = ({
 export default withGridItem(
   connect(
     state => ({
-      value: state.TaskWithReducer
+      value: state.IncrementTask
     }),
     {
       increment,
       decrement,
       reset
     }
-  )(TaskWithReducer)
+  )(IncrementTask)
 );
