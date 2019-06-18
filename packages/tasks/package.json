@@ -1,6 +1,6 @@
 {
   "name": "@hcikit/tasks",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A set of components that act as experimental tasks for running HCI experiments",
   "author": "blainelewis1",
   "license": "MIT",

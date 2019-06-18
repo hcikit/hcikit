@@ -1,6 +1,6 @@
 {
   "name": "@hcikit/docz",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "index.js",
   "license": "MIT",
   "private": true,
@@ -9,9 +9,9 @@
     "docz:build": "docz build"
   },
   "dependencies": {
+    "@hcikit/tasks": "^0.1.0",
+    "@hcikit/workflow": "^0.1.0",
     "docz": "^1.2.0",
-    "docz-theme-default": "^1.2.0",
-    "@hcikit/tasks": "^0.0.0",
-    "@hcikit/workflow": "^0.0.0"
+    "docz-theme-default": "^1.2.0"
   }
 }
