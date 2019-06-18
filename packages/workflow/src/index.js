@@ -4,15 +4,11 @@ import PropTypes from "prop-types";
 
 import App from "./core/App";
 import configureStore from "./core/configureStore";
-
 let store;
 /**
  * This component takes a configuration that allows you to run an experiment.
  */
 export default class Experiment extends React.Component {
-  static propTypes = {
-    configuration: PropTypes.object
-  };
   componentWillMount() {
     // TODO: if we use uploading as middleware we could pass as a prop
     store = configureStore(this.props.configuration);
@@ -26,6 +22,10 @@ export default class Experiment extends React.Component {
     );
   }
 }
+
+Experiment.propTypes = {
+  configuration: PropTypes.object
+};
 
 export { registerTask, withRawConfiguration } from "./core/Workflow";
 

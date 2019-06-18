@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import Button from '@material-ui/core/Button'
+import React, { Component } from "react";
+import { Button } from "@material-ui/core";
 
 export default class Buttons extends Component {
   render() {
@@ -7,6 +7,6 @@ export default class Buttons extends Component {
       <Button id={item} key={item} onClick={() => this.props.onResponse(item)}>
         {item}
       </Button>
-    ))
+    ));
   }
 }

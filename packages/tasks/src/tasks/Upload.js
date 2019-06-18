@@ -1,8 +1,6 @@
 import React from "react";
 
-import Typography from "@material-ui/core/Typography";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Button from "@material-ui/core/Button";
+import { Button, Typography, CircularProgress } from "@material-ui/core";
 import { withRawConfiguration } from "@hcikit/workflow";
 
 import { CenteredNicePaper, CenteredText } from "../components";

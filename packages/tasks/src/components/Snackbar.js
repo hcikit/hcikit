@@ -1,12 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "@material-ui/core/Button";
+import {
+  Button,
+  Snackbar,
+  SnackbarContent,
+  Icon,
+  IconButton
+} from "@material-ui/core";
 import green from "@material-ui/core/colors/green";
 import amber from "@material-ui/core/colors/amber";
-import Snackbar from "@material-ui/core/Snackbar";
-import SnackbarContent from "@material-ui/core/SnackbarContent";
+
 import { withStyles } from "@material-ui/core/styles";
-import { Icon, IconButton } from "@material-ui/core";
 
 const variantIcon = {
   success: "check circle",

@@ -1,14 +1,16 @@
 import React from "react";
 import Markdown from "markdown-to-jsx";
 
-import Button from "@material-ui/core/Button";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Typography from "@material-ui/core/Typography";
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  FormControl,
+  FormHelperText,
+  FormGroup,
+  Typography
+} from "@material-ui/core";
 
-import FormGroup from "@material-ui/core/FormGroup";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
 import { CenteredNicePaper } from "../components";
 import PropTypes from "prop-types";
 import { withGridItem } from "../withGridItem";
@@ -19,19 +21,6 @@ import { withGridItem } from "../withGridItem";
  * This component creates a consent form, it allows for multiple consent questions and renders the letter in markdown.
  */
 class ConsentForm extends React.Component {
-  static propTypes = {
-    /** A string, possible in Markdown, describing what the user is participating to. */
-    letter: PropTypes.string,
-    /** Each question has a label and a boolean if it is required to continue. */
-    questions: PropTypes.arrayOf(
-      PropTypes.shape({
-        required: PropTypes.bool,
-        label: PropTypes.string
-      })
-    ),
-    /**  @ignore */
-    onAdvanceWorkflow: PropTypes.func
-  };
   constructor(props) {
     super(props);
     this.state = {};
@@ -97,5 +86,19 @@ class ConsentForm extends React.Component {
     );
   }
 }
+
+ConsentForm.propTypes = {
+  /** A string, possible in Markdown, describing what the user is participating to. */
+  letter: PropTypes.string,
+  /** Each question has a label and a boolean if it is required to continue. */
+  questions: PropTypes.arrayOf(
+    PropTypes.shape({
+      required: PropTypes.bool,
+      label: PropTypes.string
+    })
+  ),
+  /**  @ignore */
+  onAdvanceWorkflow: PropTypes.func
+};
 
 export default withGridItem(ConsentForm, "task");

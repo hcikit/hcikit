@@ -1,8 +1,6 @@
 import React from "react";
-import Stepper from "@material-ui/core/Stepper";
-import Step from "@material-ui/core/Step";
-import StepLabel from "@material-ui/core/StepLabel";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import { Stepper, Step, StepLabel, LinearProgress } from "@material-ui/core";
+
 import { map, sum } from "lodash-es";
 import { connect } from "react-redux";
 import styled from "styled-components";

@@ -60,19 +60,6 @@ export function ImageStimulus({
 
 // TODO: this doesn't use the gridlayout yet
 export class StimulusResponse extends Component {
-  static propTypes = {
-    delayOnError: PropTypes.number,
-    flashOnError: PropTypes.bool,
-    continueOnError: PropTypes.bool,
-    responseInput: PropTypes.oneOfType([PropTypes.element, PropTypes.string])
-      .isRequired
-  };
-  static defaultProps = {
-    continueOnError: true,
-    flashOnError: false,
-    delayOnError: 0
-  };
-
   render() {
     let ResponseInput = this.props.getTask("ResponseInput");
 
@@ -135,6 +122,19 @@ export class StimulusResponse extends Component {
     this.forceUpdate();
   };
 }
+
+StimulusResponse.propTypes = {
+  delayOnError: PropTypes.number,
+  flashOnError: PropTypes.bool,
+  continueOnError: PropTypes.bool,
+  responseInput: PropTypes.oneOfType([PropTypes.element, PropTypes.string])
+    .isRequired
+};
+StimulusResponse.defaultProps = {
+  continueOnError: true,
+  flashOnError: false,
+  delayOnError: 0
+};
 
 export const ConnectedStimulusResponse = connect(
   state => {
