@@ -8,19 +8,36 @@ import {
   getAllPropsForComponent
 } from "./Workflow";
 import { connect } from "react-redux";
-import styled from "styled-components";
 
-const DefaultGridLayout = styled.div`
-  display: grid;
-  width: 100vw;
-  height: 100vh;
-  grid-template-columns: 1fr;
-  grid-template-rows: min-content 1fr min-content;
-  grid-template-areas:
-    "header"
-    "task"
-    "footer";
-`;
+// const DefaultGridLayout = styled.div`
+//   display: grid;
+//   width: 100vw;
+//   height: 100vh;
+//   grid-template-columns: 1fr;
+//   grid-template-rows: min-content 1fr min-content;
+//   grid-template-areas:
+//     "header"
+//     "task"
+//     "footer";
+// `;
+
+const DefaultGridLayout = () => {
+  return (
+    <div
+      style={{
+        display: grid,
+        width: "100vw",
+        height: "100vh",
+        gridTemplateColumns: "1fr",
+        gridTemplateRows: "min-content 1fr min-content",
+        gridTemplateAreas: `
+      "header"
+      "task"
+      "footer"`
+      }}
+    />
+  );
+};
 
 export const App = ({
   task,
