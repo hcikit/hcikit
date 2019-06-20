@@ -20,7 +20,7 @@ import { withGridItem } from "../withGridItem";
 /**
  * This component creates a consent form, it allows for multiple consent questions and renders the letter in markdown.
  */
-class ConsentForm extends React.Component {
+export class ConsentForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};

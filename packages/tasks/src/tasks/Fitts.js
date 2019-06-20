@@ -1,6 +1,8 @@
 import React from "react";
 import { range, noop } from "lodash-es";
 import styled from "styled-components";
+import PropTypes from "prop-types";
+import { withGridItem } from "../withGridItem";
 
 const Target = styled.circle`
   fill: ${({ active }) => (active ? "#FF8080" : "#ccc")};
@@ -8,14 +10,14 @@ const Target = styled.circle`
 `;
 
 const FullSVG = styled.svg`
-  position: fixed;
+  ${"" /* position: fixed;
   top: 0;
-  left: 0;
+  left: 0; */}
   height: 100%;
   width: 100%;
 `;
 
-export default ({
+const Fitts = ({
   numTargets,
   distance,
   width,
@@ -39,10 +41,11 @@ export default ({
         i = (targetIndex + i + 1) % numTargets;
         let active = i === targetIndex;
         let rotation = theta * i;
-
+        let id = `fitts-${idPrefix}-${i}`;
         return (
           <Target
-            id={`fitts-${idPrefix}-${i}`}
+            id={id}
+            key={id}
             cx={Math.cos(rotation) * radius}
             cy={Math.sin(rotation) * radius}
             r={width}
@@ -54,3 +57,15 @@ export default ({
     </FullSVG>
   );
 };
+
+Fitts.propTypes = {
+  numTargets: PropTypes.number,
+  distance: PropTypes.number,
+  width: PropTypes.number,
+  targetIndex: PropTypes.number,
+  idPrefix: PropTypes.string
+};
+
+export { Fitts };
+
+export default withGridItem(Fitts);

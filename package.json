@@ -4,8 +4,7 @@
   "workspaces": [
     "packages/workflow",
     "packages/tasks",
-    "example",
-    "docz"
+    "example"
   ],
   "devDependencies": {
     "@babel/core": "^7.4.5",

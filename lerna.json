@@ -1,8 +1,7 @@
 {
   "packages": [
     "packages/*",
-    "example",
-    "docz"
+    "example"
   ],
   "version": "independent",
   "npmClient": "yarn",

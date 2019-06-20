@@ -21,11 +21,11 @@ import { connect } from "react-redux";
 //     "footer";
 // `;
 
-const DefaultGridLayout = () => {
+const DefaultGridLayout = ({ children }) => {
   return (
     <div
       style={{
-        display: grid,
+        display: "grid",
         width: "100vw",
         height: "100vh",
         gridTemplateColumns: "1fr",
@@ -35,7 +35,9 @@ const DefaultGridLayout = () => {
       "task"
       "footer"`
       }}
-    />
+    >
+      {children}
+    </div>
   );
 };
 
