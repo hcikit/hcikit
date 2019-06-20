@@ -55,5 +55,9 @@
     "markdown-to-jsx": "^6.10.2",
     "prop-types": "^15.7.2"
   },
-  "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86"
+  "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86",
+  "devDependencies": {
+    "react-scripts": "^3.0.1",
+    "react-styleguidist": "^9.1.8"
+  }
 }
