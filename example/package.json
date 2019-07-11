@@ -1,12 +1,12 @@
 {
   "name": "@hcikit/example",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://hcikit.github.io",
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@hcikit/tasks": "^0.1.0",
-    "@hcikit/workflow": "^0.1.0",
+    "@hcikit/tasks": "^0.2.0",
+    "@hcikit/workflow": "^0.2.0",
     "@material-ui/core": "^4.1.1",
     "aws-sdk": "^2.478.0",
     "react": "^16.8.6",
