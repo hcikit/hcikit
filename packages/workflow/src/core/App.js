@@ -1,5 +1,5 @@
 import React from "react";
-import { advanceWorkflow, log, editConfig } from "./Workflow.actions";
+import { advanceWorkflow, advanceWorkflowLevelTo, log, editConfig } from "./Workflow.actions";
 import {
   withRawConfiguration,
   getGlobalProps,
@@ -47,6 +47,7 @@ export const App = ({
   configuration,
   onLog,
   onAdvanceWorkflow,
+  onAdvanceWorkflowLevelTo,
   onEditConfig,
   getTask,
   GridLayout = DefaultGridLayout
@@ -76,6 +77,7 @@ export const App = ({
           return (
             <Task
               onAdvanceWorkflow={onAdvanceWorkflow}
+              onAdvanceWorkflowLevelTo={onAdvanceWorkflowLevelTo}
               onLog={onLog}
               onEditConfig={onEditConfig}
               getTask={getTask}
@@ -118,7 +120,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   onAdvanceWorkflow: advanceWorkflow,
   onLog: log,
-  onEditConfig: editConfig
+  onEditConfig: editConfig,
+  onAdvanceWorkflowLevelTo: advanceWorkflowLevelTo
 };
 
 export default withRawConfiguration(
