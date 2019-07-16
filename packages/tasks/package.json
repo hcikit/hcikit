@@ -44,7 +44,7 @@
     ]
   },
   "peerDependencies": {
-    "@hcikit/workflow": "^0.1.0",
+    "@hcikit/workflow": "0.x",
     "@material-ui/core": "^4.1.1",
     "react": "^16.8.6",
     "react-redux": "^7.1.0",
