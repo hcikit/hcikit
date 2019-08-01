@@ -1,5 +1,10 @@
 import React from "react";
-import { advanceWorkflow, advanceWorkflowLevelTo, log, editConfig } from "./Workflow.actions";
+import {
+  advanceWorkflow,
+  advanceWorkflowLevelTo,
+  log,
+  editConfig
+} from "./Workflow.actions";
 import {
   withRawConfiguration,
   getGlobalProps,
@@ -55,6 +60,8 @@ export const App = ({
   if (task) {
     tasks = [...tasks, task];
   }
+
+  // TODO: make this work properly
 
   if (tasks.length > 0) {
     return (
