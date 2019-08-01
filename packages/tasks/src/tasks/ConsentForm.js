@@ -7,8 +7,7 @@ import {
   FormControlLabel,
   FormControl,
   FormHelperText,
-  FormGroup,
-  Typography
+  FormGroup
 } from "@material-ui/core";
 
 import { CenteredNicePaper } from "../components";
@@ -50,8 +49,7 @@ export class ConsentForm extends React.Component {
     return (
       <CenteredNicePaper>
         {/* <Typography> */}
-          <Markdown children={letter} />{" "}
-        {/* </Typography> */}
+        <Markdown children={letter} /> {/* </Typography> */}
         <FormControl required error={error}>
           <FormGroup>
             {questions.map(question => {

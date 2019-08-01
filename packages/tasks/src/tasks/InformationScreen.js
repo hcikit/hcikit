@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Markdown from "markdown-to-jsx";
 
-import { Typography, Button } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { CenteredNicePaper } from "../components";
 import PropTypes from "prop-types";
 import { withGridItem } from "../withGridItem";
@@ -34,7 +34,7 @@ const InformationScreen = ({
   return (
     <CenteredNicePaper centerX={centerX} centerY={centerY}>
       {/* <Typography> */}
-        <Markdown children={content} />
+      <Markdown children={content} />
       {/* </Typography> */}
       <br />
       {withContinue && (
