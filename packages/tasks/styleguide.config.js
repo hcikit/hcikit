@@ -5,7 +5,8 @@ module.exports = {
     "src/tasks/GoogleFormQuestionnaire.js",
     "src/tasks/InformationScreen.js",
     "src/tasks/MouseCenteringTask.js",
-    "src/tasks/DisplayTextTask.js"
+    "src/tasks/DisplayTextTask.js",
+    "src/tasks/Upload.js"
   ]
   // ignore: [
   //   "**/*.test.js",
