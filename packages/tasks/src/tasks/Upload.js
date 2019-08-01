@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import { Button, Typography, CircularProgress } from "@material-ui/core";
 import { withRawConfiguration } from "@hcikit/workflow";
@@ -7,7 +8,7 @@ import { CenteredNicePaper, CenteredText } from "../components";
 
 export const UploadDisplay = ({
   error,
-  participant,
+  filename,
   log,
   experimenter,
   onClick
@@ -31,7 +32,7 @@ export const UploadDisplay = ({
           and send them to <a href={`mailto:${experimenter}`}>{experimenter}</a>
         </p>
         <a
-          download={`${participant}.json`}
+          download={`${filename}.json`}
           href={`data:text/json;charset=utf-8,${log}`}
         >
           Download experiment log
@@ -51,7 +52,7 @@ export const UploadDisplay = ({
   );
 };
 
-class Upload extends React.Component {
+export class Upload extends React.Component {
   state = {
     done: false,
     error: null
@@ -96,7 +97,7 @@ class Upload extends React.Component {
     return (
       <UploadDisplay
         log={JSON.stringify(this.props.configuration)}
-        participant={this.props.configuration.participant}
+        filename={this.props.filename}
         onClick={this.props.onAdvanceWorkflow}
         experimenter={this.props.experimenter}
         error={this.state.error}
@@ -104,6 +105,13 @@ class Upload extends React.Component {
     );
   }
 }
+
+Upload.propTypes = {
+  fireAndForget: PropTypes.bool,
+  filename: PropTypes.string,
+  /** The upload function should take a filename and a string containing all of the logs to upload */
+  upload: PropTypes.func
+};
 
 let ConnectedUpload = withRawConfiguration(Upload);
 
