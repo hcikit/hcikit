@@ -6,13 +6,7 @@ import { withRawConfiguration } from "@hcikit/workflow";
 
 import { CenteredNicePaper, CenteredText } from "../components";
 
-export const UploadDisplay = ({
-  error,
-  filename,
-  log,
-  experimenter,
-  onClick
-}) => {
+const UploadDisplay = ({ error, filename, log, experimenter, onClick }) => {
   let contents;
 
   if (!error) {
@@ -109,6 +103,8 @@ export class Upload extends React.Component {
 Upload.propTypes = {
   fireAndForget: PropTypes.bool,
   filename: PropTypes.string,
+  /** The email of the experimenter to send logfiles manually in case of a problem uploading */
+  experimenter: PropTypes.string,
   /** The upload function should take a filename and a string containing all of the logs to upload */
   upload: PropTypes.func
 };
