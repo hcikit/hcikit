@@ -1,15 +1,6 @@
 import React from 'react'
 import { CenteredPaper } from '../components'
 
-// const UploadToS3 = Loadable({
-// loader: () => import('../tasks/UploadToS3'),
-// loading: () => <div>Loading...</div>
-// })
-
-const UploadToS3 = () => {
-  return <div>Broken</div>
-}
-
 export class UploadOnError extends React.Component {
   constructor(props) {
     super(props)
@@ -27,6 +18,7 @@ export class UploadOnError extends React.Component {
 
   render() {
     if (this.state.hasError) {
+      let {configuration : {experimenter}, onLog, }
       let configuration = this.props.configuration
 
       return (
@@ -38,23 +30,19 @@ export class UploadOnError extends React.Component {
                 You can try refreshing the page. If that doesn't work please
                 message the requestor and we will arrange payment. You can also
                 email
-                <a href={`mailto:${this.props.configuration.experimenter}`}>
-                  {this.props.configuration.experimenter}
+                <a href={`mailto:${experimenter}`}>
+                  {experimenter}
                 </a>
               </p>
             </div>
           </CenteredPaper>
 
-          <UploadToS3
+          <Uploader
+          // TODO: find a better way to do this.
             experimenter={configuration.experimenter}
-            onLog={this.props.onLog}
+            filename={configuration.filename}
+            onLog={onLog}
             onAdvanceWorkflow={() => {}}
-            s3FileName={`${configuration.participant}-ERROR.json`}
-            AWS_REGION={configuration.AWS_REGION}
-            AWS_S3_BUCKET={configuration.AWS_S3_BUCKET}
-            AWS_COGNITO_IDENTITY_POOL_ID={
-              configuration.AWS_COGNITO_IDENTITY_POOL_ID
-            }
           />
         </React.Fragment>
       )
@@ -63,3 +51,9 @@ export class UploadOnError extends React.Component {
     return this.props.children
   }
 }
+
+
+
+export default UploadComponent => props => {
+  return <UploadOnError Uploader={UploadComponent} {...props} />;
+};
