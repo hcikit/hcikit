@@ -4,10 +4,10 @@
  */
 export function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[a[i], a[j]] = [a[j], a[i]]
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
   }
-  return a
+  return a;
 }
 
 /**
@@ -15,7 +15,7 @@ export function shuffle(a) {
  * @param {Array} a An array containing the options.
  */
 export function randomChoice(a) {
-  return a[Math.floor(Math.random() * a.length)]
+  return a[Math.floor(Math.random() * a.length)];
 }
 
 /**
@@ -23,32 +23,32 @@ export function randomChoice(a) {
  * @param {Array} a An array containing the options.
  */
 export function randomChoiceNoReplacement(a) {
-  const index = [Math.floor(Math.random() * a.length)]
-  const choice = a[index]
-  a.splice(index, 1)
+  const index = [Math.floor(Math.random() * a.length)];
+  const choice = a[index];
+  a.splice(index, 1);
 
-  return choice
+  return choice;
 }
 
 /**
  * Returns a random number between min (inclusive) and max (exclusive)
  */
 export function randInt(min, max) {
-  min = Math.ceil(min)
-  max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min)) + min // The maximum is exclusive and the minimum is inclusive
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; // The maximum is exclusive and the minimum is inclusive
 }
 
 /**
  * Generates a random GUID.
  */
 export function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = (Math.random() * 16) | 0
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    var r = (Math.random() * 16) | 0;
 
-    var v = c === 'x' ? r : (r & 0x3) | 0x8
-    return v.toString(16)
-  })
+    var v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 }
 
 /**
@@ -57,28 +57,34 @@ export function uuidv4() {
 export function randomString() {
   return Math.random()
     .toString(36)
-    .substring(2)
+    .substring(2);
 }
 
+/**
+ * Gets the OS of the user.
+ */
 export function getOS() {
   const oss = {
-    Win: 'Windows',
-    Mac: 'MacOS',
-    X11: 'UNIX',
-    Linux: 'Linux'
-  }
+    Win: "Windows",
+    Mac: "MacOS",
+    X11: "UNIX",
+    Linux: "Linux"
+  };
 
   for (const os of Object.keys(oss)) {
     if (navigator.appVersion.indexOf(os) >= 0) {
-      return oss[os]
+      return oss[os];
     }
   }
 
-  return 'Unknown'
+  return "Unknown";
 }
 
-// TODO: there has to be a better way to do this.
+/**
+ * Grabs a bunch of info from the browser for logging. Tries not to include too much information but there is more such as the location API etc.
+ */
 export function getBrowserInfo() {
+  // https://stackoverflow.com/a/37093316/1036813
   return {
     browserName: navigator.appName,
     browserEngine: navigator.product,
@@ -97,5 +103,5 @@ export function getBrowserInfo() {
     sizeAvailH: window.screen.availHeight,
     scrColorDepth: window.screen.colorDepth,
     scrPixelDepth: window.screen.pixelDepth
-  }
+  };
 }

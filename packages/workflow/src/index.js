@@ -10,7 +10,6 @@ let store;
  */
 export default class Experiment extends React.Component {
   componentWillMount() {
-    // TODO: if we use uploading as middleware we could pass as a prop
     store = configureStore(this.props.configuration);
   }
 
@@ -38,11 +37,9 @@ export * from "./designUtils";
 
 // TODO: we could render the html using the "server" I think we could do it statically at build. And then we just call hydrate instead. This would improve the bundle size a lot.
 
-// TODO: redux subspace, and redux dynamic reducers will be useful.
-
 // TODO: when losing focus we should grey out the screen, or whenever we can't capture keyboard shortcuts. Implement this as a auxillary task you can add in addition
+// TODO: need a task that automatically logs when changing tabs
 
 // TODO: rethink how we do multiple sessions, especially when we start thinking about localstorage.
-// TODO: add helvetica back in as a font....
 
-// TODO: need a task that automatically logs when changing tabs
+// TODO: add helvetica back in as a font....

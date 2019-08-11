@@ -34,6 +34,8 @@ const saveState = throttle(() => {
 // TODO: add touch events here too.
 // TODO: this doesn't work right now.
 // TODO: this shouldn't be here and should actually be a component added all the time, then you can dynamically control the throttlerate and what events are used with config.
+// TODO: log things like page refreshes in here.
+
 const transformEvent = event => {
   switch (event.type) {
     case "mousedown":

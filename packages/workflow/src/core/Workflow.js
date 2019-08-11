@@ -1,6 +1,9 @@
 import { connect } from "react-redux";
 import { mergeWith, pickBy } from "lodash-es";
 
+// TODO: mergeWith is very slow which slows everything down with lots of onlogs.
+// TODO: there is a lot of duplication in here.
+
 let tasks = {};
 let reducers = {};
 
@@ -23,7 +26,6 @@ let merge = mergeArraysSpecial;
 
  */
 export const registerTask = (taskName, task, reducer = undefined) => {
-  // TODO: for a first pass of adding reducers, store them in an object for calling with  combine reducers
   tasks[taskName] = task;
   if (reducer) {
     reducers[taskName] = reducer;
@@ -165,7 +167,7 @@ export function advanceWorkflowLevelTo(config, level, newValue) {
   }
 }
 
-// TODO: this overwrites when things are logged multiple times
+// TODO: this overwrites when things are logged multiple times, it should at the very least warn when that happens.
 export function log(config, key, value, withTimeStamp) {
   while ("children" in config) {
     const nextLevelIndex = config.index || 0;
