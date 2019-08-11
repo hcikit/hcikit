@@ -32,10 +32,7 @@
       "src/**/*.{js,jsx}",
       "!/node_modules/",
       "!src/registerServiceWorker.js",
-      "!src/stories/*",
-      "!src/experiments/*",
-      "!src/setupTests.js",
-      "!src/**/*.stories.js"
+      "!src/setupTests.js"
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!lodash-es).+\\.js$"
