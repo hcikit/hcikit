@@ -8,7 +8,7 @@ import {
 import { createStore, combineReducers } from "redux";
 import { throttle } from "lodash-es";
 import ConfigurationReducer from "./Workflow.reducers";
-import { getReducers } from "./Workflow";
+import { getReducers, getCurrentIndex } from "./Workflow";
 
 const STATE_KEY = "state";
 
@@ -80,7 +80,10 @@ export default Configuration => {
 
     dispatch(action);
 
-    if (action.type === TASK_COMPLETE) {
+    if (
+      action.type === TASK_COMPLETE &&
+      getCurrentIndex(store.getState().Configuration).length !== 0
+    ) {
       dispatch(log("start", Date.now(), false));
     }
   };
