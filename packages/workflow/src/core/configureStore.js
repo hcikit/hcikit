@@ -1,4 +1,10 @@
-import { logAction, log, LOG, LOG_ACTION } from "./Workflow.actions";
+import {
+  logAction,
+  log,
+  LOG,
+  LOG_ACTION,
+  ADVANCE_WORKFLOW
+} from "./Workflow.actions";
 import { createStore, combineReducers } from "redux";
 import { throttle } from "lodash-es";
 import ConfigurationReducer from "./Workflow.reducers";
@@ -68,13 +74,13 @@ export default Configuration => {
       dispatch(logAction(action));
     }
 
-    if (action.type === "ADVANCE_WORKFLOW") {
+    if (action.type === ADVANCE_WORKFLOW) {
       dispatch(log("end", Date.now(), false));
     }
 
     dispatch(action);
 
-    if (action.type === "ADVANCE_WORKFLOW") {
+    if (action.type === ADVANCE_WORKFLOW) {
       dispatch(log("start", Date.now(), false));
     }
   };

@@ -16,7 +16,7 @@ export default class Experiment extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <App />
+        <App {...this.props} />
       </Provider>
     );
   }
