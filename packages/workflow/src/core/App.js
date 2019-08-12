@@ -11,7 +11,8 @@ import {
   getGlobalProps,
   getTask,
   getComponentProps,
-  getAllPropsForComponent
+  getAllPropsForComponent,
+  getCurrentIndex
 } from "./Workflow";
 
 import { connect } from "react-redux";
@@ -59,7 +60,8 @@ export const App = ({
   editConfig,
   getTask,
   Layout = GridLayout,
-  ErrorHandler = null
+  ErrorHandler = null,
+  forceRemountEveryTask = true
 }) => {
   let onLog = (...args) => {
     console.warn(
@@ -97,14 +99,17 @@ export const App = ({
     tasks = [...tasks, task];
   }
 
-  // TODO: make it pick properly between sending the finished component. If there is a tasks array set at the top level then it never has no tasks. This also means it's possible to continue passed the end of the experiment.
-
   let tasksFilled;
 
   if (tasks.length > 0) {
-    tasksFilled = tasks.map(task => {
+    tasksFilled = tasks.map((task, i) => {
       let globalProps = getGlobalProps(configuration);
       let Task = getTask(task, getAllPropsForComponent(task, configuration));
+      let key = `${task}-${i.toString()}`;
+
+      if (forceRemountEveryTask) {
+        key += "-" + getCurrentIndex(configuration).join(":");
+      }
 
       if (!Task) {
         throw new Error(`Component ${task} isn't registered.`);
@@ -112,6 +117,7 @@ export const App = ({
 
       return (
         <Task
+          key={key}
           // TODO: finish deprecating these by documenting the changes.
           onAdvanceWorkflow={onAdvanceWorkflow}
           onAdvanceWorkflowLevelTo={onAdvanceWorkflowLevelTo}

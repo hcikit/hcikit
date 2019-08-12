@@ -1,5 +1,5 @@
 import Experiment, { registerTask } from "./";
-import React from "react";
+import React, { useState } from "react";
 import { mount } from "enzyme";
 
 const config = {
@@ -9,7 +9,6 @@ const config = {
       text: "hello",
       task: "ButtonTask"
     },
-
     {
       text: "hi",
       task: "ButtonTask"
@@ -27,6 +26,23 @@ let ButtonTask = ({ taskComplete, text, log }) => (
     {text}
   </button>
 );
+
+let MultiTask = ({ taskComplete, times, text, log }) => {
+  let [timesClicked, setTimesClicked] = useState(0);
+
+  return (
+    <button
+      onClick={() => {
+        setTimesClicked(timesClicked + 1);
+        if (timesClicked + 1 >= times) {
+          taskComplete();
+        }
+      }}
+    >
+      {timesClicked}
+    </button>
+  );
+};
 
 let AuxTask = ({}) => <p>Hello World!</p>;
 
@@ -48,7 +64,7 @@ describe("Experiment", () => {
     expect(experiment.find("button").text()).toEqual(config.children[1].text);
   });
 
-  it("continues to the end even with array", () => {
+  it("continues to the end", () => {
     experiment.find("button").simulate("click");
     experiment.find("button").simulate("click");
 
@@ -57,10 +73,58 @@ describe("Experiment", () => {
       "You've completed the experiment!"
     );
   });
-  // it("remounts when required", () => {
-  //   fail()
 
-  // })
+  describe("remounting", () => {
+    it("remounts when forced remount", () => {
+      const config = {
+        children: [
+          {
+            times: 2,
+            task: "MultiTask"
+          },
+          {
+            times: 4,
+            task: "MultiTask"
+          }
+        ]
+      };
+
+      registerTask("MultiTask", MultiTask);
+
+      experiment = mount(
+        <Experiment forceRemountEveryTask configuration={config} />
+      );
+
+      experiment.find("button").simulate("click");
+      experiment.find("button").simulate("click");
+      expect(experiment.find("button").text()).toBe("0");
+    });
+
+    it("won't remount when not forced", () => {
+      const config = {
+        children: [
+          {
+            times: 2,
+            task: "MultiTask"
+          },
+          {
+            times: 4,
+            task: "MultiTask"
+          }
+        ]
+      };
+
+      registerTask("MultiTask", MultiTask);
+
+      experiment = mount(
+        <Experiment forceRemountEveryTask={false} configuration={config} />
+      );
+
+      experiment.find("button").simulate("click");
+      experiment.find("button").simulate("click");
+      expect(experiment.find("button").text()).toBe("2");
+    });
+  });
 
   // it("passes all props", () => {
   //   fail()

@@ -6,7 +6,8 @@ import {
   logAction,
   getGlobalProps,
   getComponentProps,
-  mergeArraysSpecial
+  mergeArraysSpecial,
+  getCurrentIndex
 } from "./Workflow";
 import deepFreeze from "deep-freeze";
 
@@ -142,6 +143,24 @@ describe("getGlobalProps", () => {
       configprop: "section",
       stimulus: "bear"
     });
+  });
+});
+
+describe("getCurrentIndex", () => {
+  it("returns the index as an array", () => {
+    expect(getCurrentIndex(config)).toEqual([0, 0, 0]);
+  });
+  it("returns the index as an after advancing", () => {
+    expect(getCurrentIndex(config)).toEqual([0, 0, 0]);
+    advanceWorkflow(config);
+    expect(getCurrentIndex(config)).toEqual([0, 0, 1]);
+    advanceWorkflow(config);
+    expect(getCurrentIndex(config)).toEqual([0, 1, 0]);
+    advanceWorkflow(config);
+    expect(getCurrentIndex(config)).toEqual([0, 1, 1]);
+
+    advanceWorkflow(config);
+    expect(getCurrentIndex(config)).toEqual([]);
   });
 });
 

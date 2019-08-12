@@ -279,6 +279,24 @@ export function flattenToLevel(config, level) {
   }
 }
 
+// BUG: this function breaks if any numbers are passed the point they should be
+export const getCurrentIndex = config => {
+  let index = [];
+
+  if (config.index >= config.children.length) {
+    return [];
+  }
+
+  while ("children" in config) {
+    const nextLevelIndex = config.index || 0;
+    index.push(nextLevelIndex);
+
+    config = config.children[nextLevelIndex];
+  }
+
+  return index;
+};
+
 export const withConfigAsProps = connect(state => {
   let configuration = getCurrentProps(state.Configuration);
   return configuration;
