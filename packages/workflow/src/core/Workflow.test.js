@@ -106,6 +106,7 @@ describe("advanceWorkflow", () => {
     advanceWorkflow(config);
 
     expect(getCurrentProps(config)).toEqual(undefined);
+    expect(config.children.length).toBe(1);
   });
 
   it("replaces the required objects", () => {
@@ -197,6 +198,19 @@ describe("getCurrentProps", () => {
 });
 
 describe("log", () => {
+  it("doesn't log when the experiment is finished", () => {
+    advanceWorkflow(config);
+    advanceWorkflow(config);
+    advanceWorkflow(config);
+    advanceWorkflow(config);
+    advanceWorkflow(config);
+
+    deepFreeze(config);
+
+    log(config, "hello", "world");
+    expect(config.children.length).toBe(1);
+  });
+
   it("logs to the correct place with timestamp", () => {
     log(config, "hello", "world");
     expect(config.children[0].children[0].children[0].hello).toEqual("world");

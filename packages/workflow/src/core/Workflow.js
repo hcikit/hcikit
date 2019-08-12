@@ -3,6 +3,9 @@ import { mergeWith, pickBy } from "lodash-es";
 
 // TODO: mergeWith is very slow which slows everything down with lots of onlogs.
 // TODO: there is a lot of duplication in here.
+// TODO: need to document the frameworks use of index or rename it to something less commonly used because it gets deleted before passing it.
+
+// TODO: to make it easier to test we should instead wrap all of the register task etc stuff into a class. If we do this properly it might help solve some issues with creating a replay thing.
 
 let tasks = {};
 let reducers = {};
@@ -42,6 +45,8 @@ export const getTask = (taskName, currentProps = {}) => {
 
   return tasks[taskName];
 };
+
+// TODO: these props are a mess, they're very expensive because we call them multiple times and they call each other.
 
 export const getComponentProps = (task, configuration) => {
   return getCurrentProps(configuration)[task] || {};
@@ -112,7 +117,6 @@ export function getCurrentProps(configuration, props = {}) {
     delete properties.nextLevel;
     delete properties.index;
     delete properties.children;
-    delete properties.metadata;
 
     properties = merge(props, properties);
 
@@ -135,17 +139,21 @@ export function advanceWorkflow(config) {
   // If we reach the end, return true so that the level above this knows we're finished
   if ("children" in config) {
     const nextLevelIndex = config.index || 0;
-    config.children = [
-      ...config.children.slice(0, nextLevelIndex),
-      {
-        ...config.children[nextLevelIndex]
-      },
-      ...config.children.slice(nextLevelIndex + 1)
-    ];
 
-    if (advanceWorkflow(config.children[nextLevelIndex])) {
-      config.index = nextLevelIndex + 1;
-      return config.index >= config.children.length;
+    // If the next level index is already passed then we shouldn't continue
+    if (nextLevelIndex < config.children.length) {
+      config.children = [
+        ...config.children.slice(0, nextLevelIndex),
+        {
+          ...config.children[nextLevelIndex]
+        },
+        ...config.children.slice(nextLevelIndex + 1)
+      ];
+
+      if (advanceWorkflow(config.children[nextLevelIndex])) {
+        config.index = nextLevelIndex + 1;
+        return config.index >= config.children.length;
+      }
     }
   } else {
     // Base case: at a leaf node, we don't have a list of steps, so we're always done
@@ -154,7 +162,10 @@ export function advanceWorkflow(config) {
 }
 
 // Returns true if the participant has finished all the steps in this part of the configuration.
+// TODO: Rename to navigateWorkflowTo
 export function advanceWorkflowLevelTo(config, level, newValue) {
+  // TODO: this function requires there be a "nextLevel" property on the configuration. Instead it should set the requested depth to a newValue. Essentially replace level with depth
+
   // Error catching: if we went past the end of a list, don't keep advancing
   if (!config) {
     return false;
@@ -168,7 +179,17 @@ export function advanceWorkflowLevelTo(config, level, newValue) {
 }
 
 // TODO: this overwrites when things are logged multiple times, it should at the very least warn when that happens.
+// TODO: Logs should instead be placed into an array on the task object called logs
+// TODO: log and logAction do essentially the same thing.
+
 export function log(config, key, value, withTimeStamp) {
+  // Walk down the tree until we have reached the bottom, replacing each level to avoid mutations.
+
+  if (config.index >= config.children.length) {
+    console.error("Attempting to log when the experiment is complete.");
+    return;
+  }
+
   while ("children" in config) {
     const nextLevelIndex = config.index || 0;
 
@@ -192,6 +213,11 @@ export function log(config, key, value, withTimeStamp) {
 }
 
 export function logAction(config, action) {
+  if (config.index >= config.children.length) {
+    console.error("Attempting to log when the experiment is complete.");
+    return;
+  }
+
   while ("children" in config) {
     const nextLevelIndex = config.index || 0;
 
