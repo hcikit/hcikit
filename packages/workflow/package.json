@@ -36,7 +36,9 @@
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!lodash-es).+\\.js$"
-    ]
+    ],
+    "setupFilesAfterEnv": ["./src/setupTests.js"]
+
   },
   "peerDependencies": {
     "react": "^16.8.6",
