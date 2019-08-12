@@ -76,6 +76,11 @@ export class Upload extends React.Component {
       .catch(err => {
         this.props.onLog("upload error", err);
         console.log(err);
+
+        if (this.props.fireAndForget) {
+          return;
+        }
+
         if (retries > 0) {
           this.attemptUploadWithRetries(retries - 1);
         } else {
