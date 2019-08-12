@@ -3,7 +3,7 @@ import {
   log,
   LOG,
   LOG_ACTION,
-  ADVANCE_WORKFLOW
+  TASK_COMPLETE
 } from "./Workflow.actions";
 import { createStore, combineReducers } from "redux";
 import { throttle } from "lodash-es";
@@ -74,13 +74,13 @@ export default Configuration => {
       dispatch(logAction(action));
     }
 
-    if (action.type === ADVANCE_WORKFLOW) {
+    if (action.type === TASK_COMPLETE) {
       dispatch(log("end", Date.now(), false));
     }
 
     dispatch(action);
 
-    if (action.type === ADVANCE_WORKFLOW) {
+    if (action.type === TASK_COMPLETE) {
       dispatch(log("start", Date.now(), false));
     }
   };

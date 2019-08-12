@@ -1,12 +1,13 @@
-export const advanceWorkflow = () => {
+
+export const taskComplete = () => {
   return {
-    type: ADVANCE_WORKFLOW
+    type: TASK_COMPLETE
   }
 }
 
-export const advanceWorkflowLevelTo = (level, newValue) => {
+export const navigateWorkflowTo = (level, newValue) => {
   return {
-    type: ADVANCE_WORKFLOW_LEVEL_TO,
+    type: NAVIGATE_WORKFLOW_TO,
     level,
     newValue
   }
@@ -36,8 +37,8 @@ export const editConfig = (key, value) => {
   }
 }
 
-export const ADVANCE_WORKFLOW = 'ADVANCE_WORKFLOW'
-export const ADVANCE_WORKFLOW_LEVEL_TO = 'ADVANCE_WORKFLOW_LEVEL_TO'
+export const TASK_COMPLETE = 'TASK_COMPLETE'
+export const NAVIGATE_WORKFLOW_TO = 'NAVIGATE_WORKFLOW_TO'
 export const LOG = 'LOG'
 export const LOG_ACTION = 'LOG_ACTION'
 export const EDIT_CONFIG = 'EDIT_CONFIG'

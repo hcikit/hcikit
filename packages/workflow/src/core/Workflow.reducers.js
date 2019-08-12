@@ -7,18 +7,18 @@ import {
 import {
   LOG,
   LOG_ACTION,
-  ADVANCE_WORKFLOW,
+  TASK_COMPLETE,
   EDIT_CONFIG,
-  ADVANCE_WORKFLOW_LEVEL_TO
+  NAVIGATE_WORKFLOW_TO
 } from './Workflow.actions'
 
 const configuration = (state = { events: [] }, action) => {
   switch (action.type) {
-    case ADVANCE_WORKFLOW:
+    case TASK_COMPLETE:
       state = { ...state }
       advanceWorkflow(state)
       return state
-    case ADVANCE_WORKFLOW_LEVEL_TO:
+    case NAVIGATE_WORKFLOW_TO:
       state = { ...state }
       advanceWorkflowLevelTo(state, action.level, action.newValue)
       return state
@@ -31,6 +31,7 @@ const configuration = (state = { events: [] }, action) => {
       logAction(state, action.action, action.withTimeStamp)
       return state
     case EDIT_CONFIG:
+      // TODO: I want edit config to be more than just global
       return { ...state, [action.key]: action.value }
     default:
       return state

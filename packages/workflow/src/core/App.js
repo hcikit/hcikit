@@ -1,10 +1,11 @@
 import React from "react";
 import {
-  advanceWorkflow,
-  advanceWorkflowLevelTo,
   log,
-  editConfig
+  editConfig,
+  navigateWorkflowTo,
+  taskComplete
 } from "./Workflow.actions";
+
 import {
   withRawConfiguration,
   getGlobalProps,
@@ -12,6 +13,7 @@ import {
   getComponentProps,
   getAllPropsForComponent
 } from "./Workflow";
+
 import { connect } from "react-redux";
 
 // const DefaultGridLayout = styled.div`
@@ -51,14 +53,46 @@ export const App = ({
   task,
   tasks = [],
   configuration,
-  onLog,
-  onAdvanceWorkflow,
-  onAdvanceWorkflowLevelTo,
-  onEditConfig,
+  log,
+  taskComplete,
+  navigateWorkflowTo,
+  editConfig,
   getTask,
   Layout = GridLayout,
   ErrorHandler = null
 }) => {
+  let onLog = (...args) => {
+    console.warn(
+      "WARNING! onLog has been deprecated, use log instead. The behaviour of this function has also changed."
+    );
+
+    log(...args);
+  };
+
+  let onEditConfig = (...args) => {
+    console.warn(
+      "WARNING! onEditConfig has been deprecated, use editConfig() instead. The behaviour of this function has also changed."
+    );
+
+    editConfig(...args);
+  };
+
+  let onAdvanceWorkflow = (...args) => {
+    console.warn(
+      "WARNING! onAdvanceWorkflow has been deprecated, use taskComplete() instead."
+    );
+
+    taskComplete(...args);
+  };
+
+  let onAdvanceWorkflowLevelTo = (...args) => {
+    console.warn(
+      "WARNING! onAdvanceWorkflow has been deprecated, use navigateWorkflowTo() instead."
+    );
+
+    navigateWorkflowTo(...args);
+  };
+
   if (task) {
     tasks = [...tasks, task];
   }
@@ -73,17 +107,19 @@ export const App = ({
       let Task = getTask(task, getAllPropsForComponent(task, configuration));
 
       if (!Task) {
-        // TODO: Better error messaging here.
-        console.log(`Component ${task} isn't registered.`);
-        return <div>Sorry an error occurred!!</div>;
+        throw new Error(`Component ${task} isn't registered.`);
       }
 
       return (
         <Task
+          // TODO: finish deprecating these by documenting the changes.
           onAdvanceWorkflow={onAdvanceWorkflow}
           onAdvanceWorkflowLevelTo={onAdvanceWorkflowLevelTo}
           onLog={onLog}
           onEditConfig={onEditConfig}
+          log={log}
+          taskComplete={taskComplete}
+          editConfig={editConfig}
           getTask={getTask}
           {...globalProps}
           {...getComponentProps(task, configuration)}
@@ -127,11 +163,10 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  onAdvanceWorkflow: advanceWorkflow,
-  onLog: log,
-  onEditConfig: editConfig,
-  // TODO: Rename to taskComplete or something...
-  onAdvanceWorkflowLevelTo: advanceWorkflowLevelTo
+  taskComplete,
+  log,
+  editConfig,
+  navigateWorkflowTo
 };
 
 export default withRawConfiguration(
