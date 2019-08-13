@@ -6,7 +6,9 @@ import {
   logAction,
   scopePropsForTask,
   mergeArraysSpecial,
-  getCurrentIndex
+  getCurrentIndex,
+  taskComplete,
+  getConfigAtIndex
 } from "./Workflow";
 import deepFreeze from "deep-freeze";
 
@@ -452,5 +454,83 @@ describe("flattenToLevel", () => {
         yolo: "yoyololo"
       }
     });
+  });
+});
+
+describe("getConfigAtIndex", () => {
+  it("empty returns everything", () => {
+    expect(getConfigAtIndex([], config)).toEqual(config);
+  });
+
+  it("middle levels are returned", () => {
+    expect(getConfigAtIndex([0], config)).toEqual({
+      nextLevel: "blocks",
+      index: 0,
+      sectionprop: "section",
+      children: [
+        {
+          blockprop: "section",
+          stimulus: "overwritten",
+          nextLevel: "trials",
+          index: 0,
+          children: [
+            {
+              stimulus: "bear"
+            },
+            {
+              stimulus: "pig",
+              StimulusResponse: {
+                hello: "hello"
+              }
+            }
+          ]
+        },
+        {
+          nextLevel: "trials",
+          // Note: no index given
+          children: [
+            {
+              stimulus: "bird"
+            },
+            {
+              stimulus: "dog"
+            }
+          ]
+        }
+      ]
+    });
+  });
+  it("leaves are returned", () => {
+    expect(getConfigAtIndex([0, 0, 0], config)).toEqual({
+      stimulus: "bear"
+    });
+  });
+});
+
+fdescribe("taskComplete", () => {
+  it("advances experiments", () => {
+    expect(taskComplete(config)).toEqual([0, 0, 1]);
+  });
+
+  it("ends gracefully", () => {
+    config.index = taskComplete(config);
+    config.index = taskComplete(config);
+    config.index = taskComplete(config);
+    config.index = taskComplete(config);
+
+    // expect(getCurrentProps(config)).toEqual({});
+    expect(config.index).toEqual([]);
+  });
+
+  it("cant advance past end", () => {
+    config.index = taskComplete(config);
+    config.index = taskComplete(config);
+    config.index = taskComplete(config);
+    config.index = taskComplete(config);
+    config.index = taskComplete(config);
+
+    // expect(getCurrentProps(config)).toEqual({});
+    expect(config.children.length).toBe(1);
+    expect(config.index).toEqual([]);
   });
 });

@@ -5,6 +5,8 @@ import { mergeWith, pickBy } from "lodash-es";
 // TODO: there is a lot of duplication in here.
 // TODO: need to document the frameworks use of index or rename it to something less commonly used because it gets deleted before passing it.
 
+let __INDEX__ = "__INDEX__";
+
 export function mergeArraysSpecial(object, source) {
   return mergeWith(object, source, (value, srcValue) => {
     if (Array.isArray(value)) {
@@ -48,6 +50,50 @@ export function getCurrentProps(configuration) {
 
   return merge(props, configuration);
 }
+
+export function getConfigAtIndex(index, initialConfig) {
+  return index.reduce((config, value) => {
+    return config.children[value];
+  }, initialConfig);
+}
+
+export function getLeafIndex(index, configuration) {
+  if (index.length === 0) {
+    return [];
+  }
+
+  index = [...index];
+
+  while ("children" in getConfigAtIndex(index, configuration)) {
+    index.push(0);
+  }
+  return index;
+}
+
+export function taskComplete(configuration) {
+  let index = [0];
+  if (configuration.index) {
+    index = [...configuration.index];
+  }
+
+  index = getLeafIndex(index, configuration);
+
+  let newIndexValue;
+
+  do {
+    newIndexValue = index.pop() + 1;
+    let currentChildren = getConfigAtIndex(index, configuration).children;
+
+    if (newIndexValue < currentChildren.length) {
+      index.push(newIndexValue);
+      break;
+    }
+  } while (index.length);
+
+  return index;
+}
+
+export function advanceWorkflowAtDepthBy() {}
 
 // Move on to the next step of the workflow.
 // Returns true if the participant has finished all the steps in this part of the configuration.
@@ -233,11 +279,6 @@ export const getCurrentIndex = config => {
 
   return index;
 };
-
-export const withConfigAsProps = connect(state => {
-  let configuration = getCurrentProps(state.Configuration);
-  return configuration;
-});
 
 export const withRawConfiguration = connect(state => {
   return { configuration: state.Configuration };
