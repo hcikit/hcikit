@@ -26,7 +26,9 @@
     "start": "rollup -c -w",
     "prepare": "npm run build",
     "styleguide": "styleguidist server",
-    "styleguide:build": "styleguidist build"
+    "styleguide:build": "styleguidist build",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -47,19 +49,20 @@
   },
   "peerDependencies": {
     "@hcikit/workflow": "0.x",
-    "@material-ui/core": "^4.1.1",
+    "@material-ui/core": "^4.3.2",
+    "@material-ui/icons": "^4.2.1",
     "react": "^16.8.6",
     "react-redux": "^7.1.0",
-    "styled-components": "^4.3.1"
+    "styled-components": "^4.3.2"
   },
   "dependencies": {
-    "lodash-es": "^4.17.11",
-    "markdown-to-jsx": "^6.10.2",
+    "lodash-es": "^4.17.15",
+    "markdown-to-jsx": "^6.10.3",
     "prop-types": "^15.7.2"
   },
   "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86",
   "devDependencies": {
-    "react-scripts": "^3.0.1",
-    "react-styleguidist": "^9.1.8"
+    "react-scripts": "^3.1.0",
+    "react-styleguidist": "^9.1.14"
   }
 }
