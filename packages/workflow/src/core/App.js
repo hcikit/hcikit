@@ -49,7 +49,7 @@ const GridLayout = ({ children }) => {
 };
 
 export const App = ({
-  // TODO: Ideally we don't pass the entire configuration...
+  // TODO: Ideally we don't pass the entire configuration... That should reduce the number of renders
   configuration,
   log,
   taskComplete,
@@ -103,6 +103,10 @@ export const App = ({
   let tasksFilled;
 
   if (getCurrentIndex(configuration).length > 0) {
+    if (!tasks.length) {
+      throw new Error(`No task selected at ${getCurrentIndex(configuration)}`);
+    }
+
     tasksFilled = tasks.map((task, i) => {
       let Task = taskRegistry.getTask(task);
       let key = `${task}-${i.toString()}`;
