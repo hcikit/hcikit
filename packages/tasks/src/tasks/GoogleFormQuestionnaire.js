@@ -6,7 +6,8 @@ import { withGridItem } from "../withGridItem";
 const GoogleFormQuestionnaire = ({
   prefillParticipant,
   formId,
-  participant
+  participant,
+  onAdvanceWorkflow
 }) => {
   let src = `https://docs.google.com/forms/d/e/${formId}/viewform?embedded=true`;
 
@@ -18,7 +19,7 @@ const GoogleFormQuestionnaire = ({
 
   function handleLoad() {
     if (hasLoaded) {
-      this.props.onAdvanceWorkflow();
+      onAdvanceWorkflow();
     } else {
       setHasLoaded(true);
     }
