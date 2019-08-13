@@ -15,85 +15,38 @@ export function mergeArraysSpecial(object, source) {
 
 let merge = mergeArraysSpecial;
 
-// TODO: these props are a mess, they're very expensive because we call them multiple times and they call each other.
-
-export const getComponentProps = (task, configuration) => {
-  return getCurrentProps(configuration)[task] || {};
-};
-
-export const getGlobalProps = configuration => {
-  return pickBy(
-    getCurrentProps(configuration),
-    (_, k) => k[0] !== k[0].toUpperCase()
-  );
-};
-
-export const getAllPropsForComponent = (task, configuration) => {
-  return merge(
-    getGlobalProps(configuration),
-    getComponentProps(task, configuration)
-  );
-};
-
-// An experiment configuration object looks like this (for example):
-// let configuration = {
-//   your_props: your_values,
-//   current: {key: "sections", value: 0},
-//   sections: [
-//     {
-//       your_section_props: your_values,
-//       current: {key: "blocks", value: 0},
-//       blocks: [
-//         {
-//           your_block_props: your_values,
-//           current: {key: "trials", value: 0},
-//           trials: [
-//             {
-//               your_trial_props: your_values,
-//             },
-//             {
-//               your_trial_props: your_values,
-//             }
-//           ],
-//         }
-//       ],
-//     }
-//   ],
-// }
-//
-// Each level of the configuration (except for the leaves) must have at least 2 elements:
-// - current: Describes where the participant is in the experiment. Contains a key (the name of a list) and a value (the current index in the list).
-// - current.key: A list of pieces of the experiment.
-// All other props are provided as inputs to the experiment components.
-// Props at the higher levels are overridden by props with the same name at lower levels. For example, a "speed" prop inside one of the "blocks" objects would take precedence over a "speed" prop in the "sections" object.
-
 // TODO: Convert getcurrentprops into a "selector" function
+export function scopePropsForTask(props, task) {
+  return merge(
+    pickBy(props, (_, k) => k[0] === k[0].toLowerCase()),
+    props[task]
+  );
+}
 
 // Get a flattened list of props for this trial of the experiment.
-export function getCurrentProps(configuration, props = {}) {
-  // Error catching: if we're finished the experiment, return undefined
-  if (!configuration) {
-    return undefined;
+export function getCurrentProps(configuration) {
+  // TODO: this doesn't seem all that nice... but without it we just return the entire configuration which seems wrong...
+  if (configuration.index >= configuration.children.length) {
+    return {};
   }
 
-  // Recursive case: return the union of the props at this level and the props at the next level
-  // Prop values at this level are overwritten by values in the next level
-  if ("children" in configuration) {
-    const nextLevelIndex = configuration.index || 0;
+  let props = {};
 
+  while (configuration && "children" in configuration) {
+    const nextLevelIndex = configuration.index || 0;
     let properties = Object.assign({}, configuration);
 
+    // TODO: don't delete nextLevel
     delete properties.nextLevel;
+    // TODO: name children and index using a constant instead.
     delete properties.index;
     delete properties.children;
 
-    properties = merge(props, properties);
-
-    return getCurrentProps(configuration.children[nextLevelIndex], properties);
-  } else {
-    // Base case: return all of the props
-    return merge(props, configuration);
+    configuration = configuration.children[nextLevelIndex];
+    props = merge(props, properties);
   }
+
+  return merge(props, configuration);
 }
 
 // Move on to the next step of the workflow.
@@ -150,6 +103,21 @@ export function advanceWorkflowLevelTo(config, level, newValue) {
 // TODO: this overwrites when things are logged multiple times, it should at the very least warn when that happens.
 // TODO: Logs should instead be placed into an array on the task object called logs
 // TODO: log and logAction do essentially the same thing.
+
+// TODO: I can make this function nicer by doing something like:
+
+/*
+
+let newTask = {...getTask([0,1,2])}
+newTask.logs = [...newTask.logs, newLog]
+modifyTask([0,1,2], newTask)
+
+
+Then modify task does essentially the same thing as log does now except replacing an entire task object. 
+
+logAction can be essentially identical after that. Although after the changes to logs I might not even need to separate them.
+
+*/
 
 export function log(config, key, value, withTimeStamp) {
   // Walk down the tree until we have reached the bottom, replacing each level to avoid mutations.

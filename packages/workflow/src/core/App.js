@@ -8,10 +8,8 @@ import {
 
 import {
   withRawConfiguration,
-  getGlobalProps,
-  getTask,
-  getComponentProps,
-  getAllPropsForComponent,
+  getCurrentProps,
+  scopePropsForTask,
   getCurrentIndex
 } from "./Workflow";
 
@@ -51,8 +49,7 @@ const GridLayout = ({ children }) => {
 };
 
 export const App = ({
-  task,
-  tasks = [],
+  // TODO: Ideally we don't pass the entire configuration...
   configuration,
   log,
   taskComplete,
@@ -62,7 +59,8 @@ export const App = ({
   taskRegistry,
   Layout = GridLayout,
   ErrorHandler = null,
-  forceRemountEveryTask = true
+  forceRemountEveryTask = true,
+  currentProps
 }) => {
   let onLog = (...args) => {
     console.warn(
@@ -96,17 +94,19 @@ export const App = ({
     navigateWorkflowTo(...args);
   };
 
-  if (task) {
-    tasks = [...tasks, task];
+  let tasks = currentProps.tasks || [];
+
+  if (currentProps.task) {
+    tasks = [...tasks, currentProps.task];
   }
 
   let tasksFilled;
 
-  if (tasks.length > 0) {
+  if (getCurrentIndex(configuration).length > 0) {
     tasksFilled = tasks.map((task, i) => {
-      let globalProps = getGlobalProps(configuration);
       let Task = taskRegistry.getTask(task);
       let key = `${task}-${i.toString()}`;
+      let props = scopePropsForTask(currentProps, task);
 
       if (forceRemountEveryTask) {
         key += "-" + getCurrentIndex(configuration).join(":");
@@ -124,8 +124,7 @@ export const App = ({
           taskComplete={taskComplete}
           editConfig={editConfig}
           getTask={getTask}
-          {...globalProps}
-          {...getComponentProps(task, configuration)}
+          {...props}
         />
       );
     });
@@ -157,12 +156,7 @@ export const App = ({
 };
 
 const mapStateToProps = state => {
-  // TODO: getTask doesn't handle all props..
-  let props = getGlobalProps(state.Configuration);
-  return {
-    ...props,
-    getTask: taskName => getTask(taskName, props)
-  };
+  return { currentProps: getCurrentProps(state.Configuration) };
 };
 
 const mapDispatchToProps = {

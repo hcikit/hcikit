@@ -4,8 +4,7 @@ import {
   advanceWorkflow,
   log,
   logAction,
-  getGlobalProps,
-  getComponentProps,
+  scopePropsForTask,
   mergeArraysSpecial,
   getCurrentIndex
 } from "./Workflow";
@@ -96,7 +95,7 @@ describe("advanceWorkflow", () => {
     advanceWorkflow(config);
     advanceWorkflow(config);
 
-    expect(getCurrentProps(config)).toEqual(undefined);
+    expect(getCurrentProps(config)).toEqual({});
   });
 
   it("cant advance past end", () => {
@@ -106,7 +105,7 @@ describe("advanceWorkflow", () => {
     advanceWorkflow(config);
     advanceWorkflow(config);
 
-    expect(getCurrentProps(config)).toEqual(undefined);
+    expect(getCurrentProps(config)).toEqual({});
     expect(config.children.length).toBe(1);
   });
 
@@ -135,17 +134,6 @@ describe("advanceWorkflow", () => {
   });
 });
 
-describe("getGlobalProps", () => {
-  it("ignores uppercase props", () => {
-    expect(getGlobalProps(config)).toEqual({
-      blockprop: "section",
-      sectionprop: "section",
-      configprop: "section",
-      stimulus: "bear"
-    });
-  });
-});
-
 describe("getCurrentIndex", () => {
   it("returns the index as an array", () => {
     expect(getCurrentIndex(config)).toEqual([0, 0, 0]);
@@ -164,16 +152,56 @@ describe("getCurrentIndex", () => {
   });
 });
 
-describe("getComponentProps", () => {
-  it("ignores uppercase props", () => {
-    expect(getComponentProps("StimulusResponse", config)).toEqual({
+describe("scopePropsForTask", () => {
+  it("scopes props properly", () => {
+    expect(
+      scopePropsForTask(
+        {
+          hello: "world",
+          StimulusResponse: {
+            you: "too"
+          }
+        },
+        "StimulusResponse"
+      )
+    ).toEqual({
       hello: "world",
-      yolo: "yoyololo"
+      you: "too"
     });
   });
 
-  it("returns an object if there are no props", () => {
-    expect(getComponentProps("Stimulus", config)).toEqual({});
+  it("more specific props override less specific", () => {
+    expect(
+      scopePropsForTask(
+        {
+          hello: "world",
+          StimulusResponse: {
+            hello: "you"
+          }
+        },
+        "StimulusResponse"
+      )
+    ).toEqual({
+      hello: "you"
+    });
+  });
+  it("wrong scopes are thrown away", () => {
+    expect(
+      scopePropsForTask(
+        {
+          hello: "world",
+          StimulusResponse: {
+            hello: "you"
+          },
+          WrongScope: {
+            hello: "dude"
+          }
+        },
+        "StimulusResponse"
+      )
+    ).toEqual({
+      hello: "you"
+    });
   });
 });
 
@@ -346,6 +374,7 @@ describe("flattenToLevel", () => {
         hello: "world",
         yolo: "yoyololo"
       },
+
       children: [
         {
           blockprop: "section",
@@ -395,6 +424,7 @@ describe("flattenToLevel", () => {
         hello: "world",
         yolo: "yoyololo"
       },
+
       children: [
         {
           stimulus: "bear"
