@@ -5,7 +5,7 @@ import { mergeWith, pickBy } from "lodash-es";
 // TODO: there is a lot of duplication in here.
 // TODO: need to document the frameworks use of index or rename it to something less commonly used because it gets deleted before passing it.
 
-let __INDEX__ = "__INDEX__";
+export const __INDEX__ = "__INDEX__";
 
 export function mergeArraysSpecial(object, source) {
   return mergeWith(object, source, (value, srcValue) => {
@@ -17,7 +17,6 @@ export function mergeArraysSpecial(object, source) {
 
 let merge = mergeArraysSpecial;
 
-// TODO: Convert getcurrentprops into a "selector" function
 export function scopePropsForTask(props, task) {
   return merge(
     pickBy(props, (_, k) => k[0] === k[0].toLowerCase()),
@@ -25,23 +24,23 @@ export function scopePropsForTask(props, task) {
   );
 }
 
-// Get a flattened list of props for this trial of the experiment.
+export function experimentComplete(configuration) {
+  return configuration[__INDEX__] && configuration[__INDEX__].length === 0;
+}
+
+// TODO: Convert getcurrentprops into a "selector" function
 export function getCurrentProps(configuration) {
-  // TODO: this doesn't seem all that nice... but without it we just return the entire configuration which seems wrong...
-  if (configuration.index >= configuration.children.length) {
+  if (experimentComplete(configuration)) {
     return {};
   }
 
   let props = {};
+  let index = configuration[__INDEX__] || [0];
+  index = getLeafIndex(index, configuration);
 
-  while (configuration && "children" in configuration) {
-    const nextLevelIndex = configuration.index || 0;
+  for (const nextLevelIndex of index) {
     let properties = Object.assign({}, configuration);
 
-    // TODO: don't delete nextLevel
-    delete properties.nextLevel;
-    // TODO: name children and index using a constant instead.
-    delete properties.index;
     delete properties.children;
 
     configuration = configuration.children[nextLevelIndex];
@@ -71,9 +70,13 @@ export function getLeafIndex(index, configuration) {
 }
 
 export function taskComplete(configuration) {
+  if (experimentComplete(configuration)) {
+    return [];
+  }
+
   let index = [0];
-  if (configuration.index) {
-    index = [...configuration.index];
+  if (configuration[__INDEX__]) {
+    index = [...configuration[__INDEX__]];
   }
 
   index = getLeafIndex(index, configuration);
@@ -90,43 +93,7 @@ export function taskComplete(configuration) {
     }
   } while (index.length);
 
-  return index;
-}
-
-export function advanceWorkflowAtDepthBy() {}
-
-// Move on to the next step of the workflow.
-// Returns true if the participant has finished all the steps in this part of the configuration.
-export function advanceWorkflow(config) {
-  // Error catching: if we went past the end of a list, don't keep advancing
-  if (!config) {
-    return false;
-  }
-
-  // Recursive case: move through this level's stage list
-  // If we reach the end, return true so that the level above this knows we're finished
-  if ("children" in config) {
-    const nextLevelIndex = config.index || 0;
-
-    // If the next level index is already passed then we shouldn't continue
-    if (nextLevelIndex < config.children.length) {
-      config.children = [
-        ...config.children.slice(0, nextLevelIndex),
-        {
-          ...config.children[nextLevelIndex]
-        },
-        ...config.children.slice(nextLevelIndex + 1)
-      ];
-
-      if (advanceWorkflow(config.children[nextLevelIndex])) {
-        config.index = nextLevelIndex + 1;
-        return config.index >= config.children.length;
-      }
-    }
-  } else {
-    // Base case: at a leaf node, we don't have a list of steps, so we're always done
-    return true;
-  }
+  return getLeafIndex(index, configuration);
 }
 
 // Returns true if the participant has finished all the steps in this part of the configuration.
@@ -154,9 +121,7 @@ export function advanceWorkflowLevelTo(config, level, newValue) {
 
 /*
 
-let newTask = {...getTask([0,1,2])}
-newTask.logs = [...newTask.logs, newLog]
-modifyTask([0,1,2], newTask)
+
 
 
 Then modify task does essentially the same thing as log does now except replacing an entire task object. 
@@ -166,119 +131,74 @@ logAction can be essentially identical after that. Although after the changes to
 */
 
 export function log(config, key, value, withTimeStamp) {
-  // Walk down the tree until we have reached the bottom, replacing each level to avoid mutations.
-
-  if (config.index >= config.children.length) {
+  if (experimentComplete(config)) {
     console.error("Attempting to log when the experiment is complete.");
     return;
   }
+  let index = config[__INDEX__] || getLeafIndex([0], config);
 
-  while ("children" in config) {
-    const nextLevelIndex = config.index || 0;
+  let newTask = { ...getConfigAtIndex(index, config) };
+  // TODO: Change the way we do configs.
+  // newTask.logs = [...newTask.logs, newLog]
 
-    config.children = [
-      ...config.children.slice(0, nextLevelIndex),
-      {
-        ...config.children[nextLevelIndex]
-      },
-      ...config.children.slice(nextLevelIndex + 1)
-    ];
-    config = config.children[nextLevelIndex];
-  }
   if (withTimeStamp) {
-    config[key] = {
+    newTask[key] = {
       value: value,
       timestamp: Date.now()
     };
   } else {
-    config[key] = value;
+    newTask[key] = value;
   }
+
+  modifyConfig(index, config, newTask);
 }
 
 export function logAction(config, action) {
-  if (config.index >= config.children.length) {
+  if (experimentComplete(config)) {
     console.error("Attempting to log when the experiment is complete.");
     return;
   }
+  let index = config[__INDEX__] || getLeafIndex([0], config);
 
-  while ("children" in config) {
-    const nextLevelIndex = config.index || 0;
+  let newTask = { ...getConfigAtIndex(index, config) };
+  // TODO: Change the way we do configs.
+  // newTask.logs = [...newTask.logs, newLog]
 
-    config.children = [
-      ...config.children.slice(0, nextLevelIndex),
-      {
-        ...config.children[nextLevelIndex]
-      },
-      ...config.children.slice(nextLevelIndex + 1)
-    ];
-    config = config.children[nextLevelIndex];
+  if (!newTask.actions) {
+    newTask.actions = [];
   }
-
-  if (!config.actions) {
-    config.actions = [];
-  }
-  config.actions = [
-    ...config.actions,
+  newTask.actions = [
+    ...newTask.actions,
     {
       action: action,
       timestamp: Date.now()
     }
   ];
+
+  modifyConfig(index, config, newTask);
 }
 
-// Flatten the experiment props down to a given level.
-// Returns a list of all flattened configurations.
-export function flattenToLevel(config, level) {
-  if ("children" in config) {
-    // Find our properties
-    let properties = Object.assign({}, config);
-    delete properties.children;
-    delete properties.nextLevel;
-    delete properties.index;
+export function modifyConfig(index, config, newConfig) {
+  index = [...index];
 
-    // Get the flattened lists
-    let flattenedConfigList;
-    if (config.nextLevel === level) {
-      // Base case: we're at the right level
-      // Just grab the list of configs below us
-      flattenedConfigList = config.children;
-    } else {
-      // Recursive case: go deeper
-      flattenedConfigList = [];
-      config.children.forEach(subConfig =>
-        flattenedConfigList.push(...flattenToLevel(subConfig, level))
-      );
+  for (let i = 0; i < index.length; i++) {
+    let nextLevelIndex = index[i];
+
+    config.children = [
+      ...config.children.slice(0, nextLevelIndex),
+      {
+        ...config.children[nextLevelIndex]
+      },
+      ...config.children.slice(nextLevelIndex + 1)
+    ];
+
+    if (i < index.length - 1) {
+      config = config.children[nextLevelIndex];
     }
-
-    // Apply our properties
-    return flattenedConfigList.map(subConfig => {
-      let propertiesClone = Object.assign({}, properties);
-      return merge(propertiesClone, subConfig);
-    });
-  } else {
-    // Edge case: we've run out of levels to flatten
-    // Return a list with the entire config in it
-    return [config];
   }
+
+  config.children[index[index.length - 1]] = newConfig;
 }
-
-// BUG: this function breaks if any numbers are passed the point they should be
-export const getCurrentIndex = config => {
-  let index = [];
-
-  if (config.index >= config.children.length) {
-    return [];
-  }
-
-  while ("children" in config) {
-    const nextLevelIndex = config.index || 0;
-    index.push(nextLevelIndex);
-
-    config = config.children[nextLevelIndex];
-  }
-
-  return index;
-};
 
 export const withRawConfiguration = connect(state => {
   return { configuration: state.Configuration };

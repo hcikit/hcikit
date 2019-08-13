@@ -1,36 +1,29 @@
 import {
   flattenToLevel,
   getCurrentProps,
-  advanceWorkflow,
   log,
   logAction,
   scopePropsForTask,
   mergeArraysSpecial,
-  getCurrentIndex,
   taskComplete,
-  getConfigAtIndex
+  getConfigAtIndex,
+  __INDEX__
 } from "./Workflow";
 import deepFreeze from "deep-freeze";
 
 const configuration = {
   configprop: "section",
-  nextLevel: "sections",
-  index: 0,
   StimulusResponse: {
     hello: "world",
     yolo: "yoyololo"
   },
   children: [
     {
-      nextLevel: "blocks",
-      index: 0,
       sectionprop: "section",
       children: [
         {
           blockprop: "section",
           stimulus: "overwritten",
-          nextLevel: "trials",
-          index: 0,
           children: [
             {
               stimulus: "bear"
@@ -44,7 +37,6 @@ const configuration = {
           ]
         },
         {
-          nextLevel: "trials",
           // Note: no index given
           children: [
             {
@@ -74,83 +66,6 @@ describe("mergeArraysSpecial", () => {
     );
 
     expect(merged).toEqual({ tasks: ["foo", "bar"] });
-  });
-});
-
-describe("advanceWorkflow", () => {
-  it("advances experiments", () => {
-    expect(getCurrentProps(config).stimulus).toEqual("bear");
-    advanceWorkflow(config);
-
-    expect(getCurrentProps(config).stimulus).toEqual("pig");
-
-    advanceWorkflow(config);
-    expect(getCurrentProps(config).stimulus).toEqual("bird");
-
-    advanceWorkflow(config);
-    expect(getCurrentProps(config).stimulus).toEqual("dog");
-  });
-
-  it("ends gracefully", () => {
-    advanceWorkflow(config);
-    advanceWorkflow(config);
-    advanceWorkflow(config);
-    advanceWorkflow(config);
-
-    expect(getCurrentProps(config)).toEqual({});
-  });
-
-  it("cant advance past end", () => {
-    advanceWorkflow(config);
-    advanceWorkflow(config);
-    advanceWorkflow(config);
-    advanceWorkflow(config);
-    advanceWorkflow(config);
-
-    expect(getCurrentProps(config)).toEqual({});
-    expect(config.children.length).toBe(1);
-  });
-
-  it("replaces the required objects", () => {
-    let c = { ...config };
-    advanceWorkflow(c);
-
-    deepFreeze(config);
-
-    expect(config).not.toBe(c);
-    expect(config.children).not.toBe(c.children);
-    expect(config.children[1]).toBe(c.children[1]);
-    expect(config.children[0]).not.toBe(c.children[0]);
-    expect(config.children[0].children).not.toBe(c.children[0].children);
-    expect(config.children[0].children[1]).toBe(c.children[0].children[1]);
-    expect(config.children[0].children[0]).not.toBe(c.children[0].children[0]);
-    expect(config.children[0].children[0].children).not.toBe(
-      c.children[0].children[0].children
-    );
-    expect(config.children[0].children[0].children[1]).toBe(
-      c.children[0].children[0].children[1]
-    );
-    expect(config.children[0].children[0].children[0]).not.toBe(
-      c.children[0].children[0].children[0]
-    );
-  });
-});
-
-describe("getCurrentIndex", () => {
-  it("returns the index as an array", () => {
-    expect(getCurrentIndex(config)).toEqual([0, 0, 0]);
-  });
-  it("returns the index as an after advancing", () => {
-    expect(getCurrentIndex(config)).toEqual([0, 0, 0]);
-    advanceWorkflow(config);
-    expect(getCurrentIndex(config)).toEqual([0, 0, 1]);
-    advanceWorkflow(config);
-    expect(getCurrentIndex(config)).toEqual([0, 1, 0]);
-    advanceWorkflow(config);
-    expect(getCurrentIndex(config)).toEqual([0, 1, 1]);
-
-    advanceWorkflow(config);
-    expect(getCurrentIndex(config)).toEqual([]);
   });
 });
 
@@ -222,8 +137,9 @@ describe("getCurrentProps", () => {
   });
 
   it("handles object props properly", () => {
-    advanceWorkflow(config);
+    config[__INDEX__] = taskComplete(config);
     expect(getCurrentProps(config)).toEqual({
+      __INDEX__: [0, 0, 1],
       blockprop: "section",
       sectionprop: "section",
       configprop: "section",
@@ -248,11 +164,10 @@ describe("getCurrentProps", () => {
 
 describe("log", () => {
   it("doesn't log when the experiment is finished", () => {
-    advanceWorkflow(config);
-    advanceWorkflow(config);
-    advanceWorkflow(config);
-    advanceWorkflow(config);
-    advanceWorkflow(config);
+    config[__INDEX__] = taskComplete(config);
+    config[__INDEX__] = taskComplete(config);
+    config[__INDEX__] = taskComplete(config);
+    config[__INDEX__] = taskComplete(config);
 
     deepFreeze(config);
 
@@ -282,19 +197,20 @@ describe("log", () => {
   });
 
   it("logs after advancing correct place", () => {
-    advanceWorkflow(config);
+    config[__INDEX__] = taskComplete(config);
+
     log(config, "hello", "world", true);
     expect(config.children[0].children[0].children[1].hello.value).toEqual(
       "world"
     );
+    config[__INDEX__] = taskComplete(config);
 
-    advanceWorkflow(config);
     log(config, "hello", "world", true);
     expect(config.children[0].children[1].children[0].hello.value).toEqual(
       "world"
     );
 
-    advanceWorkflow(config);
+    config[__INDEX__] = taskComplete(config);
     log(config, "hello", "world", true);
     expect(config.children[0].children[1].children[1].hello.value).toEqual(
       "world"
@@ -302,9 +218,9 @@ describe("log", () => {
   });
   it("log replaces the required objects", () => {
     let c = { ...config };
-    log(c, "hello", "world");
-
     deepFreeze(config);
+
+    log(c, "hello", "world");
 
     expect(config).not.toBe(c);
     expect(config.children).not.toBe(c.children);
@@ -342,118 +258,23 @@ describe("logAction", () => {
   });
 
   it("logs after advancing correct place", () => {
-    advanceWorkflow(config);
+    config[__INDEX__] = taskComplete(config);
     logAction(config, "hello");
     expect(
       config.children[0].children[0].children[1].actions[0].action
     ).toEqual("hello");
 
-    advanceWorkflow(config);
+    config[__INDEX__] = taskComplete(config);
     logAction(config, "world");
     expect(
       config.children[0].children[1].children[0].actions[0].action
     ).toEqual("world");
 
-    advanceWorkflow(config);
+    config[__INDEX__] = taskComplete(config);
     logAction(config, "!");
     expect(
       config.children[0].children[1].children[1].actions[0].action
     ).toEqual("!");
-  });
-});
-
-describe("flattenToLevel", () => {
-  it("flattens to one level", () => {
-    let flatConfigurations = flattenToLevel(config, "sections");
-    expect(flatConfigurations).toHaveLength(1);
-
-    const expected = {
-      configprop: "section",
-      nextLevel: "blocks",
-      index: 0,
-      sectionprop: "section",
-      StimulusResponse: {
-        hello: "world",
-        yolo: "yoyololo"
-      },
-
-      children: [
-        {
-          blockprop: "section",
-          stimulus: "overwritten",
-          nextLevel: "trials",
-          index: 0,
-          children: [
-            {
-              stimulus: "bear"
-            },
-            {
-              stimulus: "pig",
-              StimulusResponse: {
-                hello: "hello"
-              }
-            }
-          ]
-        },
-        {
-          nextLevel: "trials",
-          // Note: no index given
-          children: [
-            {
-              stimulus: "bird"
-            },
-            {
-              stimulus: "dog"
-            }
-          ]
-        }
-      ]
-    };
-    expect(flatConfigurations[0]).toEqual(expected);
-  });
-
-  it("flattens to multiple levels", () => {
-    let flatConfigurations = flattenToLevel(config, "blocks");
-    expect(flatConfigurations).toHaveLength(2);
-    expect(flatConfigurations[0]).toEqual({
-      configprop: "section",
-      sectionprop: "section",
-      blockprop: "section",
-      stimulus: "overwritten",
-      nextLevel: "trials",
-      index: 0,
-      StimulusResponse: {
-        hello: "world",
-        yolo: "yoyololo"
-      },
-
-      children: [
-        {
-          stimulus: "bear"
-        },
-        {
-          stimulus: "pig",
-          StimulusResponse: {
-            hello: "hello"
-          }
-        }
-      ]
-    });
-  });
-
-  it("handles levels that aren't present", () => {
-    let flatConfigurations = flattenToLevel(config, "thisIsNotTheNameOfALevel");
-    expect(flatConfigurations).toHaveLength(4);
-    expect(flatConfigurations[0]).toEqual({
-      configprop: "section",
-      sectionprop: "section",
-      blockprop: "section",
-      stimulus: "bear",
-      StimulusResponse: {
-        hello: "hello",
-        yolo: "yoyololo"
-      }
-    });
   });
 });
 
@@ -464,15 +285,11 @@ describe("getConfigAtIndex", () => {
 
   it("middle levels are returned", () => {
     expect(getConfigAtIndex([0], config)).toEqual({
-      nextLevel: "blocks",
-      index: 0,
       sectionprop: "section",
       children: [
         {
           blockprop: "section",
           stimulus: "overwritten",
-          nextLevel: "trials",
-          index: 0,
           children: [
             {
               stimulus: "bear"
@@ -486,7 +303,6 @@ describe("getConfigAtIndex", () => {
           ]
         },
         {
-          nextLevel: "trials",
           // Note: no index given
           children: [
             {
@@ -507,30 +323,37 @@ describe("getConfigAtIndex", () => {
   });
 });
 
-fdescribe("taskComplete", () => {
+describe("taskComplete", () => {
   it("advances experiments", () => {
     expect(taskComplete(config)).toEqual([0, 0, 1]);
   });
 
-  it("ends gracefully", () => {
-    config.index = taskComplete(config);
-    config.index = taskComplete(config);
-    config.index = taskComplete(config);
-    config.index = taskComplete(config);
+  it("advances from second", () => {
+    config[__INDEX__] = [0, 0, 1];
+    expect(taskComplete(config)).toEqual([0, 1, 0]);
+  });
 
-    // expect(getCurrentProps(config)).toEqual({});
-    expect(config.index).toEqual([]);
+  it("ends gracefully", () => {
+    config[__INDEX__] = taskComplete(config);
+    expect(config[__INDEX__]).toEqual([0, 0, 1]);
+    config[__INDEX__] = taskComplete(config);
+    expect(config[__INDEX__]).toEqual([0, 1, 0]);
+    config[__INDEX__] = taskComplete(config);
+    expect(config[__INDEX__]).toEqual([0, 1, 1]);
+    config[__INDEX__] = taskComplete(config);
+
+    expect(getCurrentProps(config)).toEqual({});
+    expect(config[__INDEX__]).toEqual([]);
   });
 
   it("cant advance past end", () => {
-    config.index = taskComplete(config);
-    config.index = taskComplete(config);
-    config.index = taskComplete(config);
-    config.index = taskComplete(config);
-    config.index = taskComplete(config);
+    config[__INDEX__] = taskComplete(config);
+    config[__INDEX__] = taskComplete(config);
+    config[__INDEX__] = taskComplete(config);
+    config[__INDEX__] = taskComplete(config);
 
-    // expect(getCurrentProps(config)).toEqual({});
+    expect(getCurrentProps(config)).toEqual({});
     expect(config.children.length).toBe(1);
-    expect(config.index).toEqual([]);
+    expect(config[__INDEX__]).toEqual([]);
   });
 });

@@ -10,7 +10,8 @@ import {
   withRawConfiguration,
   getCurrentProps,
   scopePropsForTask,
-  getCurrentIndex
+  experimentComplete,
+  __INDEX__
 } from "./Workflow";
 
 import { connect } from "react-redux";
@@ -102,9 +103,9 @@ export const App = ({
 
   let tasksFilled;
 
-  if (getCurrentIndex(configuration).length > 0) {
+  if (!experimentComplete(configuration)) {
     if (!tasks.length) {
-      throw new Error(`No task selected at ${getCurrentIndex(configuration)}`);
+      throw new Error(`No task selected at ${configuration[__INDEX__]}`);
     }
 
     tasksFilled = tasks.map((task, i) => {
@@ -113,7 +114,7 @@ export const App = ({
       let props = scopePropsForTask(currentProps, task);
 
       if (forceRemountEveryTask) {
-        key += "-" + getCurrentIndex(configuration).join(":");
+        key += "-" + configuration[__INDEX__].join(":");
       }
 
       return (

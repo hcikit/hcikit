@@ -8,7 +8,7 @@ import {
 import { createStore, combineReducers } from "redux";
 import { throttle } from "lodash-es";
 import ConfigurationReducer from "./Workflow.reducers";
-import { getCurrentIndex } from "./Workflow";
+import { experimentComplete, getLeafIndex, __INDEX__ } from "./Workflow";
 
 const STATE_KEY = "state";
 
@@ -47,6 +47,8 @@ export default (Configuration, reducers) => {
   reducers["Configuration"] = ConfigurationReducer;
   let reducer = combineReducers(reducers);
 
+  Configuration[__INDEX__] = getLeafIndex([0], Configuration);
+
   if (process.env.NODE_ENV !== "production") {
     store = createStore(
       reducer,
@@ -81,7 +83,7 @@ export default (Configuration, reducers) => {
 
     if (
       action.type === TASK_COMPLETE &&
-      getCurrentIndex(store.getState().Configuration).length !== 0
+      !experimentComplete(store.getState().Configuration)
     ) {
       dispatch(log("start", Date.now(), false));
     }
