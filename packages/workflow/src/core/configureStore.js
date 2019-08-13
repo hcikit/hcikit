@@ -8,7 +8,7 @@ import {
 import { createStore, combineReducers } from "redux";
 import { throttle } from "lodash-es";
 import ConfigurationReducer from "./Workflow.reducers";
-import { getReducers, getCurrentIndex } from "./Workflow";
+import { getCurrentIndex } from "./Workflow";
 
 const STATE_KEY = "state";
 
@@ -29,7 +29,7 @@ const saveState = throttle(state => {
   } catch (err) {}
 }, 1000);
 
-export default Configuration => {
+export default (Configuration, reducers) => {
   let storedState;
 
   if (process.env.NODE_ENV === "production") {
@@ -44,7 +44,6 @@ export default Configuration => {
   }
 
   let store = {};
-  let reducers = getReducers();
   reducers["Configuration"] = ConfigurationReducer;
   let reducer = combineReducers(reducers);
 

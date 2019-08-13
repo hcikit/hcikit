@@ -59,6 +59,7 @@ export const App = ({
   navigateWorkflowTo,
   editConfig,
   getTask,
+  taskRegistry,
   Layout = GridLayout,
   ErrorHandler = null,
   forceRemountEveryTask = true
@@ -104,15 +105,11 @@ export const App = ({
   if (tasks.length > 0) {
     tasksFilled = tasks.map((task, i) => {
       let globalProps = getGlobalProps(configuration);
-      let Task = getTask(task, getAllPropsForComponent(task, configuration));
+      let Task = taskRegistry.getTask(task);
       let key = `${task}-${i.toString()}`;
 
       if (forceRemountEveryTask) {
         key += "-" + getCurrentIndex(configuration).join(":");
-      }
-
-      if (!Task) {
-        throw new Error(`Component ${task} isn't registered.`);
       }
 
       return (

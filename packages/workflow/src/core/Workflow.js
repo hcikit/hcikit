@@ -5,11 +5,6 @@ import { mergeWith, pickBy } from "lodash-es";
 // TODO: there is a lot of duplication in here.
 // TODO: need to document the frameworks use of index or rename it to something less commonly used because it gets deleted before passing it.
 
-// TODO: to make it easier to test we should instead wrap all of the register task etc stuff into a class. If we do this properly it might help solve some issues with creating a replay thing.
-
-let tasks = {};
-let reducers = {};
-
 export function mergeArraysSpecial(object, source) {
   return mergeWith(object, source, (value, srcValue) => {
     if (Array.isArray(value)) {
@@ -19,32 +14,6 @@ export function mergeArraysSpecial(object, source) {
 }
 
 let merge = mergeArraysSpecial;
-
-/**
- *
- * registerTask("MyTask", MyTask))
- *
- * @param {string} taskName, the name of the component for lookup in configuration
- * @param {function} task, the component
-
- */
-export const registerTask = (taskName, task, reducer = undefined) => {
-  tasks[taskName] = task;
-  if (reducer) {
-    reducers[taskName] = reducer;
-  }
-};
-
-export const getReducers = () => reducers;
-
-// TODO: consider using something that supports passing them in better, so that I can just pass a component in during a test without using workflow...
-export const getTask = (taskName, currentProps = {}) => {
-  if (typeof currentProps[taskName] === "string") {
-    taskName = currentProps[taskName];
-  }
-
-  return tasks[taskName];
-};
 
 // TODO: these props are a mess, they're very expensive because we call them multiple times and they call each other.
 

@@ -1,6 +1,7 @@
-import Experiment, { registerTask } from "./";
+import Experiment from "./";
 import React, { useState } from "react";
 import { mount } from "enzyme";
+import TaskRegistry from "./core/TaskRegistry";
 
 const config = {
   tasks: ["AuxTask"],
@@ -49,10 +50,12 @@ let AuxTask = ({}) => <p>Hello World!</p>;
 describe("Experiment", () => {
   let experiment;
   beforeEach(() => {
-    registerTask("ButtonTask", ButtonTask);
-    registerTask("AuxTask", AuxTask);
-
-    experiment = mount(<Experiment configuration={config} />);
+    experiment = mount(
+      <Experiment
+        taskRegistry={new TaskRegistry({ ButtonTask, AuxTask })}
+        configuration={config}
+      />
+    );
   });
 
   it("renders the proper task", () => {
@@ -89,10 +92,12 @@ describe("Experiment", () => {
         ]
       };
 
-      registerTask("MultiTask", MultiTask);
-
       experiment = mount(
-        <Experiment forceRemountEveryTask configuration={config} />
+        <Experiment
+          forceRemountEveryTask
+          taskRegistry={new TaskRegistry({ MultiTask })}
+          configuration={config}
+        />
       );
 
       experiment.find("button").simulate("click");
@@ -114,10 +119,12 @@ describe("Experiment", () => {
         ]
       };
 
-      registerTask("MultiTask", MultiTask);
-
       experiment = mount(
-        <Experiment forceRemountEveryTask={false} configuration={config} />
+        <Experiment
+          forceRemountEveryTask={false}
+          taskRegistry={new TaskRegistry({ MultiTask })}
+          configuration={config}
+        />
       );
 
       experiment.find("button").simulate("click");

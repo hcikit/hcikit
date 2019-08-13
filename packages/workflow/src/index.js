@@ -4,18 +4,21 @@ import PropTypes from "prop-types";
 
 import App from "./core/App";
 import configureStore from "./core/configureStore";
-let store;
+import TaskRegistry from "./core/TaskRegistry";
+
 /**
  * This component takes a configuration that allows you to run an experiment.
  */
 export default class Experiment extends React.Component {
-  componentWillMount() {
-    store = configureStore(this.props.configuration);
-  }
+  // TODO: maybe we should hide the task registry and instead just pass a list of objects?
+  store = configureStore(
+    this.props.configuration,
+    this.props.taskRegistry.getReducers()
+  );
 
   render() {
     return (
-      <Provider store={store}>
+      <Provider store={this.store}>
         <App {...this.props} />
       </Provider>
     );
@@ -23,11 +26,13 @@ export default class Experiment extends React.Component {
 }
 
 Experiment.propTypes = {
-  configuration: PropTypes.object
+  configuration: PropTypes.object.isRequired,
+  taskRegistry: PropTypes.instanceOf(TaskRegistry)
 };
 
 export { registerTask, withRawConfiguration } from "./core/Workflow";
 
+export { TaskRegistry } from "./core/TaskRegistry";
 export * from "./Utils";
 export * from "./designUtils";
 
@@ -38,6 +43,7 @@ export * from "./designUtils";
 // TODO: we could render the html using the "server" I think we could do it statically at build. And then we just call hydrate instead. This would improve the bundle size a lot.
 
 // TODO: when losing focus we should grey out the screen, or whenever we can't capture keyboard shortcuts. Implement this as a auxillary task you can add in addition
+
 // TODO: need a task that automatically logs when changing tabs
 
 // TODO: rethink how we do multiple sessions, especially when we start thinking about localstorage.
