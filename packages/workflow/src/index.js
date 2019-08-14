@@ -30,9 +30,9 @@ Experiment.propTypes = {
   taskRegistry: PropTypes.instanceOf(TaskRegistry)
 };
 
-export { registerTask, withRawConfiguration } from "./core/Workflow";
+export { withRawConfiguration } from "./core/Workflow";
 
-export { TaskRegistry } from "./core/TaskRegistry";
+export { default as TaskRegistry } from "./core/TaskRegistry";
 export * from "./Utils";
 export * from "./designUtils";
 

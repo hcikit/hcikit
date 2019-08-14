@@ -49,12 +49,13 @@ let AuxTask = ({}) => <p>Hello World!</p>;
 
 describe("Experiment", () => {
   let experiment;
+
   beforeEach(() => {
+    let taskRegistry = new TaskRegistry({ ButtonTask });
+    taskRegistry.registerTask("AuxTask", AuxTask);
+
     experiment = mount(
-      <Experiment
-        taskRegistry={new TaskRegistry({ ButtonTask, AuxTask })}
-        configuration={config}
-      />
+      <Experiment taskRegistry={taskRegistry} configuration={config} />
     );
   });
 
@@ -75,6 +76,29 @@ describe("Experiment", () => {
     expect(experiment.find("h1").text()).toEqual(
       "You've completed the experiment!"
     );
+  });
+
+  it("throws errors for unregistered tasks", () => {
+    spyOn(console, "error");
+
+    const config = {
+      children: [
+        {
+          times: 2,
+          task: "MultiTask"
+        }
+      ]
+    };
+
+    let error;
+    try {
+      mount(
+        <Experiment taskRegistry={new TaskRegistry()} configuration={config} />
+      );
+    } catch (e) {
+      error = e;
+    }
+    expect(error).toBeInstanceOf(Error);
   });
 
   describe("remounting", () => {
