@@ -7,6 +7,14 @@ import {
   FastRewind
 } from "@material-ui/icons";
 import styled from "styled-components";
+import { withRawConfiguration } from "@hcikit/workflow/src";
+import {
+  taskNumberToIndex,
+  indexToTaskNumber,
+  getPropsFor,
+  __INDEX__,
+  getLeafIndex
+} from "@hcikit/workflow/src/core/Workflow";
 
 const StyledCard = styled(Card)`
   display: inline-block;
@@ -19,14 +27,12 @@ const StyledSlider = styled(Slider)`
   margin-right: 10px;
 `;
 
-export default ({ config }) => {
-  // TODO: making the slider work might be super tricky. Say you complete later in the experiment and leave "index" filled out somewhere, then go backwards, then do experiment as normal. Now when you catch up it will break. It might be better to instead store a single index at the top level like: [1,2,3], but that might require rewriting the advanceworkflow function etc. But it does make advanceworkflowlevelto super easy...
-
+export const DevTools = ({ configuration, setWorkflowIndex }) => {
   // TODO: set the marks to the top level sections
 
   const topLevelTasks = configuration.children.map((_, i) => ({
-    value: getTaskNumber([i]),
-    label: getTaskNumber([i])
+    value: indexToTaskNumber(getLeafIndex([i]), configuration),
+    label: getPropsFor([i], configuration).task
   }));
 
   let currentIndex = 5;
@@ -50,17 +56,19 @@ export default ({ config }) => {
       <StyledSlider
         step={1}
         valueLabelDisplay="auto"
-        value={getCurrentIndex(config)}
+        value={indexToTaskNumber(config[__INDEX__], configuration)}
         marks={topLevelTasks}
         min={0}
         max={totalTasks}
         onChange={() =>
-          advanceWorkflowLevelTo(taskNumberToIndex(config, e.value))
+          setWorkflowIndex(taskNumberToIndex(e.value, configuration))
         }
       />
     </StyledCard>
   );
 };
+
+export default withRawConfiguration(DevTools);
 
 // class extends React.Component {
 //   componentDidMount() {

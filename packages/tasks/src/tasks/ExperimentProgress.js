@@ -5,6 +5,8 @@ import { map, sum } from "lodash-es";
 import { connect } from "react-redux";
 import styled from "styled-components";
 
+// TODO: this class is very broken right now, and needs work anyways to make it work with gridlayouts instead
+
 const Progress = styled.div`
   position: fixed;
   left: 0;
