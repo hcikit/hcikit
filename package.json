@@ -7,7 +7,8 @@
     "example"
   ],
   "scripts": {
-    "test": "yarn workspaces run test"
+    "test": "yarn workspaces run test",
+    "build": "yarn workspaces run build"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^5.1.11",
