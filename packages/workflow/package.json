@@ -21,7 +21,7 @@
   },
   "scripts": {
     "test": "jest",
-    "test:watch": "jest --watch --colors",
+    "test:watch": "jest --watch --colors --verbose",
     "test:coverage": "jest --coverage --colors",
     "build": "rollup -c",
     "start": "rollup -c -w",
@@ -37,8 +37,9 @@
     "transformIgnorePatterns": [
       "/node_modules/(?!lodash-es).+\\.js$"
     ],
-    "setupFilesAfterEnv": ["./src/setupTests.js"]
-
+    "setupFilesAfterEnv": [
+      "./src/setupTests.js"
+    ]
   },
   "peerDependencies": {
     "react": "^16.8.6",
