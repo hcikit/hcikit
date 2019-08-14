@@ -6,6 +6,9 @@
     "packages/tasks",
     "example"
   ],
+  "scripts": {
+    "test": "yarn workspaces run test"
+  },
   "devDependencies": {
     "@storybook/addon-actions": "^5.1.11",
     "@storybook/addon-links": "^5.1.11",
@@ -36,9 +39,5 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-peer-deps-external": "^2.2.0",
     "rollup-plugin-postcss": "^2.0.3"
-  },
-  "dependencies": {
-    "@hcikit/tasks": "file:packages/tasks",
-    "@hcikit/workflow": "file:packages/workflow"
   }
 }
