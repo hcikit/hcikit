@@ -1,9 +1,8 @@
 export default class TaskRegistry {
-  tasks = {};
   reducers = {};
 
   constructor(tasks) {
-    this.tasks = tasks;
+    this.tasks = tasks || {};
   }
 
   /**
@@ -15,20 +14,20 @@ export default class TaskRegistry {
 
  */
   registerTask = (taskName, task, reducer = undefined) => {
-    tasks[taskName] = task;
+    this.tasks[taskName] = task;
 
     if (reducer) {
-      reducers[taskName] = reducer;
+      this.reducers[taskName] = reducer;
     }
   };
 
   getReducers = () => this.reducers;
 
-  getTask = taskName => {
-    if (!this.tasks[taskName]) {
+  getTask = task => {
+    if (!this.tasks[task]) {
       throw new Error(`Task ${task} isn't registered.`);
     }
 
-    return this.tasks[taskName];
+    return this.tasks[task];
   };
 }
