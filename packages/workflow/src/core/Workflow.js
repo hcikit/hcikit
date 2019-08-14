@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { mergeWith, pickBy } from "lodash-es";
+import { mergeWith, pickBy, isEqual } from "lodash-es";
 
 // TODO: mergeWith is very slow which slows everything down with lots of onlogs.
 // TODO: document everything here...
@@ -29,12 +29,16 @@ export function experimentComplete(configuration) {
 
 // TODO: Convert getcurrentprops into a "selector" function
 export function getCurrentProps(configuration) {
+  return getPropsFor(configuration[__INDEX__] || [0], configuration);
+}
+
+export function getPropsFor(index, configuration) {
   if (experimentComplete(configuration)) {
     return {};
   }
 
   let props = {};
-  let index = configuration[__INDEX__] || [0];
+  // TODO: should this be for a leaf index only?
   index = getLeafIndex(index, configuration);
 
   for (const nextLevelIndex of index) {
@@ -179,6 +183,61 @@ export function modifyConfig(index, config, newConfig) {
 
   config.children[index[index.length - 1]] = newConfig;
 }
+
+export function indexToTaskNumber(index, config) {
+  // TODO: this adds lots of nodes to a list which seems slow.. this might actually be best as a recursive function :(
+  let number = 0;
+  let toSearch = [[0]];
+
+  while (toSearch.length !== 0) {
+    let searchingIndex = toSearch.pop();
+
+    let searchingConfig = getConfigAtIndex(searchingIndex, config);
+
+    if ("children" in searchingConfig) {
+      for (let i = searchingConfig.children.length - 1; i >= 0; i--) {
+        toSearch.push([...searchingIndex, i]);
+      }
+    } else {
+      if (isEqual(searchingIndex, index)) {
+        return number;
+      }
+
+      number++;
+    }
+  }
+}
+
+export function taskNumberToIndex(taskNumber, config) {
+  let number = 0;
+  let toSearch = [[0]];
+
+  while (toSearch.length !== 0) {
+    let searchingIndex = toSearch.pop();
+
+    let searchingConfig = getConfigAtIndex(searchingIndex, config);
+
+    if ("children" in searchingConfig) {
+      for (let i = searchingConfig.children.length - 1; i >= 0; i--) {
+        toSearch.push([...searchingIndex, i]);
+      }
+    } else {
+      if (taskNumber === number) {
+        return searchingIndex;
+      }
+      number++;
+    }
+  }
+}
+/*
+
+[
+  [[1,2,3,4], [5,6,7]],
+  [8]
+]
+
+
+*/
 
 export const withRawConfiguration = connect(state => {
   return { configuration: state.Configuration };

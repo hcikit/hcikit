@@ -7,7 +7,9 @@ import {
   mergeArraysSpecial,
   taskComplete,
   getConfigAtIndex,
-  __INDEX__
+  __INDEX__,
+  indexToTaskNumber,
+  taskNumberToIndex
 } from "./Workflow";
 import deepFreeze from "deep-freeze";
 
@@ -164,6 +166,8 @@ describe("getCurrentProps", () => {
 
 describe("log", () => {
   it("doesn't log when the experiment is finished", () => {
+    spyOn(console, "error");
+
     config[__INDEX__] = taskComplete(config);
     config[__INDEX__] = taskComplete(config);
     config[__INDEX__] = taskComplete(config);
@@ -355,5 +359,29 @@ describe("taskComplete", () => {
     expect(getCurrentProps(config)).toEqual({});
     expect(config.children.length).toBe(1);
     expect(config[__INDEX__]).toEqual([]);
+  });
+});
+
+describe("indexToTaskNumber", () => {
+  it("works on first task", () => {
+    expect(indexToTaskNumber([0, 0, 0], config)).toEqual(0);
+  });
+  it("works on last task", () => {
+    expect(indexToTaskNumber([0, 1, 1], config)).toEqual(3);
+  });
+  it("works on middle task", () => {
+    expect(indexToTaskNumber([0, 1, 0], config)).toEqual(2);
+  });
+});
+
+describe("taskNumberToIndex", () => {
+  it("works on first task", () => {
+    expect(taskNumberToIndex(0, config)).toEqual([0, 0, 0]);
+  });
+  it("works on last task", () => {
+    expect(taskNumberToIndex(3, config)).toEqual([0, 1, 1]);
+  });
+  it("works on middle task", () => {
+    expect(taskNumberToIndex(2, config)).toEqual([0, 1, 0]);
   });
 });
