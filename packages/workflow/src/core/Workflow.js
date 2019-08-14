@@ -2,8 +2,7 @@ import { connect } from "react-redux";
 import { mergeWith, pickBy } from "lodash-es";
 
 // TODO: mergeWith is very slow which slows everything down with lots of onlogs.
-// TODO: there is a lot of duplication in here.
-// TODO: need to document the frameworks use of index or rename it to something less commonly used because it gets deleted before passing it.
+// TODO: document everything here...
 
 export const __INDEX__ = "__INDEX__";
 
@@ -113,23 +112,6 @@ export function advanceWorkflowLevelTo(config, level, newValue) {
   }
 }
 
-// TODO: this overwrites when things are logged multiple times, it should at the very least warn when that happens.
-// TODO: Logs should instead be placed into an array on the task object called logs
-// TODO: log and logAction do essentially the same thing.
-
-// TODO: I can make this function nicer by doing something like:
-
-/*
-
-
-
-
-Then modify task does essentially the same thing as log does now except replacing an entire task object. 
-
-logAction can be essentially identical after that. Although after the changes to logs I might not even need to separate them.
-
-*/
-
 export function log(config, key, value, withTimeStamp) {
   if (experimentComplete(config)) {
     console.error("Attempting to log when the experiment is complete.");
@@ -161,8 +143,6 @@ export function logAction(config, action) {
   let index = config[__INDEX__] || getLeafIndex([0], config);
 
   let newTask = { ...getConfigAtIndex(index, config) };
-  // TODO: Change the way we do configs.
-  // newTask.logs = [...newTask.logs, newLog]
 
   if (!newTask.actions) {
     newTask.actions = [];

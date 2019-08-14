@@ -138,6 +138,8 @@ describe("Experiment", () => {
 
   // })
 
+  it("logs properly", () => {});
+
   // it("doesn't pass logs to components", () => {
   //   fail()
   // })

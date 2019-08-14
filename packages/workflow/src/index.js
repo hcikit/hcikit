@@ -40,7 +40,7 @@ export * from "./designUtils";
 
 // TODO: integration tests, ones that you can train to run a single task and string them together.
 
-// TODO: we could render the html using the "server" I think we could do it statically at build. And then we just call hydrate instead. This would improve the bundle size a lot.
+// TODO: we could render the html using the "server" I think we could do it statically at build. And then we just call hydrate instead. This would improve the render time a bit. https://github.com/stereobooster/react-snap https://www.npmjs.com/package/react-snapshot https://create-react-app.dev/docs/pre-rendering-into-static-html-files
 
 // TODO: when losing focus we should grey out the screen, or whenever we can't capture keyboard shortcuts. Implement this as a auxillary task you can add in addition
 

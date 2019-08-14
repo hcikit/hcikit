@@ -1,8 +1,6 @@
 import { zip, max, flatten, flatMap } from "lodash-es";
 
 // TODO: this file should be split into many pieces.
-// TODO: create a metadata field to scope things for easy removal when parsing.
-
 // TODO: configs are suuuper volatiile because of the random aspect, if you change the order of anything it wrecks everything. Maybe we reseed the random all the time to fix that?
 
 export function trialsWithDistribution(frequencies, stimuli) {
