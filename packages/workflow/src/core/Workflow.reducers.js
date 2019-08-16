@@ -10,7 +10,8 @@ import {
   LOG_ACTION,
   TASK_COMPLETE,
   EDIT_CONFIG,
-  NAVIGATE_WORKFLOW_TO
+  NAVIGATE_WORKFLOW_TO,
+  SET_WORKFLOW_INDEX
 } from "./Workflow.actions";
 
 const configuration = (state = { events: [] }, action) => {
@@ -18,6 +19,13 @@ const configuration = (state = { events: [] }, action) => {
     case TASK_COMPLETE:
       state = { ...state, [__INDEX__]: taskComplete(state) };
       return state;
+    case SET_WORKFLOW_INDEX:
+      console.log(action.value);
+      return {
+        ...state,
+        [__INDEX__]: action.value
+      };
+    // TODO: Remove?
     case NAVIGATE_WORKFLOW_TO:
       state = { ...state };
       advanceWorkflowLevelTo(state, action.level, action.newValue);

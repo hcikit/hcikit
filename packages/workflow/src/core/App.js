@@ -3,7 +3,8 @@ import {
   log,
   editConfig,
   navigateWorkflowTo,
-  taskComplete
+  taskComplete,
+  setWorkflowIndex
 } from "./Workflow.actions";
 
 import {
@@ -54,6 +55,7 @@ export const App = ({
   configuration,
   log,
   taskComplete,
+  setWorkflowIndex,
   navigateWorkflowTo,
   editConfig,
   getTask,
@@ -125,6 +127,7 @@ export const App = ({
           onAdvanceWorkflowLevelTo={onAdvanceWorkflowLevelTo}
           onLog={onLog}
           onEditConfig={onEditConfig}
+          setWorkflowIndex={setWorkflowIndex}
           log={log}
           taskComplete={taskComplete}
           editConfig={editConfig}
@@ -168,7 +171,8 @@ const mapDispatchToProps = {
   taskComplete,
   log,
   editConfig,
-  navigateWorkflowTo
+  navigateWorkflowTo,
+  setWorkflowIndex
 };
 
 export default withRawConfiguration(
