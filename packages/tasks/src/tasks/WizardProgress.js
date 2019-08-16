@@ -1,7 +1,7 @@
 import React from "react";
 import { Stepper, Step, StepLabel } from "@material-ui/core";
 import { withRawConfiguration, __INDEX__ } from "@hcikit/workflow";
-import { withGridItem } from "../../";
+import { withGridItem } from "../withGridItem";
 
 // TODO: should we use a custom prop like the label or should we consider just using the task and then people can include spaces if they'd like?
 

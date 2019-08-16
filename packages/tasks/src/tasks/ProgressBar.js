@@ -9,7 +9,7 @@ import {
   getLeafIndex
 } from "@hcikit/workflow";
 
-import { withGridItem } from "../../";
+import { withGridItem } from "../withGridItem";
 
 // BUG: I think there might be an off by one error, check the example
 
