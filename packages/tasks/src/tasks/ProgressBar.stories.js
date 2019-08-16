@@ -24,7 +24,17 @@ storiesOf("ProgressBar", module)
       }}
     />
   ))
-
+  .add("second from end", () => (
+    <ProgressBar
+      configuration={{
+        __INDEX__: [1, 1],
+        children: [
+          { task: "Hello", children: [{}, {}, {}] },
+          { task: "World", children: [{}, {}, {}] }
+        ]
+      }}
+    />
+  ))
   .add("end", () => (
     <ProgressBar
       configuration={{
@@ -56,6 +66,18 @@ storiesOf("ProgressBar", module)
         children: [
           { task: "Hello", children: [{}, {}, {}] },
           { task: "World", children: [{}, {}, {}] }
+        ]
+      }}
+    />
+  ))
+  .add("depth second from end", () => (
+    <ProgressBar
+      depth={1}
+      configuration={{
+        __INDEX__: [1, 3],
+        children: [
+          { task: "Hello", children: [{}, {}, {}] },
+          { task: "World", children: [{}, {}, {}, {}, {}] }
         ]
       }}
     />

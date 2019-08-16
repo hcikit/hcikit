@@ -11,6 +11,8 @@ import {
 
 import { withGridItem } from "../../";
 
+// BUG: I think there might be an off by one error, check the example
+
 let ProgressBar = ({ depth = 0, configuration }) => {
   let index = configuration[__INDEX__] || [];
   let rightHalf = index.slice(depth);

@@ -42,6 +42,8 @@ The consent form uses markdown to create a letter, and it automatically generate
     {
       label: "Task",
       task: "IncrementTask",
+      tasks: ["ProgressBar"],
+      depth: 1,
       children: [
         { desiredValue: 2 },
         { desiredValue: 5 },
