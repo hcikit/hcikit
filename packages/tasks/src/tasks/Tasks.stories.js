@@ -1,90 +1,90 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
-import { action } from '@storybook/addon-actions'
-import { withKnobs, text } from '@storybook/addon-knobs'
+// import React from "react";
+// import { storiesOf } from "@storybook/react";
+// import { action } from "@storybook/addon-actions";
+// import { withKnobs, text } from "@storybook/addon-knobs";
 
-import DisplayTextTask from './DisplayTextTask'
+// import DisplayTextTask from "./DisplayTextTask";
 
-import { UploadToS3Display } from './UploadToS3'
+// import { UploadToS3Display } from "./UploadToS3";
 
-import GoogleFormQuestionnaire from './GoogleFormQuestionnaire'
-import MouseCenteringTask from './MouseCenteringTask'
-import ConsentForm from './ConsentForm'
+// import GoogleFormQuestionnaire from "./GoogleFormQuestionnaire";
+// import MouseCenteringTask from "./MouseCenteringTask";
+// import ConsentForm from "./ConsentForm";
 
-import Fitts from './Fitts'
+// import Fitts from "./Fitts";
 
-storiesOf('tasks/MouseCenteringTask', module).add('task', () => (
-  <MouseCenteringTask onAdvanceWorkflow={action('advanceWorkflow')} />
-))
+// storiesOf('tasks/MouseCenteringTask', module).add('task', () => (
+//   <MouseCenteringTask onAdvanceWorkflow={action('advanceWorkflow')} />
+// ))
 
-storiesOf('tasks/GoogleFormQuestionnaire', module)
-  .add('form', () => (
-    <GoogleFormQuestionnaire
-      formId='1FAIpQLScYw8Rd-j9YPeVN2fAuqQa_TpdF2a0h9fn_6wA7A3prHoGIwQ'
-      answer='ABC12345'
-      onAdvanceWorkflow={action('onAdvanceWorkflow')}
-    />
-  ))
-  .add('prefilled', () => (
-    <GoogleFormQuestionnaire
-      formId='1FAIpQLScYw8Rd-j9YPeVN2fAuqQa_TpdF2a0h9fn_6wA7A3prHoGIwQ'
-      prefillParticipant='entry.812855120'
-      participant='test'
-      answer='ABC12345'
-      onAdvanceWorkflow={action('onAdvanceWorkflow')}
-    />
-  ))
-  .add('preview', () => (
-    <GoogleFormQuestionnaire
-      formId='1FAIpQLSdjqE29uBllkl7SlY-oWIcI5huop9irdAuCHqFOd8YHrGuGDw/'
-      answer='ABC12345'
-      onAdvanceWorkflow={action('onAdvanceWorkflow')}
-    />
-  ))
+// storiesOf('tasks/GoogleFormQuestionnaire', module)
+//   .add('form', () => (
+//     <GoogleFormQuestionnaire
+//       formId='1FAIpQLScYw8Rd-j9YPeVN2fAuqQa_TpdF2a0h9fn_6wA7A3prHoGIwQ'
+//       answer='ABC12345'
+//       onAdvanceWorkflow={action('onAdvanceWorkflow')}
+//     />
+//   ))
+//   .add('prefilled', () => (
+//     <GoogleFormQuestionnaire
+//       formId='1FAIpQLScYw8Rd-j9YPeVN2fAuqQa_TpdF2a0h9fn_6wA7A3prHoGIwQ'
+//       prefillParticipant='entry.812855120'
+//       participant='test'
+//       answer='ABC12345'
+//       onAdvanceWorkflow={action('onAdvanceWorkflow')}
+//     />
+//   ))
+//   .add('preview', () => (
+//     <GoogleFormQuestionnaire
+//       formId='1FAIpQLSdjqE29uBllkl7SlY-oWIcI5huop9irdAuCHqFOd8YHrGuGDw/'
+//       answer='ABC12345'
+//       onAdvanceWorkflow={action('onAdvanceWorkflow')}
+//     />
+//   ))
 
-storiesOf('tasks/DisplayTextTask', module)
-  .addDecorator(withKnobs)
-  .add('Example', () => (
-    <DisplayTextTask
-      displayedText={text('Text', 'Example Message')}
-      onAdvanceWorkflow={action('advanceWorkflow')}
-    />
-  ))
+// storiesOf('tasks/DisplayTextTask', module)
+//   .addDecorator(withKnobs)
+//   .add('Example', () => (
+//     <DisplayTextTask
+//       displayedText={text('Text', 'Example Message')}
+//       onAdvanceWorkflow={action('advanceWorkflow')}
+//     />
+//   ))
 
-storiesOf('tasks/ConsentForm', module).add('form', () => (
-  <ConsentForm
-    letter={`# Hello world
-    this is *markdown*`}
-    questions={[
-      {
-        label: 'I agree of my own free will to participate in the study.',
-        required: true
-      }
-    ]}
-    onAdvanceWorkflow={action('onAdvanceWorkflow')}
-  />
-))
+// storiesOf('tasks/ConsentForm', module).add('form', () => (
+//   <ConsentForm
+//     letter={`# Hello world
+//     this is *markdown*`}
+//     questions={[
+//       {
+//         label: 'I agree of my own free will to participate in the study.',
+//         required: true
+//       }
+//     ]}
+//     onAdvanceWorkflow={action('onAdvanceWorkflow')}
+//   />
+// ))
 
-storiesOf('tasks/UploadToS3', module)
-  .add('error', () => (
-    <UploadToS3Display
-      experimenter='experimenter@example.com'
-      participant='blaine'
-      error
-      log={JSON.stringify({ hello: 'world' })}
-      onClick={action('onAdvanceWorkflow')}
-    />
-  ))
-  .add('uploading', () => (
-    <UploadToS3Display onAdvanceWorkflow={action('onAdvanceWorkflow')} />
-  ))
+// storiesOf('tasks/UploadToS3', module)
+//   .add('error', () => (
+//     <UploadToS3Display
+//       experimenter='experimenter@example.com'
+//       participant='blaine'
+//       error
+//       log={JSON.stringify({ hello: 'world' })}
+//       onClick={action('onAdvanceWorkflow')}
+//     />
+//   ))
+//   .add('uploading', () => (
+//     <UploadToS3Display onAdvanceWorkflow={action('onAdvanceWorkflow')} />
+//   ))
 
-storiesOf('tasks/Fitts', module).add('form', () => (
-  <Fitts
-    numTargets={9}
-    distance={20}
-    width={10}
-    targetIndex={0}
-    onClick={action('onClick')}
-  />
-))
+// storiesOf('tasks/Fitts', module).add('form', () => (
+//   <Fitts
+//     numTargets={9}
+//     distance={20}
+//     width={10}
+//     targetIndex={0}
+//     onClick={action('onClick')}
+//   />
+// ))
