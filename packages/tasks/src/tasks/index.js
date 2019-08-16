@@ -1,7 +1,8 @@
 export { default as ConsentForm } from "./ConsentForm";
 export { default as DevTools } from "./DevTools";
 export { default as DisplayText } from "./DisplayTextTask";
-export { default as ExperimentProgress } from "./ExperimentProgress";
+export { default as ProgressBar } from "./ProgressBar";
+export { default as WizardProgress } from "./WizardProgress
 export { default as Fitts } from "./Fitts";
 export { default as GoogleFormQuestionnaire } from "./GoogleFormQuestionnaire";
 export { default as InformationScreen } from "./InformationScreen";
