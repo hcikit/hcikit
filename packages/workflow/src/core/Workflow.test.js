@@ -1,15 +1,16 @@
 import {
-  flattenToLevel,
+  getLeafIndex,
+  getConfigAtIndex,
   getCurrentProps,
   log,
   logAction,
   scopePropsForTask,
   mergeArraysSpecial,
   taskComplete,
-  getConfigAtIndex,
   __INDEX__,
   indexToTaskNumber,
-  taskNumberToIndex
+  taskNumberToIndex,
+  getTotalTasks
 } from "./Workflow";
 import deepFreeze from "deep-freeze";
 
@@ -20,6 +21,7 @@ const configuration = {
     yolo: "yoyololo"
   },
   children: [
+    { task: "real task without children" },
     {
       sectionprop: "section",
       children: [
@@ -126,7 +128,10 @@ describe("scopePropsForTask", () => {
 
 describe("getCurrentProps", () => {
   it("cascades properties from top to bottom", () => {
+    config[__INDEX__] = taskComplete(config);
+
     expect(getCurrentProps(config)).toEqual({
+      __INDEX__: [1, 0, 0],
       blockprop: "section",
       sectionprop: "section",
       configprop: "section",
@@ -140,8 +145,10 @@ describe("getCurrentProps", () => {
 
   it("handles object props properly", () => {
     config[__INDEX__] = taskComplete(config);
+    config[__INDEX__] = taskComplete(config);
+
     expect(getCurrentProps(config)).toEqual({
-      __INDEX__: [0, 0, 1],
+      __INDEX__: [1, 0, 1],
       blockprop: "section",
       sectionprop: "section",
       configprop: "section",
@@ -172,16 +179,17 @@ describe("log", () => {
     config[__INDEX__] = taskComplete(config);
     config[__INDEX__] = taskComplete(config);
     config[__INDEX__] = taskComplete(config);
+    config[__INDEX__] = taskComplete(config);
 
     deepFreeze(config);
 
     log(config, "hello", "world");
-    expect(config.children.length).toBe(1);
+    expect(config.children.length).toBe(2);
   });
 
   it("logs to the correct place with timestamp", () => {
     log(config, "hello", "world");
-    expect(config.children[0].children[0].children[0].hello).toEqual("world");
+    expect(config.children[0].hello).toEqual("world");
   });
 
   it("logs with timestamp", () => {
@@ -189,13 +197,9 @@ describe("log", () => {
     Date.now = () => 10;
 
     log(config, "hello", "world", true);
-    expect(config.children[0].children[0].children[0].hello.value).toEqual(
-      "world"
-    );
+    expect(config.children[0].hello.value).toEqual("world");
 
-    expect(config.children[0].children[0].children[0].hello.timestamp).toEqual(
-      10
-    );
+    expect(config.children[0].hello.timestamp).toEqual(10);
 
     Date.now = patch;
   });
@@ -204,43 +208,51 @@ describe("log", () => {
     config[__INDEX__] = taskComplete(config);
 
     log(config, "hello", "world", true);
-    expect(config.children[0].children[0].children[1].hello.value).toEqual(
+    expect(config.children[1].children[0].children[0].hello.value).toEqual(
+      "world"
+    );
+
+    config[__INDEX__] = taskComplete(config);
+
+    log(config, "hello", "world", true);
+    expect(config.children[1].children[0].children[1].hello.value).toEqual(
       "world"
     );
     config[__INDEX__] = taskComplete(config);
 
     log(config, "hello", "world", true);
-    expect(config.children[0].children[1].children[0].hello.value).toEqual(
+    expect(config.children[1].children[1].children[0].hello.value).toEqual(
       "world"
     );
 
     config[__INDEX__] = taskComplete(config);
     log(config, "hello", "world", true);
-    expect(config.children[0].children[1].children[1].hello.value).toEqual(
+    expect(config.children[1].children[1].children[1].hello.value).toEqual(
       "world"
     );
   });
   it("log replaces the required objects", () => {
     let c = { ...config };
+    c[__INDEX__] = taskComplete(c);
+
     deepFreeze(config);
 
     log(c, "hello", "world");
 
     expect(config).not.toBe(c);
     expect(config.children).not.toBe(c.children);
-    expect(config.children[1]).toBe(c.children[1]);
-    expect(config.children[0]).not.toBe(c.children[0]);
-    expect(config.children[0].children).not.toBe(c.children[0].children);
-    expect(config.children[0].children[1]).toBe(c.children[0].children[1]);
-    expect(config.children[0].children[0]).not.toBe(c.children[0].children[0]);
-    expect(config.children[0].children[0].children).not.toBe(
-      c.children[0].children[0].trials
+    expect(config.children[1]).not.toBe(c.children[1]);
+    expect(config.children[1].children).not.toBe(c.children[1].children);
+    expect(config.children[1].children[1]).toBe(c.children[1].children[1]);
+    expect(config.children[1].children[0]).not.toBe(c.children[1].children[0]);
+    expect(config.children[1].children[0].children).not.toBe(
+      c.children[1].children[0].trials
     );
-    expect(config.children[0].children[0].children[1]).toBe(
-      c.children[0].children[0].children[1]
+    expect(config.children[1].children[0].children[1]).toBe(
+      c.children[1].children[0].children[1]
     );
-    expect(config.children[0].children[0].children[0]).not.toBe(
-      c.children[0].children[0].children[0]
+    expect(config.children[1].children[0].children[0]).not.toBe(
+      c.children[1].children[0].children[0]
     );
   });
 });
@@ -248,36 +260,37 @@ describe("log", () => {
 describe("logAction", () => {
   it("logs to the correct place", () => {
     logAction(config, "hello");
-    expect(
-      config.children[0].children[0].children[0].actions[0].action
-    ).toEqual("hello");
+    expect(config.children[0].actions[0].action).toEqual("hello");
 
+    logAction(config, "you");
+    expect(config.children[0].actions[1].action).toEqual("you");
     logAction(config, "world");
-    expect(
-      config.children[0].children[0].children[0].actions[0].action
-    ).toEqual("hello");
-    expect(
-      config.children[0].children[0].children[0].actions[1].action
-    ).toEqual("world");
+    expect(config.children[0].actions[2].action).toEqual("world");
   });
 
-  it("logs after advancing correct place", () => {
+  it("logs action after advancing correct place", () => {
     config[__INDEX__] = taskComplete(config);
     logAction(config, "hello");
     expect(
-      config.children[0].children[0].children[1].actions[0].action
+      config.children[1].children[0].children[0].actions[0].action
+    ).toEqual("hello");
+
+    config[__INDEX__] = taskComplete(config);
+    logAction(config, "hello");
+    expect(
+      config.children[1].children[0].children[1].actions[0].action
     ).toEqual("hello");
 
     config[__INDEX__] = taskComplete(config);
     logAction(config, "world");
     expect(
-      config.children[0].children[1].children[0].actions[0].action
+      config.children[1].children[1].children[0].actions[0].action
     ).toEqual("world");
 
     config[__INDEX__] = taskComplete(config);
     logAction(config, "!");
     expect(
-      config.children[0].children[1].children[1].actions[0].action
+      config.children[1].children[1].children[1].actions[0].action
     ).toEqual("!");
   });
 });
@@ -288,7 +301,7 @@ describe("getConfigAtIndex", () => {
   });
 
   it("middle levels are returned", () => {
-    expect(getConfigAtIndex([0], config)).toEqual({
+    expect(getConfigAtIndex([1], config)).toEqual({
       sectionprop: "section",
       children: [
         {
@@ -321,7 +334,7 @@ describe("getConfigAtIndex", () => {
     });
   });
   it("leaves are returned", () => {
-    expect(getConfigAtIndex([0, 0, 0], config)).toEqual({
+    expect(getConfigAtIndex([1, 0, 0], config)).toEqual({
       stimulus: "bear"
     });
   });
@@ -329,25 +342,27 @@ describe("getConfigAtIndex", () => {
 
 describe("taskComplete", () => {
   it("advances experiments", () => {
-    expect(taskComplete(config)).toEqual([0, 0, 1]);
+    expect(taskComplete(config)).toEqual([1, 0, 0]);
   });
 
   it("advances from second", () => {
-    config[__INDEX__] = [0, 0, 1];
-    expect(taskComplete(config)).toEqual([0, 1, 0]);
+    config[__INDEX__] = [1, 0, 0];
+    expect(taskComplete(config)).toEqual([1, 0, 1]);
   });
 
   it("ends gracefully", () => {
     config[__INDEX__] = taskComplete(config);
-    expect(config[__INDEX__]).toEqual([0, 0, 1]);
+    expect(config[__INDEX__]).toEqual([1, 0, 0]);
     config[__INDEX__] = taskComplete(config);
-    expect(config[__INDEX__]).toEqual([0, 1, 0]);
+    expect(config[__INDEX__]).toEqual([1, 0, 1]);
     config[__INDEX__] = taskComplete(config);
-    expect(config[__INDEX__]).toEqual([0, 1, 1]);
+    expect(config[__INDEX__]).toEqual([1, 1, 0]);
+    config[__INDEX__] = taskComplete(config);
+    expect(config[__INDEX__]).toEqual([1, 1, 1]);
     config[__INDEX__] = taskComplete(config);
 
+    expect(config[__INDEX__]).toEqual("__COMPLETE__");
     expect(getCurrentProps(config)).toEqual({});
-    expect(config[__INDEX__]).toEqual([]);
   });
 
   it("cant advance past end", () => {
@@ -355,33 +370,109 @@ describe("taskComplete", () => {
     config[__INDEX__] = taskComplete(config);
     config[__INDEX__] = taskComplete(config);
     config[__INDEX__] = taskComplete(config);
+    config[__INDEX__] = taskComplete(config);
 
+    expect(config[__INDEX__]).toEqual("__COMPLETE__");
     expect(getCurrentProps(config)).toEqual({});
-    expect(config.children.length).toBe(1);
-    expect(config[__INDEX__]).toEqual([]);
   });
 });
 
 describe("indexToTaskNumber", () => {
   it("works on first task", () => {
-    expect(indexToTaskNumber([0, 0, 0], config)).toEqual(0);
+    expect(indexToTaskNumber([0], config)).toEqual(0);
   });
   it("works on last task", () => {
-    expect(indexToTaskNumber([0, 1, 1], config)).toEqual(3);
+    expect(indexToTaskNumber([1, 1, 1], config)).toEqual(4);
   });
   it("works on middle task", () => {
-    expect(indexToTaskNumber([0, 1, 0], config)).toEqual(2);
+    expect(indexToTaskNumber([1, 0, 1], config)).toEqual(2);
+    expect(indexToTaskNumber([1, 1, 0], config)).toEqual(3);
   });
 });
 
 describe("taskNumberToIndex", () => {
   it("works on first task", () => {
-    expect(taskNumberToIndex(0, config)).toEqual([0, 0, 0]);
+    expect(taskNumberToIndex(0, config)).toEqual([0]);
   });
   it("works on last task", () => {
-    expect(taskNumberToIndex(3, config)).toEqual([0, 1, 1]);
+    expect(taskNumberToIndex(4, config)).toEqual([1, 1, 1]);
   });
   it("works on middle task", () => {
-    expect(taskNumberToIndex(2, config)).toEqual([0, 1, 0]);
+    expect(taskNumberToIndex(2, config)).toEqual([1, 0, 1]);
+    expect(taskNumberToIndex(3, config)).toEqual([1, 1, 0]);
+  });
+});
+
+describe("getLeafIndex", () => {
+  it("works with root task", () => {
+    expect(getLeafIndex([], config)).toEqual([0]);
+  });
+
+  it("works with leaf task", () => {
+    expect(getLeafIndex([1, 1, 0], config)).toEqual([1, 1, 0]);
+    expect(getLeafIndex([0], config)).toEqual([0]);
+  });
+  it("works on middle task", () => {
+    expect(getLeafIndex([1], config)).toEqual([1, 0, 0]);
+  });
+});
+
+describe("getTotalTasks", () => {
+  it("works on first task", () => {
+    expect(getTotalTasks(config)).toEqual(5);
+  });
+
+  it("works on a real config", () => {
+    let config = {
+      tasks: ["DevTools"],
+      nextLevel: "section",
+      fullProgress: true,
+      CustomTask: { text: "Click to continue" },
+      participant: "yo",
+      children: [
+        {
+          task: "InformationScreen",
+          label: "Information",
+          shortcutEnabled: true,
+          centerY: true,
+          centerX: true,
+          content: "# Hello World",
+          start: 1565928398460
+        },
+        { label: "Text", task: "DisplayText", content: "Hello" },
+        {
+          label: "Consent",
+          task: "ConsentForm",
+          letter:
+            "# Consent Form\n\nThe consent form uses markdown to create a letter, and it automatically generates as many checkboxes as needed to consent.",
+          questions: [
+            {
+              label:
+                "I consent of my free will to complete this example experiment",
+              required: true
+            }
+          ]
+        },
+        { label: "Custom", task: "CustomTask" },
+        {
+          label: "Task",
+          progressLevel: true,
+          currentProgress: true,
+          fullProgress: false,
+          task: "IncrementTask",
+          children: [
+            { desiredValue: 2 },
+            { desiredValue: 5 },
+            { desiredValue: 10 },
+            { desiredValue: 20 },
+            { desiredValue: 4 },
+            { desiredValue: 1 }
+          ]
+        }
+      ],
+      __INDEX__: [0]
+    };
+
+    expect(getTotalTasks(config)).toEqual(10);
   });
 });

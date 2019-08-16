@@ -47,7 +47,7 @@ export default (Configuration, reducers) => {
   reducers["Configuration"] = ConfigurationReducer;
   let reducer = combineReducers(reducers);
 
-  Configuration[__INDEX__] = getLeafIndex([0], Configuration);
+  Configuration[__INDEX__] = getLeafIndex([], Configuration);
 
   if (process.env.NODE_ENV !== "production") {
     store = createStore(

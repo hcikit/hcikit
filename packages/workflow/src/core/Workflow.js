@@ -5,6 +5,7 @@ import { mergeWith, pickBy, isEqual } from "lodash-es";
 // TODO: document everything here...
 
 export const __INDEX__ = "__INDEX__";
+const COMPLETE = "__COMPLETE__";
 
 export function mergeArraysSpecial(object, source) {
   return mergeWith(object, source, (value, srcValue) => {
@@ -24,7 +25,7 @@ export function scopePropsForTask(props, task) {
 }
 
 export function experimentComplete(configuration) {
-  return configuration[__INDEX__] && configuration[__INDEX__].length === 0;
+  return configuration[__INDEX__] === COMPLETE;
 }
 
 // TODO: Convert getcurrentprops into a "selector" function
@@ -60,10 +61,6 @@ export function getConfigAtIndex(index, initialConfig) {
 }
 
 export function getLeafIndex(index, configuration) {
-  if (index.length === 0) {
-    return [];
-  }
-
   index = [...index];
 
   while ("children" in getConfigAtIndex(index, configuration)) {
@@ -95,6 +92,10 @@ export function taskComplete(configuration) {
       break;
     }
   } while (index.length);
+
+  if (index.length === 0) {
+    return COMPLETE;
+  }
 
   return getLeafIndex(index, configuration);
 }
@@ -185,9 +186,10 @@ export function modifyConfig(index, config, newConfig) {
 }
 
 export function indexToTaskNumber(index, config) {
+  // TODO: maybe index can be converted to a leaf node
   // TODO: this adds lots of nodes to a list which seems slow.. this might actually be best as a recursive function :(
   let number = 0;
-  let toSearch = [[0]];
+  let toSearch = [[]];
 
   while (toSearch.length !== 0) {
     let searchingIndex = toSearch.pop();
@@ -210,9 +212,9 @@ export function indexToTaskNumber(index, config) {
 
 export function taskNumberToIndex(taskNumber, config) {
   let number = 0;
-  let toSearch = [[0]];
+  let toSearch = [[]];
 
-  while (toSearch.length !== 0) {
+  while (toSearch.length > 0) {
     let searchingIndex = toSearch.pop();
 
     let searchingConfig = getConfigAtIndex(searchingIndex, config);
@@ -229,15 +231,26 @@ export function taskNumberToIndex(taskNumber, config) {
     }
   }
 }
-/*
 
-[
-  [[1,2,3,4], [5,6,7]],
-  [8]
-]
+export function getTotalTasks(config) {
+  let tasks = 0;
+  let toSearch = [[]];
 
+  while (toSearch.length > 0) {
+    let searchingIndex = toSearch.pop();
+    let searchingConfig = getConfigAtIndex(searchingIndex, config);
 
-*/
+    if ("children" in searchingConfig) {
+      for (let i = searchingConfig.children.length - 1; i >= 0; i--) {
+        toSearch.push([...searchingIndex, i]);
+      }
+    } else {
+      tasks++;
+    }
+  }
+
+  return tasks;
+}
 
 export const withRawConfiguration = connect(state => {
   return { configuration: state.Configuration };
