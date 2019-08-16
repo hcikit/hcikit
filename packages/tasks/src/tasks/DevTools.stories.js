@@ -3,12 +3,15 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 
-import { DevTools } from "../src/tasks/DevTools";
+import { DevTools } from "./DevTools";
 
 storiesOf("DevTools", module).add("example", () => (
   <DevTools
     configuration={{
-      children: [{ task: "Hello" }]
+      children: [
+        { task: "Hello", children: [{}, {}, {}] },
+        { task: "World", children: [{}, {}, {}] }
+      ]
     }}
   />
 ));

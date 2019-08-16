@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IconButton, Slider, Card } from "@material-ui/core";
 import {
   FastForward,
@@ -7,17 +7,19 @@ import {
   FastRewind
 } from "@material-ui/icons";
 import styled from "styled-components";
-import { withRawConfiguration } from "@hcikit/workflow/src";
 import {
+  withRawConfiguration,
   taskNumberToIndex,
   indexToTaskNumber,
   getPropsFor,
   __INDEX__,
-  getLeafIndex
-} from "@hcikit/workflow/src/core/Workflow";
+  getLeafIndex,
+  getTotalTasks
+} from "@hcikit/workflow";
 
 const StyledCard = styled(Card)`
   display: inline-block;
+  position: fixed;
 `;
 const Controls = styled.div`
   display: flex;
@@ -27,18 +29,58 @@ const StyledSlider = styled(Slider)`
   margin-right: 10px;
 `;
 
-export const DevTools = ({ configuration, setWorkflowIndex }) => {
+export const DevTools = ({ taskComplete, configuration, setWorkflowIndex }) => {
+  let [isDragging, setIsDragging] = useState(false);
+  let [relativePosition, setRelativePosition] = useState();
+
+  let [position, setPosition] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    function handleMouseMove(e) {
+      if (isDragging) {
+        // TODO: use bottom right instead.
+        setPosition({
+          top: e.pageY - relativePosition.y,
+          left: e.pageX - relativePosition.x
+        });
+      }
+    }
+
+    function handleMouseUp() {
+      setIsDragging(false);
+    }
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [isDragging]);
+
   // TODO: set the marks to the top level sections
 
+  if (process.env.NODE_ENV === "production") {
+    return null;
+  }
+
   const topLevelTasks = configuration.children.map((_, i) => ({
-    value: indexToTaskNumber(getLeafIndex([i]), configuration),
+    value: indexToTaskNumber(getLeafIndex([i], configuration), configuration),
     label: getPropsFor([i], configuration).task
   }));
 
-  let currentIndex = 5;
-
   return (
-    <StyledCard>
+    <StyledCard
+      onMouseDown={e => {
+        setIsDragging(true);
+        setRelativePosition({
+          x: e.pageX - position.left,
+          y: e.pageY - position.top
+        });
+      }}
+      style={position}
+    >
       <Controls>
         <IconButton>
           <SkipPrevious />
@@ -47,7 +89,7 @@ export const DevTools = ({ configuration, setWorkflowIndex }) => {
           <FastRewind />
         </IconButton>
         <IconButton>
-          <FastForward />
+          <FastForward onClick={taskComplete} />
         </IconButton>
         <IconButton>
           <SkipNext />
@@ -56,13 +98,13 @@ export const DevTools = ({ configuration, setWorkflowIndex }) => {
       <StyledSlider
         step={1}
         valueLabelDisplay="auto"
-        value={indexToTaskNumber(config[__INDEX__], configuration)}
+        value={indexToTaskNumber(configuration[__INDEX__], configuration)}
         marks={topLevelTasks}
         min={0}
-        max={totalTasks}
-        onChange={() =>
-          setWorkflowIndex(taskNumberToIndex(e.value, configuration))
-        }
+        max={getTotalTasks(configuration)}
+        onChange={(_, value) => {
+          setWorkflowIndex(taskNumberToIndex(value, configuration));
+        }}
       />
     </StyledCard>
   );
