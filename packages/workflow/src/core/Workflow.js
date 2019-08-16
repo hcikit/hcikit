@@ -3,6 +3,7 @@ import { mergeWith, pickBy, isEqual } from "lodash-es";
 
 // TODO: mergeWith is very slow which slows everything down with lots of onlogs.
 // TODO: document everything here...
+// TODO: should this work with a config with no children? Does it work with no children?
 
 export const __INDEX__ = "__INDEX__";
 const COMPLETE = "__COMPLETE__";

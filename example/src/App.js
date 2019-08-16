@@ -4,7 +4,9 @@ import {
   ConsentForm,
   InformationScreen,
   DisplayText,
-  ExperimentProgress
+  ProgressBar,
+  WizardProgress,
+  DevTools
 } from "@hcikit/tasks";
 import IncrementTask, { reducer } from "./IncrementTask";
 import CustomTask from "./CustomTask";
@@ -16,7 +18,9 @@ let taskRegistry = new TaskRegistry({
   ConsentForm,
   InformationScreen,
   DisplayText,
-  ExperimentProgress
+  ProgressBar,
+  WizardProgress,
+  DevTools
 });
 
 taskRegistry.registerTask("IncrementTask", IncrementTask, reducer);

@@ -1,7 +1,6 @@
 export default {
-  tasks: ["ExperimentProgress"],
-  nextLevel: "section",
-  fullProgress: true,
+  // tasks: ["ExperimentProgress", "DevTools"],
+  tasks: ["DevTools"],
   CustomTask: {
     text: "Click to continue"
   },
@@ -42,9 +41,6 @@ The consent form uses markdown to create a letter, and it automatically generate
     },
     {
       label: "Task",
-      progressLevel: true,
-      currentProgress: true,
-      fullProgress: false,
       task: "IncrementTask",
       children: [
         { desiredValue: 2 },
