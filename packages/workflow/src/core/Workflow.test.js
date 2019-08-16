@@ -388,6 +388,18 @@ describe("indexToTaskNumber", () => {
     expect(indexToTaskNumber([1, 0, 1], config)).toEqual(2);
     expect(indexToTaskNumber([1, 1, 0], config)).toEqual(3);
   });
+
+  it("works on a real config", () => {
+    let config = {
+      __INDEX__: [0, 1],
+      children: [
+        { task: "Hello", children: [{}, {}, {}] },
+        { task: "World", children: [{}, {}, {}] }
+      ]
+    };
+    expect(indexToTaskNumber([0, 1], config)).toEqual(1);
+    expect(indexToTaskNumber([1, 2], config)).toEqual(5);
+  });
 });
 
 describe("taskNumberToIndex", () => {
@@ -420,6 +432,17 @@ describe("getLeafIndex", () => {
 describe("getTotalTasks", () => {
   it("works on first task", () => {
     expect(getTotalTasks(config)).toEqual(5);
+  });
+
+  it("really works on a real config", () => {
+    let config = {
+      __INDEX__: [0, 1],
+      children: [
+        { task: "Hello", children: [{}, {}, {}] },
+        { task: "World", children: [{}, {}, {}] }
+      ]
+    };
+    expect(getTotalTasks(config)).toEqual(6);
   });
 
   it("works on a real config", () => {
