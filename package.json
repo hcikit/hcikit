@@ -7,7 +7,7 @@
     "example"
   ],
   "scripts": {
-    "lint": "eslint . --ext .js --ignore-path .gitignore",
+    "lint": "eslint example/src packages/tasks/src packages/workflow/src",
     "test": "jest --verbose --colors",
     "test:watch": "jest --watch --verbose --colors",
     "build": "yarn workspaces run build"
