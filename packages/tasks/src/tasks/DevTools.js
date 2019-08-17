@@ -17,6 +17,8 @@ import {
   getTotalTasks
 } from "@hcikit/workflow";
 
+import PropTypes from "prop-types";
+
 const StyledCard = styled(Card)`
   display: inline-block;
   position: fixed;
@@ -108,6 +110,12 @@ export const DevTools = ({ taskComplete, configuration, setWorkflowIndex }) => {
       />
     </StyledCard>
   );
+};
+
+DevTools.propTypes = {
+  configuration: PropTypes.object,
+  setWorkflowIndex: PropTypes.func,
+  taskComplete: PropTypes.func
 };
 
 export default withRawConfiguration(DevTools);

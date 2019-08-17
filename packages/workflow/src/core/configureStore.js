@@ -18,7 +18,9 @@ const loadState = () => {
     if (state) {
       return JSON.parse(state);
     }
-  } catch (err) {}
+  } catch (err) {
+    console.error("Failed to load from localStorage");
+  }
 
   return undefined;
 };
@@ -26,7 +28,10 @@ const loadState = () => {
 const saveState = throttle(state => {
   try {
     window.localStorage.setItem(STATE_KEY, JSON.stringify(state));
-  } catch (err) {}
+  } catch (err) {
+    // TODO: Better logging?
+    console.error("Failed to save to localStorage");
+  }
 }, 1000);
 
 export default (Configuration, reducers) => {

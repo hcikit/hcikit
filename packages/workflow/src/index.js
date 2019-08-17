@@ -2,7 +2,7 @@ import React from "react";
 import { Provider } from "react-redux";
 import PropTypes from "prop-types";
 
-import App from "./core/App";
+import TaskRenderer from "./core/App";
 import configureStore from "./core/configureStore";
 import TaskRegistry from "./core/TaskRegistry";
 
@@ -19,7 +19,7 @@ export default class Experiment extends React.Component {
   render() {
     return (
       <Provider store={this.store}>
-        <App {...this.props} />
+        <TaskRenderer {...this.props} />
       </Provider>
     );
   }

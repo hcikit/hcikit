@@ -17,6 +17,7 @@ const config = {
   ]
 };
 
+/* eslint-disable react/prop-types */
 let ButtonTask = ({ taskComplete, text, log }) => (
   <button
     onClick={() => {
@@ -28,7 +29,8 @@ let ButtonTask = ({ taskComplete, text, log }) => (
   </button>
 );
 
-let MultiTask = ({ taskComplete, times, text, log }) => {
+/* eslint-disable react/prop-types */
+let MultiTask = ({ taskComplete, times }) => {
   let [timesClicked, setTimesClicked] = useState(0);
 
   return (
@@ -45,7 +47,7 @@ let MultiTask = ({ taskComplete, times, text, log }) => {
   );
 };
 
-let AuxTask = ({}) => <p>Hello World!</p>;
+let AuxTask = () => <p>Hello World!</p>;
 
 describe("Experiment", () => {
   let experiment;
@@ -79,7 +81,7 @@ describe("Experiment", () => {
   });
 
   it("throws errors for unregistered tasks", () => {
-    spyOn(console, "error");
+    jest.spyOn(console, "error").mockImplementation(() => {});
 
     const config = {
       children: [

@@ -12,7 +12,8 @@ export default {
       shortcutEnabled: true,
       centerY: true,
       centerX: true,
-      content: "# Hello World"
+      content: `# Hello World
+this is *markdown*`
     },
     {
       label: "Text",

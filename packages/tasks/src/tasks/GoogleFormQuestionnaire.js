@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { withGridItem } from "../withGridItem";
+import PropTypes from "prop-types";
 
 // TODO: ideally this should prefill as many fields as you would like.
 
@@ -7,7 +8,7 @@ const GoogleFormQuestionnaire = ({
   prefillParticipant,
   formId,
   participant,
-  onAdvanceWorkflow
+  taskComplete
 }) => {
   let src = `https://docs.google.com/forms/d/e/${formId}/viewform?embedded=true`;
 
@@ -19,7 +20,7 @@ const GoogleFormQuestionnaire = ({
 
   function handleLoad() {
     if (hasLoaded) {
-      onAdvanceWorkflow();
+      taskComplete();
     } else {
       setHasLoaded(true);
     }
@@ -41,6 +42,13 @@ const GoogleFormQuestionnaire = ({
       Loading...
     </iframe>
   );
+};
+
+GoogleFormQuestionnaire.propTypes = {
+  formId: PropTypes.string,
+  taskComplete: PropTypes.func,
+  participant: PropTypes.string,
+  prefillParticipant: PropTypes.string
 };
 
 export default withGridItem(GoogleFormQuestionnaire);

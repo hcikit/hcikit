@@ -10,6 +10,7 @@ import {
 } from "@hcikit/workflow";
 
 import { withGridItem } from "../withGridItem";
+import PropTypes from "prop-types";
 
 // BUG: I think there might be an off by one error, check the example
 
@@ -33,6 +34,11 @@ let ProgressBar = ({ depth = 0, configuration }) => {
       value={progress}
     />
   );
+};
+
+ProgressBar.propTypes = {
+  configuration: PropTypes.object,
+  depth: PropTypes.number
 };
 
 ProgressBar = withGridItem(ProgressBar, "footer");

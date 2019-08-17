@@ -173,7 +173,7 @@ describe("getCurrentProps", () => {
 
 describe("log", () => {
   it("doesn't log when the experiment is finished", () => {
-    spyOn(console, "error");
+    let spy = jest.spyOn(console, "error").mockImplementation(() => {});
 
     config[__INDEX__] = taskComplete(config);
     config[__INDEX__] = taskComplete(config);
@@ -185,6 +185,7 @@ describe("log", () => {
 
     log(config, "hello", "world");
     expect(config.children.length).toBe(2);
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
   it("logs to the correct place with timestamp", () => {

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import { withGridItem } from "../withGridItem";
 import { CenteredDiv } from "../components";
+import PropTypes from "prop-types";
 
 const Content = styled.span`
   display: table-cell;
@@ -73,13 +74,17 @@ class MouseCenteringTask extends Component {
 
   handleKey = e => {
     if (e.key === " " && this.state.mouseOver) {
-      this.props.onAdvanceWorkflow();
+      this.props.taskComplete();
     }
   };
 
-  handleClick = e => {
+  handleClick = () => {
     this.setState({ hasClicked: true });
   };
 }
+
+MouseCenteringTask.propTypes = {
+  taskComplete: PropTypes.func
+};
 
 export default withGridItem(MouseCenteringTask);

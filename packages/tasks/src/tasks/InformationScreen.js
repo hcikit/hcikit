@@ -33,9 +33,7 @@ const InformationScreen = ({
 
   return (
     <CenteredNicePaper centerX={centerX} centerY={centerY}>
-      {/* <Typography> */}
-      <Markdown children={content} />
-      {/* </Typography> */}
+      <Markdown>{content}</Markdown>
       <br />
       {withContinue && (
         <Button color="primary" onClick={onAdvanceWorkflow}>

@@ -22,7 +22,7 @@ const DisplayTextTask = ({ content, taskComplete }) => {
 DisplayTextTask.propTypes = {
   content: PropTypes.string,
   /**  @ignore */
-  onAdvanceWorkflow: PropTypes.func
+  taskComplete: PropTypes.func
 };
 
 export default withGridItem(DisplayTextTask);

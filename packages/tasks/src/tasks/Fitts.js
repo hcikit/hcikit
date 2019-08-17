@@ -22,7 +22,7 @@ const Fitts = ({
   distance,
   width,
   targetIndex,
-  onAdvanceWorkflow,
+  taskComplete,
   idPrefix = ""
 }) => {
   // TODO: Needs to have a way of saying "expand to max"
@@ -50,7 +50,7 @@ const Fitts = ({
             cy={Math.sin(rotation) * radius}
             r={width}
             active={active}
-            onClick={active ? onAdvanceWorkflow : noop}
+            onClick={active ? taskComplete : noop}
           />
         );
       })}
@@ -63,7 +63,8 @@ Fitts.propTypes = {
   distance: PropTypes.number,
   width: PropTypes.number,
   targetIndex: PropTypes.number,
-  idPrefix: PropTypes.string
+  idPrefix: PropTypes.string,
+  taskComplete: PropTypes.func
 };
 
 export { Fitts };

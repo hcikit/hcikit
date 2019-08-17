@@ -5,14 +5,13 @@ import { Button, Typography, CircularProgress } from "@material-ui/core";
 import { withRawConfiguration } from "@hcikit/workflow";
 
 import { CenteredNicePaper, CenteredText } from "../components";
-
 const UploadDisplay = ({ error, filename, log, experimenter, onClick }) => {
   let contents;
 
   if (!error) {
     contents = (
       <div>
-        <Typography>We're uploading your results!</Typography>
+        <Typography>We&apos;re uploading your results!</Typography>
         <br />
         <CircularProgress size={100} />
       </div>
@@ -21,9 +20,10 @@ const UploadDisplay = ({ error, filename, log, experimenter, onClick }) => {
     contents = (
       <div>
         <p>
-          Something went wrong uploading your results. We'll still compensate
-          you for your time upon submitting the hit. Please download the results
-          and send them to <a href={`mailto:${experimenter}`}>{experimenter}</a>
+          Something went wrong uploading your results. We&apos;ll still
+          compensate you for your time upon submitting the hit. Please download
+          the results and send them to{" "}
+          <a href={`mailto:${experimenter}`}>{experimenter}</a>
         </p>
         <a
           download={`${filename}.json`}
@@ -46,6 +46,14 @@ const UploadDisplay = ({ error, filename, log, experimenter, onClick }) => {
   );
 };
 
+UploadDisplay.propTypes = {
+  error: PropTypes.bool,
+  experimenter: PropTypes.string,
+  filename: PropTypes.string,
+  log: PropTypes.string,
+  onClick: PropTypes.func
+};
+
 export class Upload extends React.Component {
   state = {
     done: false,
@@ -55,7 +63,7 @@ export class Upload extends React.Component {
   UNSAFE_componentWillMount() {
     if (this.props.fireAndForget) {
       this.attemptUploadWithRetries(1);
-      this.props.onAdvanceWorkflow();
+      this.props.taskComplete();
     } else {
       this.attemptUploadWithRetries(3);
     }
@@ -69,12 +77,12 @@ export class Upload extends React.Component {
       .upload(this.props.filename, logs)
       .then(() => {
         if (!this.props.fireAndForget) {
-          this.props.onAdvanceWorkflow();
+          this.props.taskComplete();
           this.setState({ done: true });
         }
       })
       .catch(err => {
-        this.props.onLog("upload error", err);
+        this.props.log("upload error", err);
         console.log(err);
         if (retries > 0) {
           this.attemptUploadWithRetries(retries - 1);
@@ -92,7 +100,7 @@ export class Upload extends React.Component {
       <UploadDisplay
         log={JSON.stringify(this.props.configuration)}
         filename={this.props.filename}
-        onClick={this.props.onAdvanceWorkflow}
+        onClick={this.props.taskComplete}
         experimenter={this.props.experimenter}
         error={this.state.error}
       />
@@ -101,16 +109,19 @@ export class Upload extends React.Component {
 }
 
 Upload.propTypes = {
-  fireAndForget: PropTypes.bool,
-  filename: PropTypes.string,
-  /** The email of the experimenter to send logfiles manually in case of a problem uploading */
+  configuration: PropTypes.object,
   experimenter: PropTypes.string,
-  /** The upload function should take a filename and a string containing all of the logs to upload */
+  filename: PropTypes.string,
+  fireAndForget: PropTypes.bool,
+  taskComplete: PropTypes.func,
+  log: PropTypes.func,
   upload: PropTypes.func
 };
 
 let ConnectedUpload = withRawConfiguration(Upload);
 
-export default upload => props => {
-  return <ConnectedUpload upload={upload} {...props} />;
+export default upload => {
+  return function UploadWrapper(props) {
+    return <ConnectedUpload upload={upload} {...props} />;
+  };
 };

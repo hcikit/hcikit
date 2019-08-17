@@ -2,6 +2,7 @@ import React from "react";
 import { Stepper, Step, StepLabel } from "@material-ui/core";
 import { withRawConfiguration, __INDEX__ } from "@hcikit/workflow";
 import { withGridItem } from "../withGridItem";
+import PropTypes from "prop-types";
 
 // TODO: should we use a custom prop like the label or should we consider just using the task and then people can include spaces if they'd like?
 
@@ -35,6 +36,11 @@ let WizardProgress = ({ setWorkflowIndex, configuration }) => {
       })}
     </Stepper>
   );
+};
+
+WizardProgress.propTypes = {
+  setWorkflowIndex: PropTypes.func,
+  configuration: PropTypes.object
 };
 
 WizardProgress = withGridItem(WizardProgress, "header");

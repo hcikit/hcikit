@@ -48,8 +48,7 @@ export class ConsentForm extends React.Component {
 
     return (
       <CenteredNicePaper>
-        {/* <Typography> */}
-        <Markdown children={letter} /> {/* </Typography> */}
+        <Markdown>{letter}</Markdown>
         <FormControl required error={error}>
           <FormGroup>
             {questions.map(question => {

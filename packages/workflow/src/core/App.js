@@ -15,6 +15,10 @@ import {
   __INDEX__
 } from "./Workflow";
 
+import TaskRegistry from "./TaskRegistry";
+
+import PropTypes from "prop-types";
+
 import { connect } from "react-redux";
 
 // const DefaultGridLayout = styled.div`
@@ -50,6 +54,10 @@ const GridLayout = ({ children }) => {
   );
 };
 
+GridLayout.propTypes = {
+  children: PropTypes.arrayOf(PropTypes.node)
+};
+
 export const App = ({
   // TODO: Ideally we don't pass the entire configuration... That should reduce the number of renders
   configuration,
@@ -58,7 +66,6 @@ export const App = ({
   setWorkflowIndex,
   navigateWorkflowTo,
   editConfig,
-  getTask,
   taskRegistry,
   Layout = GridLayout,
   ErrorHandler = null,
@@ -131,7 +138,6 @@ export const App = ({
           log={log}
           taskComplete={taskComplete}
           editConfig={editConfig}
-          getTask={getTask}
           {...props}
         />
       );
@@ -139,7 +145,7 @@ export const App = ({
   } else {
     tasksFilled = (
       <div style={{ gridArea: "task" }}>
-        <h1>You've completed the experiment!</h1>
+        <h1>You&apos;ve completed the experiment!</h1>
         <a
           download={`${configuration.participant || "log"}.json`}
           href={`data:text/json;charset=utf-8,${encodeURIComponent(
@@ -161,6 +167,20 @@ export const App = ({
   }
 
   return <Layout>{tasksFilled}</Layout>;
+};
+
+App.propTypes = {
+  configuration: PropTypes.object,
+  log: PropTypes.func,
+  taskComplete: PropTypes.func,
+  setWorkflowIndex: PropTypes.func,
+  navigateWorkflowTo: PropTypes.func,
+  editConfig: PropTypes.func,
+  taskRegistry: PropTypes.instanceOf(TaskRegistry),
+  Layout: PropTypes.node,
+  ErrorHandler: PropTypes.node,
+  forceRemountEveryTask: PropTypes.bool,
+  currentProps: PropTypes.object
 };
 
 const mapStateToProps = state => {
