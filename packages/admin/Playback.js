@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 // import testConfig from "./test.json";
 
 // TODO: choose a json file to display
@@ -9,12 +9,12 @@ import React from 'react'
 
 export default () => {
   return (
-    <iframe title='hello'>
+    <iframe title="hello">
       <html>
         <body>
           <h1>hello world</h1>
         </body>
       </html>
     </iframe>
-  )
-}
+  );
+};

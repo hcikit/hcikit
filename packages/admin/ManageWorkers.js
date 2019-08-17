@@ -1,6 +1,6 @@
-import React from 'react'
-import { Switch, Route, Link } from 'react-router-dom'
-import { mturk, s3 } from './mturk'
+import React from "react";
+import { Switch, Route, Link } from "react-router-dom";
+import { mturk, s3 } from "./mturk";
 import {
   CircularProgress,
   Paper,
@@ -14,59 +14,59 @@ import {
   Button,
   Icon,
   Divider
-} from '@material-ui/core'
-import { uniqBy } from 'lodash'
+} from "@material-ui/core";
+import { uniqBy } from "lodash";
 
 // Return array of string values, or NULL if CSV string not well formed.
 // https://stackoverflow.com/a/8497474/1036813
 export function CSVtoArray(text) {
-  var reValid = /^\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*(?:,\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*)*$/
-  var reValue = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g
+  var reValid = /^\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*(?:,\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*)*$/;
+  var reValue = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g;
   // Return NULL if input string is not well formed CSV string.
-  if (!reValid.test(text)) return null
-  var a = [] // Initialize array to receive values.
+  if (!reValid.test(text)) return null;
+  var a = []; // Initialize array to receive values.
   text.replace(
     reValue, // "Walk" the string using replace with callback.
     function(m0, m1, m2, m3) {
       // Remove backslash from \' in single quoted values.
-      if (m1 !== undefined) a.push(m1.replace(/\\'/g, "'"))
+      if (m1 !== undefined) a.push(m1.replace(/\\'/g, "'"));
       // Remove backslash from \" in double quoted values.
-      else if (m2 !== undefined) a.push(m2.replace(/\\"/g, '"'))
-      else if (m3 !== undefined) a.push(m3)
-      return '' // Return empty string.
+      else if (m2 !== undefined) a.push(m2.replace(/\\"/g, '"'));
+      else if (m3 !== undefined) a.push(m3);
+      return ""; // Return empty string.
     }
-  )
+  );
   // Handle special case of empty last value.
-  if (/,\s*$/.test(text)) a.push('')
-  return a
+  if (/,\s*$/.test(text)) a.push("");
+  return a;
 }
 
 const styles = theme => ({
   rightIcon: {
     marginLeft: theme.spacing.unit
   }
-})
+});
 const SetQualifications = withStyles(styles)(({ classes, ...props }) => (
   <Button
     {...props}
-    variant='contained'
-    color='primary'
+    variant="contained"
+    color="primary"
     className={classes.button}
   >
     Sync Qualifications
     <Icon className={classes.rightIcon}>send</Icon>
   </Button>
-))
+));
 
 // TODO: can this be generalised...
 function getAllQualifications(params, data = [], results) {
   if (results) {
-    data = data.concat(results.Qualifications)
+    data = data.concat(results.Qualifications);
   }
 
   if (results === undefined || results.NextToken) {
     if (results) {
-      params.NextToken = results.NextToken
+      params.NextToken = results.NextToken;
     }
 
     return mturk
@@ -74,21 +74,21 @@ function getAllQualifications(params, data = [], results) {
         ...params
       })
       .promise()
-      .then(getAllQualifications.bind(undefined, params, data))
+      .then(getAllQualifications.bind(undefined, params, data));
   } else {
-    return data
+    return data;
   }
 }
 
 class QualificationDetail extends React.Component {
-  state = { workersWithout: [] }
+  state = { workersWithout: [] };
   componentDidMount() {
-    this.loadData()
+    this.loadData();
   }
 
   loadData = () => {
-    let id = '1Rg70vDdfuIwEjJFdStZVgwGMDkPg3vUNi2ZB31oUZBg'
-    let base = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv`
+    let id = "1Rg70vDdfuIwEjJFdStZVgwGMDkPg3vUNi2ZB31oUZBg";
+    let base = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv`;
 
     mturk
       .getQualificationType({
@@ -97,7 +97,7 @@ class QualificationDetail extends React.Component {
       .promise()
       .then(qualification =>
         this.setState({ qualification: qualification.QualificationType })
-      )
+      );
 
     Promise.all([
       getAllQualifications({
@@ -106,78 +106,78 @@ class QualificationDetail extends React.Component {
       }),
       s3
         .listObjectsV2({
-          Bucket: 'exii-experiment-uploads'
+          Bucket: "exii-experiment-uploads"
         })
         .promise()
         .then(data => {
           data = data.Contents.map(object => ({
             date: Date.parse(object.LastModified),
-            workerId: object.Key.split('.')[0].split('_')[0],
-            source: 's3'
-          }))
+            workerId: object.Key.split(".")[0].split("_")[0],
+            source: "s3"
+          }));
 
-          return data
+          return data;
         }),
       fetch(base)
         .then(res => res.text())
         .then(data => {
-          data = data.split('\n').map(CSVtoArray)
+          data = data.split("\n").map(CSVtoArray);
           data = data.slice(1).map(row => ({
             date: Date.parse(row[0]),
             workerId: row[1],
-            source: 'preQuestionnaire'
-          }))
+            source: "preQuestionnaire"
+          }));
 
-          return data
+          return data;
         })
     ]).then(([workersWith, s3, questionnaire]) => {
-      let alreadyAssigned = {}
+      let alreadyAssigned = {};
       workersWith.forEach(
         qualification => (alreadyAssigned[qualification.WorkerId] = true)
-      )
+      );
 
-      let workersWithout = uniqBy([...s3, ...questionnaire], 'workerId').filter(
+      let workersWithout = uniqBy([...s3, ...questionnaire], "workerId").filter(
         worker => !alreadyAssigned[worker.workerId]
-      )
+      );
 
-      this.setState({ workersWithout })
-    })
-  }
+      this.setState({ workersWithout });
+    });
+  };
 
   syncQualifications = () => {
-    let promises = []
+    let promises = [];
 
     this.state.workersWithout.forEach(({ workerId }) => {
       var params = {
         QualificationTypeId: this.props.match.params.id /* required */,
         WorkerId: workerId /* required */,
         SendNotification: false
-      }
+      };
 
-      promises.push(mturk.associateQualificationWithWorker(params).promise())
-    })
+      promises.push(mturk.associateQualificationWithWorker(params).promise());
+    });
 
     Promise.all(promises)
       .then(this.loadData)
-      .catch(this.loadData)
-  }
+      .catch(this.loadData);
+  };
 
   render() {
     if (this.state.error) {
-      return <div>Error: {JSON.stringify(this.state.error, undefined, 2)}</div>
+      return <div>Error: {JSON.stringify(this.state.error, undefined, 2)}</div>;
     } else {
-      const headers = ['WorkerID', 'Date', 'Source']
+      const headers = ["WorkerID", "Date", "Source"];
       return (
         <Paper>
           {this.state.qualification && (
             <div>
-              <Typography variant='title' gutterBottom>
+              <Typography variant="title" gutterBottom>
                 {this.state.qualification.Name}
               </Typography>
-              <Typography variant='subheading' gutterBottom>
+              <Typography variant="subheading" gutterBottom>
                 {this.state.qualification.QualificationTypeId}
               </Typography>
-              <Typography variant='body1' gutterBottom>
+              <Typography variant="body1" gutterBottom>
                 {this.state.qualification.Description}
               </Typography>
             </div>
@@ -198,26 +198,26 @@ class QualificationDetail extends React.Component {
               {this.state.workersWithout.map(row => {
                 return (
                   <TableRow key={row.workerId}>
-                    <TableCell component='th' scope='row'>
+                    <TableCell component="th" scope="row">
                       {row.workerId}
                     </TableCell>
                     <TableCell>{new Date(row.date).toDateString()}</TableCell>
                     <TableCell>{row.source}</TableCell>
                   </TableRow>
-                )
+                );
               })}
             </TableBody>
           </Table>
         </Paper>
-      )
+      );
     }
   }
 }
 
 class QualificationList extends React.Component {
-  state = {}
+  state = {};
   componentDidMount() {
-    this.loadData()
+    this.loadData();
   }
   // TODO: could write code that autofetches everything at once, then generalise these stupid components.
   // TODO: just write a picker, and have that map columns etc. Pass a function into the component, and the rest as props.
@@ -232,16 +232,16 @@ class QualificationList extends React.Component {
       MustBeRequestable,
       MaxResults,
       MustBeOwnedByCaller
-    }
+    };
     mturk.listQualificationTypes(params, (error, data) => {
-      this.setState({ error, data })
-    })
+      this.setState({ error, data });
+    });
   }
   // TODO: load all of the workers with the qualification we want on our account.
   render() {
-    let headers = ['ID', 'Name', 'Description']
+    let headers = ["ID", "Name", "Description"];
     if (this.state.error) {
-      return <div>Error: {JSON.stringify(this.state.error, undefined, 2)}</div>
+      return <div>Error: {JSON.stringify(this.state.error, undefined, 2)}</div>;
     } else if (this.state.data) {
       return (
         <Paper>
@@ -257,7 +257,7 @@ class QualificationList extends React.Component {
               {this.state.data.QualificationTypes.map(row => {
                 return (
                   <TableRow key={row.QualificationTypeId}>
-                    <TableCell component='th' scope='row'>
+                    <TableCell component="th" scope="row">
                       <Link to={`qualifications/${row.QualificationTypeId}`}>
                         {row.QualificationTypeId}
                       </Link>
@@ -265,64 +265,64 @@ class QualificationList extends React.Component {
                     <TableCell>{row.Name}</TableCell>
                     <TableCell>{row.Description}</TableCell>
                   </TableRow>
-                )
+                );
               })}
             </TableBody>
           </Table>
         </Paper>
-      )
+      );
       // <div>{JSON.stringify(this.state.data, undefined, 2)}</div>;
     } else {
       return (
         <div>
           <CircularProgress size={50} />
         </div>
-      )
+      );
     }
   }
 }
 
 export class ListWorkers extends React.Component {
-  state = { data: [] }
+  state = { data: [] };
   componentDidMount() {
-    this.loadData()
+    this.loadData();
   }
 
   loadData() {
-    s3.listObjectsV2({ Bucket: 'exii-experiment-uploads' }, (error, data) => {
+    s3.listObjectsV2({ Bucket: "exii-experiment-uploads" }, (error, data) => {
       if (error) {
-        this.setState({ error })
+        this.setState({ error });
       } else {
         let d = data.Contents.map(object => ({
           date: Date.parse(object.LastModified),
-          workerId: object.Key.split('.')[0].split('_')[0],
-          source: 's3'
-        }))
-        this.setState({ data: [...this.state.data, ...d] })
+          workerId: object.Key.split(".")[0].split("_")[0],
+          source: "s3"
+        }));
+        this.setState({ data: [...this.state.data, ...d] });
       }
-    })
+    });
 
-    let id = '1Rg70vDdfuIwEjJFdStZVgwGMDkPg3vUNi2ZB31oUZBg'
-    let base = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv`
+    let id = "1Rg70vDdfuIwEjJFdStZVgwGMDkPg3vUNi2ZB31oUZBg";
+    let base = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv`;
     fetch(base)
       .then(res => res.text())
       .then(data => {
-        data = data.split('\n').map(CSVtoArray)
+        data = data.split("\n").map(CSVtoArray);
         data = data.slice(1).map(row => ({
           date: Date.parse(row[0]),
           workerId: row[1],
-          source: 'preQuestionnaire'
-        }))
+          source: "preQuestionnaire"
+        }));
 
-        this.setState({ data: [...this.state.data, ...data] })
-      })
+        this.setState({ data: [...this.state.data, ...data] });
+      });
   }
 
   render() {
     if (this.state.error) {
-      return <div>Error: {JSON.stringify(this.state.error, undefined, 2)}</div>
+      return <div>Error: {JSON.stringify(this.state.error, undefined, 2)}</div>;
     } else if (this.state.data.length > 0) {
-      const headers = ['WorkerID', 'Date', 'Source']
+      const headers = ["WorkerID", "Date", "Source"];
       return (
         <Paper>
           <Table>
@@ -337,24 +337,24 @@ export class ListWorkers extends React.Component {
               {this.state.data.map(row => {
                 return (
                   <TableRow>
-                    <TableCell component='th' scope='row'>
+                    <TableCell component="th" scope="row">
                       {row.workerId}
                     </TableCell>
                     <TableCell>{new Date(row.date).toDateString()}</TableCell>
                     <TableCell>{row.source}</TableCell>
                   </TableRow>
-                )
+                );
               })}
             </TableBody>
           </Table>
         </Paper>
-      )
+      );
     } else {
       return (
         <div>
           <CircularProgress size={50} />
         </div>
-      )
+      );
     }
   }
 }
@@ -366,19 +366,19 @@ class ManageWorkers extends React.Component {
         <Switch>
           <Route
             exact
-            path='/admin/workers/qualifications'
+            path="/admin/workers/qualifications"
             component={QualificationList}
           />
           <Route
             exact
-            path='/admin/workers/qualifications/:id'
+            path="/admin/workers/qualifications/:id"
             component={QualificationDetail}
           />
-          <Route exact path='/admin/workers' component={ListWorkers} />
+          <Route exact path="/admin/workers" component={ListWorkers} />
         </Switch>
       </React.Fragment>
-    )
+    );
   }
 }
 
-export default ManageWorkers
+export default ManageWorkers;

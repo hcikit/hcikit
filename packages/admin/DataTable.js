@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   CircularProgress,
   Table,
@@ -6,9 +6,9 @@ import {
   TableRow,
   TableCell,
   TableBody
-} from '@material-ui/core'
+} from "@material-ui/core";
 
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 // TODO: we could also have the promise return a function to get the next row as well, and then support pagination somehow...
 // TODO: hmmm, this is a bumch mixed together. This should juts take data.
@@ -17,18 +17,18 @@ import { Link } from 'react-router-dom'
 // TODO: should look at adding checkboxes as well.
 
 export const dateTransform = date => {
-  return new Date(date).toDateString()
-}
+  return new Date(date).toDateString();
+};
 
 export class DataTable extends React.Component {
   state = {
     data: undefined,
     error: undefined
-  }
+  };
 
   componentWillReceiveProps(newProps) {
     if (newProps.fetchData !== this.props.fetchData) {
-      this.getData()
+      this.getData();
     }
   }
 
@@ -36,18 +36,18 @@ export class DataTable extends React.Component {
     this.props
       .fetchData()
       .then(data => {
-        this.setState({ data })
+        this.setState({ data });
       })
-      .catch(error => this.setState({ error }))
-  }
+      .catch(error => this.setState({ error }));
+  };
 
   componentDidMount() {
-    this.getData()
+    this.getData();
   }
 
   render() {
     if (this.state.error) {
-      return <div>Error: {JSON.stringify(this.state.error, undefined, 2)}</div>
+      return <div>Error: {JSON.stringify(this.state.error, undefined, 2)}</div>;
     } else if (this.state.data) {
       return (
         <Table>
@@ -64,13 +64,13 @@ export class DataTable extends React.Component {
             ))}
           </TableBody>
         </Table>
-      )
+      );
     } else {
       return (
         <div>
           <CircularProgress size={50} />
         </div>
-      )
+      );
     }
   }
 }
@@ -84,7 +84,7 @@ export class DataTable extends React.Component {
 // TODO: links still need to be done.
 const Cell = ({ content, transform, Component, ...props }) => {
   if (transform) {
-    content = transform(content)
+    content = transform(content);
   }
 
   if (Component) {
@@ -94,22 +94,22 @@ const Cell = ({ content, transform, Component, ...props }) => {
           {content}
         </Component>
       </TableCell>
-    )
+    );
   } else {
-    return <TableCell {...props}>{content}</TableCell>
+    return <TableCell {...props}>{content}</TableCell>;
   }
-}
+};
 
 export const WrappedLinkComponent = ({ content, to, children, ...props }) => {
-  return <Link to={`${to}/${content}`}>{children}</Link>
-}
+  return <Link to={`${to}/${content}`}>{children}</Link>;
+};
 
 const Row = ({ row, columns }) => {
   return (
     <TableRow>
       {columns.map(({ key, title, ...props }) => {
-        return <Cell key={key} content={row[key || title]} {...props} />
+        return <Cell key={key} content={row[key || title]} {...props} />;
       })}
     </TableRow>
-  )
-}
+  );
+};

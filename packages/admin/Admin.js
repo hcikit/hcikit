@@ -1,9 +1,9 @@
-import React from 'react'
-import { Switch, Route, Link } from 'react-router-dom'
-import { GenerateConfiguration } from '../../design/GenerateConfiguration'
+import React from "react";
+import { Switch, Route, Link } from "react-router-dom";
+import { GenerateConfiguration } from "../../design/GenerateConfiguration";
 
-import Playback from './Playback'
-import classNames from 'classnames'
+import Playback from "./Playback";
+import classNames from "classnames";
 
 import {
   Toolbar,
@@ -18,25 +18,25 @@ import {
   ListItemIcon,
   ListItemText,
   withStyles
-} from '@material-ui/core'
-import ManageWorkers from './ManageWorkers'
-import ManageHITs from './ManageHITs'
+} from "@material-ui/core";
+import ManageWorkers from "./ManageWorkers";
+import ManageHITs from "./ManageHITs";
 
 // TODO: this should all be inside of a CRA.
 
-const drawerWidth = 240
+const drawerWidth = 240;
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
     zIndex: 1,
-    overflow: 'hidden',
-    position: 'relative',
-    display: 'flex'
+    overflow: "hidden",
+    position: "relative",
+    display: "flex"
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     })
@@ -44,7 +44,7 @@ const styles = theme => ({
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen
     })
@@ -54,33 +54,33 @@ const styles = theme => ({
     marginRight: 36
   },
   hide: {
-    display: 'none'
+    display: "none"
   },
   drawerPaper: {
-    position: 'relative',
-    whiteSpace: 'nowrap',
+    position: "relative",
+    whiteSpace: "nowrap",
     width: drawerWidth,
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen
     })
   },
   drawerPaperClose: {
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
+    overflowX: "hidden",
+    transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     }),
     width: theme.spacing.unit * 7,
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       width: theme.spacing.unit * 9
     }
   },
   toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: "0 8px",
     ...theme.mixins.toolbar
   },
   content: {
@@ -88,28 +88,28 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3
   }
-})
+});
 
 class MiniDrawer extends React.Component {
   state = {
     open: false
-  }
+  };
 
   handleDrawerOpen = () => {
-    this.setState({ open: true })
-  }
+    this.setState({ open: true });
+  };
 
   handleDrawerClose = () => {
-    this.setState({ open: false })
-  }
+    this.setState({ open: false });
+  };
 
   render() {
-    const { classes, theme } = this.props
+    const { classes, theme } = this.props;
 
     return (
       <div className={classes.root}>
         <AppBar
-          position='absolute'
+          position="absolute"
           className={classNames(
             classes.appBar,
             this.state.open && classes.appBarShift
@@ -117,8 +117,8 @@ class MiniDrawer extends React.Component {
         >
           <Toolbar disableGutters={!this.state.open}>
             <IconButton
-              color='inherit'
-              aria-label='Open drawer'
+              color="inherit"
+              aria-label="Open drawer"
               onClick={this.handleDrawerOpen}
               className={classNames(
                 classes.menuButton,
@@ -127,13 +127,13 @@ class MiniDrawer extends React.Component {
             >
               <Icon>menu</Icon>
             </IconButton>
-            <Typography variant='title' color='inherit' noWrap>
+            <Typography variant="title" color="inherit" noWrap>
               Experiment Dashboard
             </Typography>
           </Toolbar>
         </AppBar>
         <Drawer
-          variant='permanent'
+          variant="permanent"
           classes={{
             paper: classNames(
               classes.drawerPaper,
@@ -144,7 +144,7 @@ class MiniDrawer extends React.Component {
         >
           <div className={classes.toolbar}>
             <IconButton onClick={this.handleDrawerClose}>
-              {theme.direction === 'rtl' ? (
+              {theme.direction === "rtl" ? (
                 <Icon>chevron_right</Icon>
               ) : (
                 <Icon>chevron_left</Icon>
@@ -154,40 +154,40 @@ class MiniDrawer extends React.Component {
           <Divider />
           <List>
             <div>
-              <ListItem button component={Link} to='/'>
+              <ListItem button component={Link} to="/">
                 <ListItemIcon>
                   <Icon>assignment</Icon>
                 </ListItemIcon>
-                <ListItemText primary='Experiment' />
+                <ListItemText primary="Experiment" />
               </ListItem>
-              <ListItem button component={Link} to='/admin/config'>
+              <ListItem button component={Link} to="/admin/config">
                 <ListItemIcon>
                   <Icon>build</Icon>
                 </ListItemIcon>
-                <ListItemText primary='Config' />
+                <ListItemText primary="Config" />
               </ListItem>
-              <ListItem button component={Link} to='/admin/playback'>
+              <ListItem button component={Link} to="/admin/playback">
                 <ListItemIcon>
                   <Icon>replay</Icon>
                 </ListItemIcon>
-                <ListItemText primary='Playback' />
+                <ListItemText primary="Playback" />
               </ListItem>
               {/* TODO: should be nested... */}
-              <ListItem button component={Link} to='/admin/workers'>
+              <ListItem button component={Link} to="/admin/workers">
                 <ListItemIcon>
                   <Icon>person</Icon>
                 </ListItemIcon>
-                <ListItemText primary='Manage Workers' />
+                <ListItemText primary="Manage Workers" />
               </ListItem>
               <ListItem
                 button
                 component={Link}
-                to='/admin/workers/qualifications'
+                to="/admin/workers/qualifications"
               >
-                <ListItemText primary='Qualification' />
+                <ListItemText primary="Qualification" />
               </ListItem>
-              <ListItem button component={Link} to='/admin/hits'>
-                <ListItemText primary='Hits' />
+              <ListItem button component={Link} to="/admin/hits">
+                <ListItemText primary="Hits" />
               </ListItem>
             </div>
           </List>
@@ -197,17 +197,17 @@ class MiniDrawer extends React.Component {
           <Switch>
             <Route
               exact
-              path='/admin/config'
+              path="/admin/config"
               component={GenerateConfiguration}
             />
-            <Route exact path='/admin/playback' component={Playback} />
-            <Route path='/admin/workers' component={ManageWorkers} />
-            <Route path='/admin/hits' component={ManageHITs} />
+            <Route exact path="/admin/playback" component={Playback} />
+            <Route path="/admin/workers" component={ManageWorkers} />
+            <Route path="/admin/hits" component={ManageHITs} />
           </Switch>
         </main>
       </div>
-    )
+    );
   }
 }
 
-export default withStyles(styles, { withTheme: true })(MiniDrawer)
+export default withStyles(styles, { withTheme: true })(MiniDrawer);
