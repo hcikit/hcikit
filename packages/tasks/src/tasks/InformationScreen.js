@@ -15,7 +15,7 @@ import { withGridItem } from "../withGridItem";
 const InformationScreen = ({
   content,
   withContinue = true,
-  onAdvanceWorkflow,
+  taskComplete,
   centerX,
   centerY,
   shortcutEnabled,
@@ -24,7 +24,7 @@ const InformationScreen = ({
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === key && shortcutEnabled) {
-        onAdvanceWorkflow();
+        taskComplete();
       }
     }
     window.addEventListener("keydown", handleKeyDown);
@@ -36,7 +36,7 @@ const InformationScreen = ({
       <Markdown>{content}</Markdown>
       <br />
       {withContinue && (
-        <Button color="primary" onClick={onAdvanceWorkflow}>
+        <Button color="primary" onClick={taskComplete}>
           continue {shortcutEnabled && `(${key})`}
         </Button>
       )}
@@ -48,7 +48,7 @@ InformationScreen.propTypes = {
   centerX: PropTypes.bool,
   centerY: PropTypes.bool,
   content: PropTypes.string,
-  onAdvanceWorkflow: PropTypes.func,
+  taskComplete: PropTypes.func,
   withContinue: PropTypes.bool,
   shortcutEnabled: PropTypes.bool,
   /* The KeyboardEvent.key value to use as a shortcut */

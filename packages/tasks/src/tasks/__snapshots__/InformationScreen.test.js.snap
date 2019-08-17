@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InformationScreen renders markdown properly 1`] = `
+<div
+  style={
+    Object {
+      "gridArea": "task",
+    }
+  }
+>
+  <div
+    className="sc-ifAKCX iCjAbu"
+  >
+    <div>
+      <div
+        className="MuiPaper-root MuiPaper-elevation1 sc-bxivhb hoTgWR MuiPaper-rounded"
+      >
+        <div>
+          <h1
+            id="hello-world"
+          >
+            Hello World
+          </h1>
+          <ul>
+            <li>
+              This is some markdown
+            </li>
+            <li>
+              that should render 
+              <em>
+                properly
+              </em>
+            </li>
+          </ul>
+        </div>
+        <br />
+        <button
+          className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
+          disabled={false}
+          onBlur={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={0}
+          type="button"
+        >
+          <span
+            className="MuiButton-label"
+          >
+            continue 
+          </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -1,6 +1,8 @@
 import React from "react";
 import { mount } from "enzyme";
 import DisplayTextTask from "./DisplayTextTask";
+import { create, act } from "react-test-renderer";
+
 describe("DisplayTextTask", () => {
   it("renders without crashing", () => {
     mount(<DisplayTextTask content="hello" />);
@@ -16,9 +18,15 @@ describe("DisplayTextTask", () => {
     expect(taskCompleteSpy).toBeCalledTimes(1);
   });
 
-  // it("renders properly", () => {
-  //   expect(mount(<DisplayTextTask content="hello" />)).toMatchSnapshot();
-  // });
+  it("renders properly", () => {
+    let root;
+
+    act(() => {
+      root = create(<DisplayTextTask content="hello" />);
+    });
+
+    expect(root.toJSON()).toMatchSnapshot();
+  });
 
   it("renders plain text", () => {
     let container = mount(<DisplayTextTask content="hello" />);
