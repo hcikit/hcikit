@@ -25,6 +25,25 @@ describe("InformationScreen", () => {
     expect(taskCompleteSpy).toBeCalledTimes(1);
   });
 
+  it("doesn't advance when with continue is false", () => {
+    let taskCompleteSpy = jest.fn();
+    const map = {};
+
+    jest.spyOn(window, "addEventListener").mockImplementation((event, cb) => {
+      map[event] = cb;
+    });
+
+    mount(
+      <InformationScreen
+        withContinue={false}
+        taskComplete={taskCompleteSpy}
+        content="Hello World"
+      />
+    );
+    map.keydown({ key: "Enter" });
+    expect(taskCompleteSpy).not.toHaveBeenCalled();
+  });
+
   it("advances with a keyboard press", () => {
     const map = {};
 

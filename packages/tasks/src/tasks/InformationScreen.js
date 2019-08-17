@@ -23,7 +23,7 @@ const InformationScreen = ({
 }) => {
   useEffect(() => {
     function handleKeyDown(e) {
-      if (e.key === key && shortcutEnabled) {
+      if (e.key === key && shortcutEnabled && withContinue) {
         taskComplete();
       }
     }
@@ -47,7 +47,7 @@ const InformationScreen = ({
 InformationScreen.propTypes = {
   centerX: PropTypes.bool,
   centerY: PropTypes.bool,
-  content: PropTypes.string,
+  content: PropTypes.string.isRequired,
   taskComplete: PropTypes.func,
   withContinue: PropTypes.bool,
   shortcutEnabled: PropTypes.bool,
