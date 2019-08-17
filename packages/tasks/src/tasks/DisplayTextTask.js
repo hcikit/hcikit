@@ -3,16 +3,15 @@ import { Button } from "@material-ui/core";
 import { CenteredDiv, CenteredText } from "../components";
 import PropTypes from "prop-types";
 import { withGridItem } from "../withGridItem";
-
 /**
  * Creates a simple ane small piece of text in the middle of the screen with a continue button.
  */
-const DisplayTextTask = ({ content, onAdvanceWorkflow }) => {
+const DisplayTextTask = ({ content, taskComplete }) => {
   return (
     <CenteredDiv centerX centerY>
       <CenteredText>
         <h1>{content}</h1>
-        <Button variant="contained" color="primary" onClick={onAdvanceWorkflow}>
+        <Button variant="contained" color="primary" onClick={taskComplete}>
           Continue
         </Button>
       </CenteredText>
