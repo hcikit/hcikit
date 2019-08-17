@@ -2,7 +2,7 @@ import React from "react";
 import { Provider } from "react-redux";
 import PropTypes from "prop-types";
 
-import TaskRenderer from "./core/App";
+import TaskRenderer, { GridLayout } from "./core/App";
 import configureStore from "./core/configureStore";
 import TaskRegistry from "./core/TaskRegistry";
 
@@ -31,6 +31,8 @@ Experiment.propTypes = {
 };
 
 export * from "./core/Workflow";
+
+export { GridLayout };
 
 export { default as TaskRegistry } from "./core/TaskRegistry";
 export * from "./Utils";

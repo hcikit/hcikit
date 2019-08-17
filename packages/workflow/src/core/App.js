@@ -33,8 +33,7 @@ import { connect } from "react-redux";
 //     "footer";
 // `;
 
-// TODO: How can we move this out of the workflow package but let HCIKit work out of the box..
-const GridLayout = ({ children }) => {
+export const GridLayout = ({ children }) => {
   return (
     <div
       style={{
