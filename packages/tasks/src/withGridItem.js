@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export function withGridItem(WrappedComponent, defaultGrid = "task") {
   let GridItem = props => {
     return (
-      <div style={{ gridArea: defaultGrid || props.gridArea }}>
+      <div style={{ gridArea: props.gridArea || defaultGrid }}>
         <WrappedComponent {...props} />
       </div>
     );
