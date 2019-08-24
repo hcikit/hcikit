@@ -10,7 +10,9 @@ import {
   __INDEX__,
   indexToTaskNumber,
   taskNumberToIndex,
-  getTotalTasks
+  getTotalTasks,
+  iterateConfig,
+  iterateConfigWithProps
 } from "./Workflow";
 import deepFreeze from "deep-freeze";
 
@@ -498,5 +500,80 @@ describe("getTotalTasks", () => {
     };
 
     expect(getTotalTasks(config)).toEqual(10);
+  });
+});
+
+describe("iterateConfig", () => {
+  it("iterates with correct indices", () => {
+    expect(Array.from(iterateConfig(config))).toEqual([
+      [0],
+      [1, 0, 0],
+      [1, 0, 1],
+      [1, 1, 0],
+      [1, 1, 1]
+    ]);
+  });
+});
+
+describe("iterateConfigWithProps", () => {
+  it("iterates entire config with correct props", () => {
+    expect(iterateConfigWithProps(config)).toEqual([
+      {
+        // __INDEX__: [0],
+        configprop: "section",
+        task: "real task without children",
+
+        StimulusResponse: {
+          hello: "world",
+          yolo: "yoyololo"
+        }
+      },
+      {
+        // __INDEX__: [1, 0, 0],
+        configprop: "section",
+        sectionprop: "section",
+        blockprop: "section",
+        stimulus: "bear",
+
+        StimulusResponse: {
+          hello: "world",
+          yolo: "yoyololo"
+        }
+      },
+      {
+        // __INDEX__: [1, 0, 1],
+        configprop: "section",
+        blockprop: "section",
+        sectionprop: "section",
+        stimulus: "pig",
+
+        StimulusResponse: {
+          hello: "hello",
+          yolo: "yoyololo"
+        }
+      },
+      {
+        // __INDEX__: [1, 1, 0],
+        configprop: "section",
+        sectionprop: "section",
+
+        StimulusResponse: {
+          hello: "world",
+          yolo: "yoyololo"
+        },
+        stimulus: "bird"
+      },
+      {
+        // __INDEX__: [1, 1, 1],
+        configprop: "section",
+        sectionprop: "section",
+
+        StimulusResponse: {
+          hello: "world",
+          yolo: "yoyololo"
+        },
+        stimulus: "dog"
+      }
+    ]);
   });
 });

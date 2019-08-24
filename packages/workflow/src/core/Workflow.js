@@ -1,9 +1,14 @@
 import { connect } from "react-redux";
 import { mergeWith, pickBy, isEqual } from "lodash-es";
 
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+
 // TODO: mergeWith is very slow which slows everything down with lots of onlogs.
 // TODO: document everything here...
 // TODO: should this work with a config with no children? Does it work with no children?
+
+// TODO: some of these functions I can maybe use generators to reduce computation and make things faster?
 
 export const __INDEX__ = "__INDEX__";
 const COMPLETE = "__COMPLETE__";
@@ -34,6 +39,7 @@ export function getCurrentProps(configuration) {
   return getPropsFor(configuration[__INDEX__] || [0], configuration);
 }
 
+// TODO: should this add an index?
 export function getPropsFor(index, configuration) {
   if (experimentComplete(configuration)) {
     return {};
@@ -233,6 +239,7 @@ export function taskNumberToIndex(taskNumber, config) {
   }
 }
 
+// TODO: this can be replaced with iterate config maybe?
 export function getTotalTasks(config) {
   let tasks = 0;
   let toSearch = [[]];
@@ -256,3 +263,29 @@ export function getTotalTasks(config) {
 export const withRawConfiguration = connect(state => {
   return { configuration: state.Configuration };
 });
+
+// TODO: maybe this function should just return all of the indices?
+export function* iterateConfig(config) {
+  let toSearch = [[]];
+
+  while (toSearch.length > 0) {
+    let searchingIndex = toSearch.pop();
+    let searchingConfig = getConfigAtIndex(searchingIndex, config);
+
+    if ("children" in searchingConfig) {
+      for (let i = searchingConfig.children.length - 1; i >= 0; i--) {
+        toSearch.push([...searchingIndex, i]);
+      }
+    } else {
+      yield searchingIndex;
+    }
+  }
+
+  return;
+}
+
+export function iterateConfigWithProps(config) {
+  return Array.from(iterateConfig(config)).map(index =>
+    getPropsFor(index, config)
+  );
+}

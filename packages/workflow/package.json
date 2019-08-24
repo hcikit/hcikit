@@ -46,9 +46,11 @@
     "react-redux": "^7.1.0"
   },
   "dependencies": {
+    "core-js": "^3.2.1",
     "lodash-es": "^4.17.11",
     "prop-types": "^15.7.2",
-    "redux": "^4.0.1"
+    "redux": "^4.0.1",
+    "regenerator-runtime": "^0.13.3"
   },
   "devDependencies": {
     "react": "^16.8.6",
