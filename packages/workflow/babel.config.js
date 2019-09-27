@@ -3,6 +3,18 @@ module.exports = function(api) {
 
   return {
     presets: ["@babel/preset-env", "@babel/react"],
-    plugins: [["@babel/plugin-proposal-class-properties", { loose: false }]]
+    plugins: [
+      ["@babel/plugin-proposal-class-properties", { loose: false }],
+      [
+        "@babel/plugin-transform-runtime",
+        {
+          absoluteRuntime: false,
+          corejs: false,
+          helpers: true,
+          regenerator: true,
+          useESModules: true
+        }
+      ]
+    ]
   };
 };

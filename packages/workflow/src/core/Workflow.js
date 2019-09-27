@@ -1,9 +1,6 @@
 import { connect } from "react-redux";
 import { mergeWith, pickBy, isEqual } from "lodash-es";
 
-import "core-js/stable";
-import "regenerator-runtime/runtime";
-
 // TODO: mergeWith is very slow which slows everything down with lots of onlogs.
 // TODO: document everything here...
 // TODO: should this work with a config with no children? Does it work with no children?
