@@ -69,6 +69,11 @@ export const App = ({
   forceRemountEveryTask = true,
   currentProps
 }) => {
+  if (process.env.NODE_ENV === "development") {
+    window.currentProps = currentProps;
+    window.configuration = configuration;
+  }
+
   let onLog = (...args) => {
     console.warn(
       "WARNING! onLog has been deprecated, use log instead. The behaviour of this function has also changed."
