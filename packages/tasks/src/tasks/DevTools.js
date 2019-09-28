@@ -90,8 +90,8 @@ export const DevTools = ({ taskComplete, configuration, setWorkflowIndex }) => {
         <IconButton>
           <FastRewind />
         </IconButton>
-        <IconButton>
-          <FastForward onClick={taskComplete} />
+        <IconButton onClick={taskComplete}>
+          <FastForward />
         </IconButton>
         <IconButton>
           <SkipNext />
