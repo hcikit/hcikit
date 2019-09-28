@@ -12,6 +12,7 @@ import IncrementTask, { reducer } from "./IncrementTask";
 import CustomTask from "./CustomTask";
 
 import configuration from "./configuration";
+import ConfigUnroller from "./ConfigUnroller";
 
 let taskRegistry = new TaskRegistry({
   CustomTask,
@@ -28,7 +29,10 @@ taskRegistry.registerTask("IncrementTask", IncrementTask, reducer);
 export default class App extends Component {
   render() {
     return (
-      <Experiment taskRegistry={taskRegistry} configuration={configuration} />
+      <ConfigUnroller
+        taskRegistry={taskRegistry}
+        configuration={configuration}
+      />
     );
   }
 }
