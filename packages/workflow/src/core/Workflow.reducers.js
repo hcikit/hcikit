@@ -1,16 +1,9 @@
-import {
-  taskComplete,
-  advanceWorkflowLevelTo,
-  log,
-  logAction,
-  __INDEX__
-} from "./Workflow";
+import { taskComplete, log, logAction, __INDEX__ } from "./Workflow";
 import {
   LOG,
   LOG_ACTION,
   TASK_COMPLETE,
   EDIT_CONFIG,
-  NAVIGATE_WORKFLOW_TO,
   SET_WORKFLOW_INDEX
 } from "./Workflow.actions";
 
@@ -20,23 +13,17 @@ const configuration = (state = { events: [] }, action) => {
       state = { ...state, [__INDEX__]: taskComplete(state) };
       return state;
     case SET_WORKFLOW_INDEX:
-      console.log(action.value);
       return {
         ...state,
         [__INDEX__]: action.value
       };
-    // TODO: Remove?
-    case NAVIGATE_WORKFLOW_TO:
-      state = { ...state };
-      advanceWorkflowLevelTo(state, action.level, action.newValue);
-      return state;
     case LOG:
       state = { ...state };
       log(state, action.key, action.value);
       return state;
     case LOG_ACTION:
       state = { ...state };
-      logAction(state, action.action, action.withTimeStamp);
+      logAction(state, action.action);
       return state;
     case EDIT_CONFIG:
       // TODO: I want edit config to be more than just global

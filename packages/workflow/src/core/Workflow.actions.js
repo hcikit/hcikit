@@ -11,14 +11,6 @@ export const setWorkflowIndex = value => {
   };
 };
 
-export const navigateWorkflowTo = (level, newValue) => {
-  return {
-    type: NAVIGATE_WORKFLOW_TO,
-    level,
-    newValue
-  };
-};
-
 export const log = (key, value) => {
   return {
     type: LOG,
@@ -27,11 +19,10 @@ export const log = (key, value) => {
   };
 };
 
-export const logAction = (action, withTimeStamp = true) => {
+export const logAction = action => {
   return {
     type: LOG_ACTION,
-    action,
-    withTimeStamp
+    action
   };
 };
 
@@ -45,7 +36,6 @@ export const editConfig = (key, value) => {
 
 export const TASK_COMPLETE = "TASK_COMPLETE";
 export const SET_WORKFLOW_INDEX = "SET_WORKFLOW_INDEX";
-export const NAVIGATE_WORKFLOW_TO = "NAVIGATE_WORKFLOW_TO";
 export const LOG = "LOG";
 export const LOG_ACTION = "LOG_ACTION";
 export const EDIT_CONFIG = "EDIT_CONFIG";

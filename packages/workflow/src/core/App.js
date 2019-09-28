@@ -2,7 +2,6 @@ import React from "react";
 import {
   log,
   editConfig,
-  navigateWorkflowTo,
   taskComplete,
   setWorkflowIndex
 } from "./Workflow.actions";
@@ -63,7 +62,6 @@ export const App = ({
   log,
   taskComplete,
   setWorkflowIndex,
-  navigateWorkflowTo,
   editConfig,
   taskRegistry,
   Layout = GridLayout,
@@ -95,14 +93,6 @@ export const App = ({
     taskComplete(...args);
   };
 
-  let onAdvanceWorkflowLevelTo = (...args) => {
-    console.warn(
-      "WARNING! onAdvanceWorkflow has been deprecated, use navigateWorkflowTo() instead."
-    );
-
-    navigateWorkflowTo(...args);
-  };
-
   let tasks = currentProps.tasks || [];
 
   if (currentProps.task) {
@@ -130,7 +120,6 @@ export const App = ({
           key={key}
           // TODO: finish deprecating these by documenting the changes.
           onAdvanceWorkflow={onAdvanceWorkflow}
-          onAdvanceWorkflowLevelTo={onAdvanceWorkflowLevelTo}
           onLog={onLog}
           onEditConfig={onEditConfig}
           setWorkflowIndex={setWorkflowIndex}
@@ -173,7 +162,6 @@ App.propTypes = {
   log: PropTypes.func,
   taskComplete: PropTypes.func,
   setWorkflowIndex: PropTypes.func,
-  navigateWorkflowTo: PropTypes.func,
   editConfig: PropTypes.func,
   taskRegistry: PropTypes.instanceOf(TaskRegistry),
   Layout: PropTypes.node,
@@ -190,7 +178,6 @@ const mapDispatchToProps = {
   taskComplete,
   log,
   editConfig,
-  navigateWorkflowTo,
   setWorkflowIndex
 };
 

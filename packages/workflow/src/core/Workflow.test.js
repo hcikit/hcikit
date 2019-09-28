@@ -129,6 +129,26 @@ describe("scopePropsForTask", () => {
 });
 
 describe("getCurrentProps", () => {
+  it("log isn't passed with props", () => {
+    config[__INDEX__] = taskComplete(config);
+
+    log(config, { hello: "world" });
+
+    // expect(getCurrentProps(config)).not.toHaveProperty("logs");
+
+    expect(getCurrentProps(config)).toEqual({
+      __INDEX__: [1, 0, 0],
+      blockprop: "section",
+      sectionprop: "section",
+      configprop: "section",
+      stimulus: "bear",
+      StimulusResponse: {
+        hello: "world",
+        yolo: "yoyololo"
+      }
+    });
+  });
+
   it("cascades properties from top to bottom", () => {
     config[__INDEX__] = taskComplete(config);
 
@@ -185,62 +205,69 @@ describe("log", () => {
 
     deepFreeze(config);
 
-    log(config, "hello", "world");
+    log(config, { hello: "world" });
     expect(config.children.length).toBe(2);
+    expect(config.children).not.toHaveProperty("logs");
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it("logs to the correct place with timestamp", () => {
-    log(config, "hello", "world");
-    expect(config.children[0].hello).toEqual("world");
-  });
-
-  it("logs with timestamp", () => {
+  it("logs correctly with timestamp", () => {
     let patch = Date.now;
     Date.now = () => 10;
 
-    log(config, "hello", "world", true);
-    expect(config.children[0].hello.value).toEqual("world");
-
-    expect(config.children[0].hello.timestamp).toEqual(10);
+    log(config, { hello: "world" });
+    expect(config.children[0].logs[0]).toEqual({
+      hello: "world",
+      timestamp: 10
+    });
 
     Date.now = patch;
   });
 
   it("logs after advancing correct place", () => {
-    config[__INDEX__] = taskComplete(config);
-
-    log(config, "hello", "world", true);
-    expect(config.children[1].children[0].children[0].hello.value).toEqual(
-      "world"
-    );
+    let patch = Date.now;
+    let i = 10;
+    Date.now = () => i++;
 
     config[__INDEX__] = taskComplete(config);
 
-    log(config, "hello", "world", true);
-    expect(config.children[1].children[0].children[1].hello.value).toEqual(
-      "world"
-    );
-    config[__INDEX__] = taskComplete(config);
-
-    log(config, "hello", "world", true);
-    expect(config.children[1].children[1].children[0].hello.value).toEqual(
-      "world"
-    );
+    log(config, { hello: "world" });
+    expect(config.children[1].children[0].children[0].logs[0]).toEqual({
+      hello: "world",
+      timestamp: 10
+    });
 
     config[__INDEX__] = taskComplete(config);
-    log(config, "hello", "world", true);
-    expect(config.children[1].children[1].children[1].hello.value).toEqual(
-      "world"
-    );
+
+    log(config, { hello: "world" });
+    expect(config.children[1].children[0].children[1].logs[0]).toEqual({
+      hello: "world",
+      timestamp: 11
+    });
+    config[__INDEX__] = taskComplete(config);
+
+    log(config, { hello: "world" });
+    expect(config.children[1].children[1].children[0].logs[0]).toEqual({
+      hello: "world",
+      timestamp: 12
+    });
+
+    config[__INDEX__] = taskComplete(config);
+    log(config, { hello: "world" });
+    expect(config.children[1].children[1].children[1].logs[0]).toEqual({
+      hello: "world",
+      timestamp: 13
+    });
+    Date.now = patch;
   });
+
   it("log replaces the required objects", () => {
     let c = { ...config };
     c[__INDEX__] = taskComplete(c);
 
     deepFreeze(config);
 
-    log(c, "hello", "world");
+    log(c, { hello: "world" });
 
     expect(config).not.toBe(c);
     expect(config.children).not.toBe(c.children);

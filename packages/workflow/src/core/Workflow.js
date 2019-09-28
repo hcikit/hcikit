@@ -55,7 +55,11 @@ export function getPropsFor(index, configuration) {
     props = merge(props, properties);
   }
 
-  return merge(props, configuration);
+  props = merge(props, configuration);
+
+  delete props.logs;
+
+  return props;
 }
 
 export function getConfigAtIndex(index, initialConfig) {
@@ -104,24 +108,7 @@ export function taskComplete(configuration) {
   return getLeafIndex(index, configuration);
 }
 
-// Returns true if the participant has finished all the steps in this part of the configuration.
-// TODO: Rename to navigateWorkflowTo
-export function advanceWorkflowLevelTo(config, level, newValue) {
-  // TODO: this function requires there be a "nextLevel" property on the configuration. Instead it should set the requested depth to a newValue. Essentially replace level with depth
-
-  // Error catching: if we went past the end of a list, don't keep advancing
-  if (!config) {
-    return false;
-  }
-
-  if (config["nextLevel"] === level) {
-    config.index = newValue;
-  } else if (config.children) {
-    return { ...advanceWorkflowLevelTo(config.children[config.index]) };
-  }
-}
-
-export function log(config, key, value, withTimeStamp) {
+export function log(config, log) {
   if (experimentComplete(config)) {
     console.error("Attempting to log when the experiment is complete.");
     return;
@@ -132,14 +119,17 @@ export function log(config, key, value, withTimeStamp) {
   // TODO: Change the way we do configs.
   // newTask.logs = [...newTask.logs, newLog]
 
-  if (withTimeStamp) {
-    newTask[key] = {
-      value: value,
-      timestamp: Date.now()
-    };
-  } else {
-    newTask[key] = value;
+  if (!newTask.logs) {
+    newTask.logs = [];
   }
+
+  newTask.logs = [
+    ...newTask.logs,
+    {
+      ...log,
+      timestamp: Date.now()
+    }
+  ];
 
   modifyConfig(index, config, newTask);
 }
@@ -159,7 +149,7 @@ export function logAction(config, action) {
   newTask.actions = [
     ...newTask.actions,
     {
-      action: action,
+      action,
       timestamp: Date.now()
     }
   ];
