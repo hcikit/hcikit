@@ -37,7 +37,8 @@ export default {
       }
     }),
     babel({
-      exclude: "../../node_modules/**"
+      exclude: "../../node_modules/**",
+      runtimeHelpers: true
     })
   ]
 };
