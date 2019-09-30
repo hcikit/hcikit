@@ -81,7 +81,7 @@ export default (Configuration, reducers) => {
     }
 
     if (action.type === TASK_COMPLETE) {
-      dispatch(log("end", Date.now(), false));
+      dispatch(log({ type: "end" }));
     }
 
     dispatch(action);
@@ -90,11 +90,11 @@ export default (Configuration, reducers) => {
       action.type === TASK_COMPLETE &&
       !experimentComplete(store.getState().Configuration)
     ) {
-      dispatch(log("start", Date.now(), false));
+      dispatch(log({ type: "start" }));
     }
   };
 
-  dispatch(log("start", Date.now(), false));
+  dispatch(log({ type: "start" }));
 
   return store;
 };

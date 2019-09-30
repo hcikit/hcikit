@@ -8,13 +8,12 @@ export class UploadOnError extends React.Component {
     this.state = { hasError: false };
   }
 
-  componentDidCatch(error, info) {
+  componentDidCatch(error, javscriptErrorInfo) {
     this.setState({ hasError: true });
-    this.props.log(
-      "javascriptError",
-      JSON.stringify(error, Object.getOwnPropertyNames(error))
-    );
-    this.props.log("javscriptErrorInfo", info);
+    this.props.log({
+      javascriptError: JSON.stringify(error, Object.getOwnPropertyNames(error)),
+      javscriptErrorInfo
+    });
   }
 
   render() {

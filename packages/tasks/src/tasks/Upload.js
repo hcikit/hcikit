@@ -54,6 +54,8 @@ UploadDisplay.propTypes = {
   onClick: PropTypes.func
 };
 
+// TODO: make this functional? Remove or standardise the experimenter property?
+
 export class Upload extends React.Component {
   state = {
     done: false,
@@ -81,9 +83,9 @@ export class Upload extends React.Component {
           this.setState({ done: true });
         }
       })
-      .catch(err => {
-        this.props.log("upload error", err);
-        console.error(err);
+      .catch(upload_error => {
+        this.props.log({ upload_error });
+        console.error(upload_error);
         if (retries > 0) {
           this.attemptUploadWithRetries(retries - 1);
         } else {

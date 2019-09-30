@@ -108,6 +108,7 @@ export function taskComplete(configuration) {
   return getLeafIndex(index, configuration);
 }
 
+// TODO: should these take a type?
 export function log(config, log) {
   if (experimentComplete(config)) {
     console.error("Attempting to log when the experiment is complete.");
@@ -116,8 +117,6 @@ export function log(config, log) {
   let index = config[__INDEX__] || getLeafIndex([0], config);
 
   let newTask = { ...getConfigAtIndex(index, config) };
-  // TODO: Change the way we do configs.
-  // newTask.logs = [...newTask.logs, newLog]
 
   if (!newTask.logs) {
     newTask.logs = [];

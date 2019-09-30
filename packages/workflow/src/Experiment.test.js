@@ -21,7 +21,7 @@ const config = {
 let ButtonTask = ({ taskComplete, text, log }) => (
   <button
     onClick={() => {
-      log("hello", "world");
+      log({ hello: "world" });
       taskComplete();
     }}
   >
@@ -164,6 +164,7 @@ describe("Experiment", () => {
 
   // })
 
+  // TODO:
   it("logs properly", () => {});
 
   // it("doesn't pass logs to components", () => {

@@ -11,11 +11,10 @@ export const setWorkflowIndex = value => {
   };
 };
 
-export const log = (key, value) => {
+export const log = log => {
   return {
     type: LOG,
-    key,
-    value
+    log
   };
 };
 

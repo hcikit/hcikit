@@ -19,7 +19,7 @@ const configuration = (state = { events: [] }, action) => {
       };
     case LOG:
       state = { ...state };
-      log(state, action.key, action.value);
+      log(state, action.log);
       return state;
     case LOG_ACTION:
       state = { ...state };
