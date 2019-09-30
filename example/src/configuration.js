@@ -1,6 +1,5 @@
 export default {
-  // tasks: ["ExperimentProgress", "DevTools"],
-  tasks: ["DevTools"],
+  tasks: ["DevTools", "DOMEventLogger", "WizardProgress"],
   CustomTask: {
     text: "Click to continue"
   },

@@ -1,85 +1,101 @@
 import { throttle, pick } from "lodash-es";
-window.addEventListener("mousemove", e => {
-  window.mousex = e.clientX;
-  window.mousey = e.clientY;
-});
+import { useEffect } from "react";
+import PropTypes from "prop-types";
 
-let events =
-  "mousedown mouseup click dblclick mousemove mouseover mouseout keydown keyup keypress resize";
-events.split(" ").forEach(event => {
-  window.addEventListener(event, throttle(event => logEvent(event), 200), {
-    passive: true
+// TODO: add more events like touch, page refreshes mousewheel scroll resize
+// TODO: need something better than "target", a unique identifier or something maybe? https://github.com/ericclemmons/unique-selector/
+
+// TODO: maybe the eventMapping can take an object that just logs whatever you want to it?
+const defaults = ["type"];
+
+const mouseEvents = [
+  "clientX",
+  "clientY",
+  "screenX",
+  "screenY",
+  "pageX",
+  "pageY",
+  ...defaults
+];
+
+const keyboardEvents = [
+  "key",
+  "code",
+  "metaKey",
+  "shiftKey",
+  "altKey",
+  "ctrlKey",
+  ...defaults
+];
+
+const defaultEventMapping = {
+  mousedown: mouseEvents,
+  mouseup: mouseEvents,
+  click: mouseEvents,
+  dblclick: mouseEvents,
+  mousemove: mouseEvents,
+  mouseover: mouseEvents,
+  mouseout: mouseEvents,
+
+  keydown: keyboardEvents,
+  keyup: keyboardEvents,
+  keypress: keyboardEvents
+};
+
+// TODO: this is fine for pulling some stuff out of the event but maybe not fine if you ened to aughment it
+const DOMEventLogger = ({
+  log,
+  delay = 200,
+  events = ["click", "mousemove", "keydown", "keyup", "keypress", "resize"],
+  eventMapping = defaultEventMapping
+}) => {
+  useEffect(() => {
+    const logEvent = (log, event) => {
+      event = pick(event, eventMapping[event.type]);
+      log(event);
+    };
+
+    if (!events) {
+      events = Object.keys(eventMapping);
+    }
+
+    let listeners = events.reduce((listeners, event) => {
+      let func = throttle(logEvent.bind(null, log), delay);
+      window.addEventListener(event, func, {
+        passive: true,
+        capture: true
+      });
+
+      listeners[event] = func;
+
+      return listeners;
+    }, {});
+
+    return () => {
+      Object.keys(listeners).forEach(event => {
+        window.removeEventListener(event, listeners[event], {
+          passive: true,
+          capture: true
+        });
+      });
+    };
   });
-});
 
-const LOG_KEY = "log_key";
-
-let loaded = window.localStorage.getItem(LOG_KEY);
-if (loaded) {
-  window.log = JSON.parse(loaded);
-} else {
-  window.log = [];
-}
-
-const logEvent = event => {
-  window.log.push(transformEvent(event));
-  saveState();
+  return null;
 };
 
-const saveState = throttle(() => {
-  window.localStorage.setItem(LOG_KEY, JSON.stringify(window.log));
-}, 5000);
+DOMEventLogger.propTypes = {
+  /** How often events should be logged */
+  delay: PropTypes.number,
 
-// mousewheel scroll resize
-// TODO: add touch events here too.
-// TODO: this doesn't work right now.
-// TODO: log things like page refreshes in here.
+  /** A list of events to listen for globally. If both events and eventMapping are passed then events are used as a subset of the entire eventMapping. */
+  events: PropTypes.arrayOf(PropTypes.string),
 
-const transformEvent = event => {
-  switch (event.type) {
-    case "mousedown":
-    case "mouseup":
-    case "click":
-    case "dblclick":
-    case "mousemove":
-    case "mouseover":
-    case "mouseout":
-      event = pick(event, [
-        "type",
-        "clientX",
-        "clientY",
-        "screenX",
-        "screenY",
-        "pageX",
-        "pageY"
-      ]);
-      break;
-    case "keydown":
-    case "keyup":
-    case "keypress":
-      event = pick(event, [
-        "type",
-        "key",
-        "code",
-        "metaKey",
-        "shiftKey",
-        "altKey",
-        "ctrlKey"
-      ]);
-      break;
-    case "resize":
-      event = {
-        width: Math.max(
-          document.documentElement.clientWidth,
-          window.innerWidth || 0
-        ),
-        height: Math.max(
-          document.documentElement.clientHeight,
-          window.innerHeight || 0
-        )
-      };
-      break;
-    default:
-      return {};
-  }
+  /** an object where the keys are the event to watch, and the values are the properties from each event to keep. If both events and eventMapping are passed then events are used as a subset of the entire eventMapping. */
+  eventMapping: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string)),
+
+  /** @ignore */
+  log: PropTypes.any
 };
+
+export default DOMEventLogger;

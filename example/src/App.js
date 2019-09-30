@@ -6,13 +6,14 @@ import {
   DisplayText,
   ProgressBar,
   WizardProgress,
-  DevTools
+  DevTools,
+  DOMEventLogger
 } from "@hcikit/tasks";
 import IncrementTask, { reducer } from "./IncrementTask";
 import CustomTask from "./CustomTask";
 
 import configuration from "./configuration";
-import ConfigUnroller from "./ConfigUnroller";
+// import ConfigUnroller from "./ConfigUnroller";
 
 let taskRegistry = new TaskRegistry({
   CustomTask,
@@ -21,7 +22,8 @@ let taskRegistry = new TaskRegistry({
   DisplayText,
   ProgressBar,
   WizardProgress,
-  DevTools
+  DevTools,
+  DOMEventLogger
 });
 
 taskRegistry.registerTask("IncrementTask", IncrementTask, reducer);
@@ -29,10 +31,7 @@ taskRegistry.registerTask("IncrementTask", IncrementTask, reducer);
 export default class App extends Component {
   render() {
     return (
-      <ConfigUnroller
-        taskRegistry={taskRegistry}
-        configuration={configuration}
-      />
+      <Experiment taskRegistry={taskRegistry} configuration={configuration} />
     );
   }
 }

@@ -9,3 +9,4 @@ export { default as InformationScreen } from "./InformationScreen";
 export { default as MouseCenteringTask } from "./MouseCenteringTask";
 export { default as MousePositioner } from "./MousePositioner";
 export { default as createUpload } from "./Upload";
+export { default as DOMEventLogger } from "./DOMEventLogger";
