@@ -1,7 +1,8 @@
 import React from "react";
 import {
   log,
-  editConfig,
+  modifyConfigAtDepth,
+  modifyConfig,
   taskComplete,
   setWorkflowIndex
 } from "./Workflow.actions";
@@ -62,7 +63,8 @@ export const App = ({
   log,
   taskComplete,
   setWorkflowIndex,
-  editConfig,
+  modifyConfig,
+  modifyConfigAtDepth,
   taskRegistry,
   Layout = GridLayout,
   ErrorHandler = null,
@@ -87,7 +89,7 @@ export const App = ({
       "WARNING! onEditConfig has been deprecated, use editConfig() instead. The behaviour of this function has also changed."
     );
 
-    editConfig(...args);
+    modifyConfig(...args);
   };
 
   let onAdvanceWorkflow = (...args) => {
@@ -130,7 +132,8 @@ export const App = ({
           setWorkflowIndex={setWorkflowIndex}
           log={log}
           taskComplete={taskComplete}
-          editConfig={editConfig}
+          modifyConfig={modifyConfig}
+          modifyConfigAtDepth={modifyConfigAtDepth}
           {...props}
         />
       );
@@ -167,7 +170,8 @@ App.propTypes = {
   log: PropTypes.func,
   taskComplete: PropTypes.func,
   setWorkflowIndex: PropTypes.func,
-  editConfig: PropTypes.func,
+  modifyConfig: PropTypes.func,
+  modifyConfigAtDepth: PropTypes.func,
   taskRegistry: PropTypes.instanceOf(TaskRegistry),
   Layout: PropTypes.node,
   ErrorHandler: PropTypes.node,
@@ -182,7 +186,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   taskComplete,
   log,
-  editConfig,
+  modifyConfig,
+  modifyConfigAtDepth,
   setWorkflowIndex
 };
 

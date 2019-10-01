@@ -6,6 +6,7 @@ import { mergeWith, pickBy, isEqual } from "lodash-es";
 // TODO: should this work with a config with no children? Does it work with no children?
 
 // TODO: some of these functions I can maybe use generators to reduce computation and make things faster?
+// TODO some of these should definitely be immutable but aren't... I'd rather everything here is immutable
 
 export const __INDEX__ = "__INDEX__";
 const COMPLETE = "__COMPLETE__";
@@ -116,49 +117,20 @@ export function log(config, log) {
   }
   let index = config[__INDEX__] || getLeafIndex([0], config);
 
-  let newTask = { ...getConfigAtIndex(index, config) };
-
-  if (!newTask.logs) {
-    newTask.logs = [];
-  }
-
-  newTask.logs = [
-    ...newTask.logs,
-    {
-      ...log,
-      timestamp: Date.now()
-    }
-  ];
-
-  modifyConfig(index, config, newTask);
+  // TODO: change modifyConfig to overwrite properties rather than replace:
+  modifyConfig(config, index, {
+    logs: [
+      ...(getConfigAtIndex(index, config).logs || []),
+      { ...log, timestamp: Date.now() }
+    ]
+  });
 }
 
 export function logAction(config, action) {
-  if (experimentComplete(config)) {
-    console.error("Attempting to log when the experiment is complete.");
-    return;
-  }
-  let index = config[__INDEX__] || getLeafIndex([0], config);
-
-  let newTask = { ...getConfigAtIndex(index, config) };
-
-  if (!newTask.actions) {
-    newTask.actions = [];
-  }
-  newTask.actions = [
-    ...newTask.actions,
-    {
-      action,
-      timestamp: Date.now()
-    }
-  ];
-
-  modifyConfig(index, config, newTask);
+  log(config, { ...action, eventType: "ACTION" });
 }
 
-export function modifyConfig(index, config, newConfig) {
-  index = [...index];
-
+export function modifyConfig(config, index, modifiedConfig) {
   for (let i = 0; i < index.length; i++) {
     let nextLevelIndex = index[i];
 
@@ -170,12 +142,38 @@ export function modifyConfig(index, config, newConfig) {
       ...config.children.slice(nextLevelIndex + 1)
     ];
 
-    if (i < index.length - 1) {
-      config = config.children[nextLevelIndex];
-    }
+    config = config.children[nextLevelIndex];
   }
 
-  config.children[index[index.length - 1]] = newConfig;
+  // TODO: use pick to get the keys of modified config from config and log those as well if a param isn't set. Need to log the original, changed and the index.
+  Object.assign(config, modifiedConfig);
+}
+
+/**
+ *
+ * Edits a config by adding all of newConfig values at a certain depth. Depth works like slice (negative values start from the end, positive from the start)
+ *
+ * @param {object} config
+ * @param {object} newConfig The key/values to overwrite
+ * @param {int} depth the depth where 0 is the root, negative numbers work from the current config upwards (-1 being one up from the current position, and positive numbers move downwards). Not passing a depth results in the current level being edited
+ */
+export function modifyConfigAtDepth(config, newConfig, depth) {
+  if (experimentComplete(config)) {
+    console.error(
+      "Attempting to modify config when the experiment is complete."
+    );
+    return;
+  }
+
+  let index = [0];
+  if (config[__INDEX__]) {
+    index = [...config[__INDEX__]];
+  }
+
+  index = getLeafIndex(index, config);
+
+  let indexToEdit = index.slice(0, depth);
+  modifyConfig(config, indexToEdit, newConfig);
 }
 
 export function indexToTaskNumber(index, config) {
@@ -246,10 +244,6 @@ export function getTotalTasks(config) {
   return tasks;
 }
 
-export const withRawConfiguration = connect(state => {
-  return { configuration: state.Configuration };
-});
-
 // TODO: maybe this function should just return all of the indices?
 export function* iterateConfig(config) {
   let toSearch = [[]];
@@ -275,3 +269,7 @@ export function iterateConfigWithProps(config) {
     getPropsFor(index, config)
   );
 }
+
+export const withRawConfiguration = connect(state => {
+  return { configuration: state.Configuration };
+});

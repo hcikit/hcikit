@@ -12,7 +12,9 @@ import {
   taskNumberToIndex,
   getTotalTasks,
   iterateConfig,
-  iterateConfigWithProps
+  iterateConfigWithProps,
+  modifyConfigAtDepth,
+  modifyConfig
 } from "./Workflow";
 import deepFreeze from "deep-freeze";
 
@@ -64,6 +66,10 @@ beforeEach(() => {
   config = JSON.parse(JSON.stringify(configuration));
 });
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 describe("mergeArraysSpecial", () => {
   it("Overwrites arrays entirely.", () => {
     let merged = mergeArraysSpecial(
@@ -76,7 +82,7 @@ describe("mergeArraysSpecial", () => {
 });
 
 describe("scopePropsForTask", () => {
-  it("scopes props properly", () => {
+  it("scopes props", () => {
     expect(
       scopePropsForTask(
         {
@@ -165,7 +171,7 @@ describe("getCurrentProps", () => {
     });
   });
 
-  it("handles object props properly", () => {
+  it("handles object props", () => {
     config[__INDEX__] = taskComplete(config);
     config[__INDEX__] = taskComplete(config);
 
@@ -289,39 +295,25 @@ describe("log", () => {
 
 describe("logAction", () => {
   it("logs to the correct place", () => {
-    logAction(config, "hello");
-    expect(config.children[0].actions[0].action).toEqual("hello");
+    let patch = Date.now;
+    let i = 10;
+    Date.now = () => i++;
 
-    logAction(config, "you");
-    expect(config.children[0].actions[1].action).toEqual("you");
-    logAction(config, "world");
-    expect(config.children[0].actions[2].action).toEqual("world");
-  });
+    logAction(config, { type: "hello" });
+    expect(config.children[0].logs[0]).toEqual({
+      eventType: "ACTION",
+      type: "hello",
+      timestamp: 10
+    });
 
-  it("logs action after advancing correct place", () => {
-    config[__INDEX__] = taskComplete(config);
-    logAction(config, "hello");
-    expect(
-      config.children[1].children[0].children[0].actions[0].action
-    ).toEqual("hello");
+    logAction(config, { type: "you" });
+    expect(config.children[0].logs[1]).toEqual({
+      eventType: "ACTION",
+      type: "you",
+      timestamp: 11
+    });
 
-    config[__INDEX__] = taskComplete(config);
-    logAction(config, "hello");
-    expect(
-      config.children[1].children[0].children[1].actions[0].action
-    ).toEqual("hello");
-
-    config[__INDEX__] = taskComplete(config);
-    logAction(config, "world");
-    expect(
-      config.children[1].children[1].children[0].actions[0].action
-    ).toEqual("world");
-
-    config[__INDEX__] = taskComplete(config);
-    logAction(config, "!");
-    expect(
-      config.children[1].children[1].children[1].actions[0].action
-    ).toEqual("!");
+    Date.now = patch;
   });
 });
 
@@ -602,5 +594,102 @@ describe("iterateConfigWithProps", () => {
         stimulus: "dog"
       }
     ]);
+  });
+});
+
+describe("modifyConfigAtDepth", () => {
+  it("edits negative indices", () => {
+    config[__INDEX__] = taskComplete(config);
+
+    modifyConfigAtDepth(config, { hello: "world" }, -1);
+    expect(config.children[1].children[0].hello).toEqual("world");
+  });
+
+  it("edits positive indices", () => {
+    config[__INDEX__] = taskComplete(config);
+
+    modifyConfigAtDepth(config, { hello: "world" }, 1);
+    expect(config.children[1].hello).toEqual("world");
+  });
+
+  it("edits global", () => {
+    config[__INDEX__] = taskComplete(config);
+
+    modifyConfigAtDepth(config, { hello: "world" }, 0);
+    expect(config.hello).toEqual("world");
+  });
+
+  it("edits the current level", () => {
+    config[__INDEX__] = taskComplete(config);
+
+    modifyConfigAtDepth(config, { hello: "world" });
+    expect(config.children[1].children[0].children[0].hello).toEqual("world");
+  });
+
+  it("fails on completed experiment", () => {
+    let spy = jest.spyOn(console, "error").mockImplementation(() => {});
+
+    config[__INDEX__] = taskComplete(config);
+    config[__INDEX__] = taskComplete(config);
+    config[__INDEX__] = taskComplete(config);
+    config[__INDEX__] = taskComplete(config);
+    config[__INDEX__] = taskComplete(config);
+
+    deepFreeze(config);
+
+    modifyConfigAtDepth(config, { hello: "world" });
+    expect(config.children[1].children[0].children[0]).not.toHaveProperty(
+      "hello"
+    );
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it("works correctly on unstarted experiment?", () => {
+    modifyConfigAtDepth(config, { hello: "world" }, 1);
+    expect(config.children[0].hello).toEqual("world");
+  });
+});
+
+describe("modifyConfig", () => {
+  it("overwrites existing properties", () => {
+    modifyConfig(config, [], { configprop: "section" });
+    expect(config.configprop).toEqual("section");
+  });
+  it("works in place", () => {
+    let c = { ...config };
+    c[__INDEX__] = taskComplete(c);
+
+    deepFreeze(config);
+
+    modifyConfig(c, [1, 0, 0], { hello: "world" });
+
+    expect(config).not.toBe(c);
+    expect(config.children).not.toBe(c.children);
+    expect(config.children[1]).not.toBe(c.children[1]);
+    expect(config.children[1].children).not.toBe(c.children[1].children);
+    expect(config.children[1].children[1]).toBe(c.children[1].children[1]);
+    expect(config.children[1].children[0]).not.toBe(c.children[1].children[0]);
+    expect(config.children[1].children[0].children).not.toBe(
+      c.children[1].children[0].trials
+    );
+    expect(config.children[1].children[0].children[1]).toBe(
+      c.children[1].children[0].children[1]
+    );
+    expect(config.children[1].children[0].children[0]).not.toBe(
+      c.children[1].children[0].children[0]
+    );
+  });
+
+  it("modifies top level", () => {
+    modifyConfig(config, [], { hello: "world" });
+    expect(config.hello).toEqual("world");
+  });
+  it("modifies leaf", () => {
+    modifyConfig(config, [1, 0, 0], { hello: "world" });
+    expect(config.children[1].children[0].children[0].hello).toEqual("world");
+  });
+  it("modifies inner", () => {
+    modifyConfig(config, [1, 0], { hello: "world" });
+    expect(config.children[1].children[0].hello).toEqual("world");
   });
 });

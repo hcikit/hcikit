@@ -1,10 +1,18 @@
-import { taskComplete, log, logAction, __INDEX__ } from "./Workflow";
+import {
+  taskComplete,
+  log,
+  logAction,
+  __INDEX__,
+  modifyConfig
+} from "./Workflow";
 import {
   LOG,
   LOG_ACTION,
   TASK_COMPLETE,
-  EDIT_CONFIG,
-  SET_WORKFLOW_INDEX
+  MODIFY_CONFIG_AT_DEPTH,
+  MODIFY_CONFIG,
+  SET_WORKFLOW_INDEX,
+  modifyConfigAtDepth
 } from "./Workflow.actions";
 
 const configuration = (state = { events: [] }, action) => {
@@ -25,9 +33,14 @@ const configuration = (state = { events: [] }, action) => {
       state = { ...state };
       logAction(state, action.action);
       return state;
-    case EDIT_CONFIG:
-      // TODO: I want edit config to be more than just global
-      return { ...state, [action.key]: action.value };
+    case MODIFY_CONFIG_AT_DEPTH:
+      state = { ...state };
+      modifyConfigAtDepth(state, action.newConfig, action.depth);
+      return state;
+    case MODIFY_CONFIG:
+      state = { ...state };
+      modifyConfig(state, action.newConfig, action.index);
+      return state;
     default:
       return state;
   }
