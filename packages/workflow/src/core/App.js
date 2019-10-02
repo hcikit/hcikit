@@ -54,7 +54,10 @@ export const GridLayout = ({ children }) => {
 };
 
 GridLayout.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.node)
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]).isRequired
 };
 
 export const App = ({

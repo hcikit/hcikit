@@ -56,7 +56,10 @@ export class UploadOnError extends React.Component {
 }
 
 UploadOnError.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.node),
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]).isRequired,
   configuration: PropTypes.object,
   log: PropTypes.func,
   Uploader: PropTypes.node
