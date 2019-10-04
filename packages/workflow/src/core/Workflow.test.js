@@ -692,4 +692,28 @@ describe("modifyConfig", () => {
     modifyConfig(config, [1, 0], { hello: "world" });
     expect(config.children[1].children[0].hello).toEqual("world");
   });
+
+  it("logs the modification", () => {
+    let patch = Date.now;
+    Date.now = () => 10;
+
+    modifyConfig(config, [1, 0], { hello: "world", stimulus: "hi" });
+
+    expect(config.children[0].logs[0]).toEqual({
+      type: "CONFIG_MODIFICATION",
+      to: { hello: "world", stimulus: "hi" },
+      from: { hello: undefined, stimulus: "overwritten" },
+      index: [1, 0],
+      timestamp: 10
+    });
+
+    Date.now = patch;
+  });
+
+  it("works", () => {
+    config[__INDEX__] = taskComplete(config);
+
+    modifyConfig(config, [1, 0], { hello: "world" });
+    expect(config.children[1].children[0].hello).toEqual("world");
+  });
 });

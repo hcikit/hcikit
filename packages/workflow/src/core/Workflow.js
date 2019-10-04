@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { mergeWith, pickBy, isEqual } from "lodash-es";
+import { mergeWith, pickBy, isEqual, pick } from "lodash-es";
 
 // TODO: mergeWith is very slow which slows everything down with lots of onlogs.
 // TODO: document everything here...
@@ -7,6 +7,8 @@ import { mergeWith, pickBy, isEqual } from "lodash-es";
 
 // TODO: some of these functions I can maybe use generators to reduce computation and make things faster?
 // TODO some of these should definitely be immutable but aren't... I'd rather everything here is immutable
+
+// TODO: configuration => config, order should be standardised so the config always comes first.
 
 export const __INDEX__ = "__INDEX__";
 const COMPLETE = "__COMPLETE__";
@@ -109,7 +111,6 @@ export function taskComplete(configuration) {
   return getLeafIndex(index, configuration);
 }
 
-// TODO: should these take a type?
 export function log(config, log) {
   if (experimentComplete(config)) {
     console.error("Attempting to log when the experiment is complete.");
@@ -117,20 +118,38 @@ export function log(config, log) {
   }
   let index = config[__INDEX__] || getLeafIndex([0], config);
 
-  // TODO: change modifyConfig to overwrite properties rather than replace:
-  modifyConfig(config, index, {
-    logs: [
-      ...(getConfigAtIndex(index, config).logs || []),
-      { ...log, timestamp: Date.now() }
-    ]
-  });
+  modifyConfig(
+    config,
+    index,
+    {
+      logs: [
+        ...(getConfigAtIndex(index, config).logs || []),
+        { ...log, timestamp: Date.now() }
+      ]
+    },
+    false
+  );
 }
 
 export function logAction(config, action) {
   log(config, { ...action, eventType: "ACTION" });
 }
 
-export function modifyConfig(config, index, modifiedConfig) {
+// TODO: this should maybe fail on completed experiments because it cannot log properly.
+export function modifyConfig(config, index, modifiedConfig, logResult = true) {
+  const originalConfig = config;
+
+  if (logResult) {
+    let configToEdit = getConfigAtIndex(index, config);
+
+    log(originalConfig, {
+      from: pick(configToEdit, Object.keys(modifiedConfig)),
+      to: modifiedConfig,
+      index,
+      type: "CONFIG_MODIFICATION"
+    });
+  }
+
   for (let i = 0; i < index.length; i++) {
     let nextLevelIndex = index[i];
 
@@ -145,7 +164,6 @@ export function modifyConfig(config, index, modifiedConfig) {
     config = config.children[nextLevelIndex];
   }
 
-  // TODO: use pick to get the keys of modified config from config and log those as well if a param isn't set. Need to log the original, changed and the index.
   Object.assign(config, modifiedConfig);
 }
 
@@ -158,6 +176,7 @@ export function modifyConfig(config, index, modifiedConfig) {
  * @param {int} depth the depth where 0 is the root, negative numbers work from the current config upwards (-1 being one up from the current position, and positive numbers move downwards). Not passing a depth results in the current level being edited
  */
 export function modifyConfigAtDepth(config, newConfig, depth) {
+  // TODO: this function is not consistent with modify config (config, newconfig, depth) vs (config, index, newconfig)
   if (experimentComplete(config)) {
     console.error(
       "Attempting to modify config when the experiment is complete."
@@ -173,9 +192,11 @@ export function modifyConfigAtDepth(config, newConfig, depth) {
   index = getLeafIndex(index, config);
 
   let indexToEdit = index.slice(0, depth);
+
   modifyConfig(config, indexToEdit, newConfig);
 }
 
+// TODO: this can be replaced with iterate config maybe?
 export function indexToTaskNumber(index, config) {
   // TODO: maybe index can be converted to a leaf node
   // TODO: this adds lots of nodes to a list which seems slow.. this might actually be best as a recursive function :(
@@ -201,6 +222,7 @@ export function indexToTaskNumber(index, config) {
   }
 }
 
+// TODO: this can be replaced with iterate config maybe?
 export function taskNumberToIndex(taskNumber, config) {
   let number = 0;
   let toSearch = [[]];
