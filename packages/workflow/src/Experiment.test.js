@@ -170,3 +170,5 @@ describe("Experiment", () => {
     expect(experiment.find("p.logs").text()).toEqual("");
   });
 });
+
+// TODO: need a test for localstorage.

@@ -60,6 +60,7 @@ export function randomString() {
     .substring(2);
 }
 
+// TODO: move to tasks repo...
 /**
  * Gets the OS of the user.
  */

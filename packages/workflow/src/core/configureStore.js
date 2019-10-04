@@ -10,7 +10,7 @@ import { throttle } from "lodash-es";
 import ConfigurationReducer from "./Workflow.reducers";
 import { experimentComplete, getLeafIndex, __INDEX__ } from "./Workflow";
 
-const STATE_KEY = "state";
+const STATE_KEY = "HCIKIT_LOGS";
 
 const loadState = () => {
   try {
@@ -30,9 +30,9 @@ const saveState = throttle(state => {
     window.localStorage.setItem(STATE_KEY, JSON.stringify(state));
   } catch (err) {
     // TODO: Better logging?
-    console.error("Failed to save to localStorage");
+    console.error("Failed to save to localStorage", err);
   }
-}, 1000);
+}, 3000);
 
 export default (Configuration, reducers) => {
   let storedState;
