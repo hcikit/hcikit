@@ -1,43 +1,8 @@
-import React from "react";
-import { Provider } from "react-redux";
-import PropTypes from "prop-types";
-
-import TaskRenderer, { GridLayout } from "./core/App";
-import configureStore from "./core/configureStore";
-import TaskRegistry from "./core/TaskRegistry";
-
-/**
- * This component takes a configuration that allows you to run an experiment.
- */
-export default class Experiment extends React.Component {
-  // TODO: maybe we should hide the task registry and instead just pass a list of objects?
-  // TODO: Need a way to pass in a state / saver / loader, how does this work in combination with s3?
-
-  store = configureStore(
-    this.props.configuration,
-    this.props.taskRegistry.getReducers()
-  );
-
-  render() {
-    return (
-      <Provider store={this.store}>
-        <TaskRenderer {...this.props} />
-      </Provider>
-    );
-  }
-}
-
-Experiment.propTypes = {
-  configuration: PropTypes.object.isRequired,
-  taskRegistry: PropTypes.instanceOf(TaskRegistry)
-};
-
 export * from "./core/Workflow";
-
-export { GridLayout };
-
+export { GridLayout } from "./core/App";
 export { default as TaskRegistry } from "./core/TaskRegistry";
 export * from "./Utils";
+export { default } from "./Experiment";
 
 // TODO: background tasks would be nice. Could be like middleware, where you have some function called on the task object whenever we increment and then it gets the chance to increment. Could implement non linear workflows that way. Or filtering ones.
 

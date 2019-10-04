@@ -6,72 +6,37 @@ import {
   TASK_COMPLETE
 } from "./Workflow.actions";
 import { createStore, combineReducers } from "redux";
-import { throttle } from "lodash-es";
+
 import ConfigurationReducer from "./Workflow.reducers";
 import { experimentComplete, getLeafIndex, __INDEX__ } from "./Workflow";
 
-const STATE_KEY = "HCIKIT_LOGS";
-
-const loadState = () => {
-  try {
-    const state = window.localStorage.getItem(STATE_KEY);
-    if (state) {
-      return JSON.parse(state);
-    }
-  } catch (err) {
-    console.error("Failed to load from localStorage");
-  }
-
-  return undefined;
-};
-
-const saveState = throttle(state => {
-  try {
-    window.localStorage.setItem(STATE_KEY, JSON.stringify(state));
-  } catch (err) {
-    // TODO: Better logging?
-    console.error("Failed to save to localStorage", err);
-  }
-}, 3000);
-
-export default (Configuration, reducers) => {
-  let storedState;
-
-  if (process.env.NODE_ENV === "production") {
-    storedState = loadState();
-  }
-
-  if (
-    storedState &&
-    storedState.Configuration.session !== Configuration.session
-  ) {
-    storedState = undefined;
-  }
-
+export default (configuration, reducers, saveState) => {
   let store = {};
   reducers["Configuration"] = ConfigurationReducer;
   let reducer = combineReducers(reducers);
 
-  Configuration[__INDEX__] = getLeafIndex([], Configuration);
+  if (!configuration.Configuration[__INDEX__]) {
+    // TODO: maybe use setIndex
+    configuration.Configuration[__INDEX__] = getLeafIndex(
+      [],
+      configuration.Configuration
+    );
+  }
 
   if (process.env.NODE_ENV !== "production") {
     store = createStore(
       reducer,
-      {
-        Configuration,
-        ...storedState
-      },
+      configuration,
       window.__REDUX_DEVTOOLS_EXTENSION__ &&
         window.__REDUX_DEVTOOLS_EXTENSION__()
     );
   } else {
-    store = createStore(reducer, {
-      Configuration,
-      ...storedState
-    });
+    store = createStore(reducer, configuration);
   }
 
-  store.subscribe(() => saveState(store.getState()));
+  if (saveState) {
+    store.subscribe(() => saveState(store.getState()));
+  }
 
   let dispatch = store.dispatch;
 

@@ -2,6 +2,7 @@ import Experiment from "./";
 import React, { useState } from "react";
 import { mount } from "enzyme";
 import TaskRegistry from "./core/TaskRegistry";
+import { saveStateToSessionStorage } from "./Experiment";
 
 const config = {
   tasks: ["AuxTask"],
@@ -60,7 +61,12 @@ describe("Experiment", () => {
     taskRegistry.registerTask("AuxTask", AuxTask);
 
     experiment = mount(
-      <Experiment taskRegistry={taskRegistry} configuration={config} />
+      <Experiment
+        loadState={null}
+        saveState={null}
+        taskRegistry={taskRegistry}
+        configuration={config}
+      />
     );
   });
 
@@ -98,12 +104,44 @@ describe("Experiment", () => {
     let error;
     try {
       mount(
-        <Experiment taskRegistry={new TaskRegistry()} configuration={config} />
+        <Experiment
+          loadState={null}
+          saveState={null}
+          taskRegistry={new TaskRegistry()}
+          configuration={config}
+        />
       );
     } catch (e) {
       error = e;
     }
     expect(error).toBeInstanceOf(Error);
+  });
+
+  describe("uses sessionStorage properly", () => {
+    it("loads from empty localStorage", () => {
+      let experiment = mount(
+        <Experiment
+          taskRegistry={new TaskRegistry({ ButtonTask, AuxTask })}
+          configuration={config}
+        />
+      );
+
+      experiment.find("button").simulate("click");
+      // TODO: this is kind of a hack.
+      saveStateToSessionStorage.flush();
+
+      experiment.unmount();
+
+      experiment = mount(
+        <Experiment
+          taskRegistry={new TaskRegistry({ ButtonTask, AuxTask })}
+          configuration={config}
+        />
+      );
+
+      expect(experiment.find("button").text()).toEqual(config.children[1].text);
+    });
+    // TODO: maybe a test making sure it is disabled for development?
   });
 
   describe("remounting", () => {
@@ -123,6 +161,8 @@ describe("Experiment", () => {
 
       experiment = mount(
         <Experiment
+          loadState={null}
+          saveState={null}
           forceRemountEveryTask
           taskRegistry={new TaskRegistry({ MultiTask })}
           configuration={config}
@@ -150,6 +190,8 @@ describe("Experiment", () => {
 
       experiment = mount(
         <Experiment
+          loadState={null}
+          saveState={null}
           forceRemountEveryTask={false}
           taskRegistry={new TaskRegistry({ MultiTask })}
           configuration={config}
@@ -170,5 +212,3 @@ describe("Experiment", () => {
     expect(experiment.find("p.logs").text()).toEqual("");
   });
 });
-
-// TODO: need a test for localstorage.
