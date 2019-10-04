@@ -11,7 +11,7 @@ The upload task takes a function with two arguments: the filename and logs to up
       reject();
     })
   }
-  onLog={() => {}}
+  log={() => {}}
   experimenter="name@hello.world"
 />
 ```

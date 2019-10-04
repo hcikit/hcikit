@@ -1,5 +1,5 @@
 import React from "react";
 
-export default ({ text, onAdvanceWorkflow }) => {
-  return <button onClick={onAdvanceWorkflow}>{text}</button>;
+export default ({ text, taskComplete }) => {
+  return <button onClick={taskComplete}>{text}</button>;
 };

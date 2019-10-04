@@ -38,7 +38,7 @@ export class ConsentForm extends React.Component {
 
   handleSubmit = () => {
     if (!this.requiredFieldNotFilled()) {
-      this.props.onAdvanceWorkflow();
+      this.props.taskComplete();
     }
   };
 
@@ -95,7 +95,7 @@ ConsentForm.propTypes = {
     })
   ),
   /**  @ignore */
-  onAdvanceWorkflow: PropTypes.func
+  taskComplete: PropTypes.func
 };
 
 export default withGridItem(ConsentForm, "task");

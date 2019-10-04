@@ -79,30 +79,6 @@ export const App = ({
     window.configuration = configuration;
   }
 
-  let onLog = (...args) => {
-    console.warn(
-      "WARNING! onLog has been deprecated, use log instead. The behaviour of this function has also changed."
-    );
-
-    log(...args);
-  };
-
-  let onEditConfig = (...args) => {
-    console.warn(
-      "WARNING! onEditConfig has been deprecated, use editConfig() instead. The behaviour of this function has also changed."
-    );
-
-    modifyConfig(...args);
-  };
-
-  let onAdvanceWorkflow = (...args) => {
-    console.warn(
-      "WARNING! onAdvanceWorkflow has been deprecated, use taskComplete() instead."
-    );
-
-    taskComplete(...args);
-  };
-
   let tasks = currentProps.tasks || [];
 
   if (currentProps.task) {
@@ -128,10 +104,6 @@ export const App = ({
       return (
         <Task
           key={key}
-          // TODO: finish deprecating these by documenting the changes.
-          onAdvanceWorkflow={onAdvanceWorkflow}
-          onLog={onLog}
-          onEditConfig={onEditConfig}
           setWorkflowIndex={setWorkflowIndex}
           log={log}
           taskComplete={taskComplete}
@@ -159,7 +131,7 @@ export const App = ({
 
   if (ErrorHandler) {
     return (
-      <ErrorHandler onLog={onLog} configuration={configuration}>
+      <ErrorHandler log={log} configuration={configuration}>
         <Layout>{tasksFilled}</Layout>
       </ErrorHandler>
     );

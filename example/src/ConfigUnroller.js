@@ -12,14 +12,10 @@ export default ({ configuration, taskRegistry }) => {
       <Provider store={store}>
         <Task
           store={store}
-          onAdvanceWorkflow={() => {}}
-          onAdvanceWorkflowLevelTo={() => {}}
-          onLog={() => {}}
-          onEditConfig={() => {}}
+          editConfig={() => {}}
           setWorkflowIndex={() => {}}
           log={() => {}}
           taskComplete={() => {}}
-          editConfig={() => {}}
           {...props}
         />
       </Provider>

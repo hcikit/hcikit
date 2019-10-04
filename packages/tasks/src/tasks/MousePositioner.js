@@ -9,16 +9,16 @@ const LeftCenter = styled.div`
   left: 25%;
   transform: translate(-50%, -50%);
 `;
-const MousePositioner = ({ onAdvanceWorkflow }) => {
+const MousePositioner = ({ taskComplete }) => {
   return (
     <LeftCenter>
-      <Button onClick={onAdvanceWorkflow}>Next</Button>
+      <Button onClick={taskComplete}>Next</Button>
     </LeftCenter>
   );
 };
 
 MousePositioner.propTypes = {
-  onAdvanceWorkflow: PropTypes.func
+  taskComplete: PropTypes.func
 };
 
 export default MousePositioner;

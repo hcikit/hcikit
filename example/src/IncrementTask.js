@@ -32,11 +32,11 @@ const IncrementTask = ({
   increment,
   decrement,
   reset,
-  onAdvanceWorkflow
+  taskComplete
 }) => {
   function checkAnswer() {
     if (value === desiredValue) {
-      onAdvanceWorkflow();
+      taskComplete();
     }
   }
 
