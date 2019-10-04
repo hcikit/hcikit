@@ -18,15 +18,18 @@ const config = {
 };
 
 /* eslint-disable react/prop-types */
-let ButtonTask = ({ taskComplete, text, log }) => (
-  <button
-    onClick={() => {
-      log({ hello: "world" });
-      taskComplete();
-    }}
-  >
-    {text}
-  </button>
+let ButtonTask = ({ taskComplete, text, log, logs }) => (
+  <>
+    <button
+      onClick={() => {
+        log({ hello: "world" });
+        taskComplete();
+      }}
+    >
+      {text}
+    </button>
+    <p className="logs">{logs}</p>
+  </>
 );
 
 /* eslint-disable react/prop-types */
@@ -159,15 +162,11 @@ describe("Experiment", () => {
     });
   });
 
-  // it("passes all props", () => {
-  //   fail()
-
-  // })
-
   // TODO:
   it("logs properly", () => {});
 
-  // it("doesn't pass logs to components", () => {
-  //   fail()
-  // })
+  it("doesn't pass logs to components", () => {
+    experiment.find("button").simulate("click");
+    expect(experiment.find("p.logs").text()).toEqual("");
+  });
 });

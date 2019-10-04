@@ -54,7 +54,7 @@ UploadDisplay.propTypes = {
   onClick: PropTypes.func
 };
 
-// TODO: make this functional? Remove or standardise the experimenter property?
+// TODO: make this a functional component? Remove or standardise the experimenter property?
 
 export class Upload extends React.Component {
   state = {
