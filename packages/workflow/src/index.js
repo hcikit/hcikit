@@ -11,6 +11,8 @@ import TaskRegistry from "./core/TaskRegistry";
  */
 export default class Experiment extends React.Component {
   // TODO: maybe we should hide the task registry and instead just pass a list of objects?
+  // TODO: Need a way to pass in a state / saver / loader, how does this work in combination with s3?
+
   store = configureStore(
     this.props.configuration,
     this.props.taskRegistry.getReducers()
@@ -36,7 +38,6 @@ export { GridLayout };
 
 export { default as TaskRegistry } from "./core/TaskRegistry";
 export * from "./Utils";
-export * from "./designUtils";
 
 // TODO: background tasks would be nice. Could be like middleware, where you have some function called on the task object whenever we increment and then it gets the chance to increment. Could implement non linear workflows that way. Or filtering ones.
 
