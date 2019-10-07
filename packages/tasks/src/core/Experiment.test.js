@@ -1,8 +1,7 @@
-import Experiment from "./";
 import React, { useState } from "react";
 import { mount } from "enzyme";
-import TaskRegistry from "./core/TaskRegistry";
-import { saveStateToSessionStorage } from "./Experiment";
+import { TaskRegistry } from "@hcikit/workflow";
+import Experiment, { saveStateToSessionStorage } from "./Experiment";
 
 const config = {
   tasks: ["AuxTask"],
@@ -19,7 +18,14 @@ const config = {
 };
 
 /* eslint-disable react/prop-types */
-let ButtonTask = ({ taskComplete, text, log, logs }) => (
+let ButtonTask = ({
+  taskComplete,
+  modifyConfigAtDepth,
+  text,
+  log,
+  logs,
+  configVal = "hello"
+}) => (
   <>
     <button
       onClick={() => {
@@ -30,6 +36,13 @@ let ButtonTask = ({ taskComplete, text, log, logs }) => (
       {text}
     </button>
     <p className="logs">{logs}</p>
+    <p className="modifyConfig">{configVal}</p>
+    <span
+      className="actuallyModifyConfig"
+      onClick={() => modifyConfigAtDepth({ configVal: "world" })}
+    >
+      Modify Config
+    </span>
   </>
 );
 
@@ -210,5 +223,12 @@ describe("Experiment", () => {
   it("doesn't pass logs to components", () => {
     experiment.find("button").simulate("click");
     expect(experiment.find("p.logs").text()).toEqual("");
+  });
+
+  it("modifies config properly", () => {
+    expect(experiment.find(".modifyConfig").text()).toEqual("hello");
+
+    experiment.find(".actuallyModifyConfig").simulate("click");
+    expect(experiment.find(".modifyConfig").text()).toEqual("world");
   });
 });

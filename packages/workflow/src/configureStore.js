@@ -1,13 +1,7 @@
-import {
-  logAction,
-  log,
-  LOG,
-  LOG_ACTION,
-  TASK_COMPLETE
-} from "./Workflow.actions";
+import { logAction, log, LOG, LOG_ACTION, TASK_COMPLETE } from "./actions";
 import { createStore, combineReducers } from "redux";
 
-import ConfigurationReducer from "./Workflow.reducers";
+import ConfigurationReducer from "./reducers";
 import { experimentComplete, getLeafIndex, __INDEX__ } from "./Workflow";
 
 export default (configuration, reducers, saveState) => {

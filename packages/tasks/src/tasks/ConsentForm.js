@@ -14,8 +14,8 @@ import { CenteredNicePaper } from "../components";
 import PropTypes from "prop-types";
 import { withGridItem } from "../withGridItem";
 
-// TODOLATER: needs stars beside required consents.
-// TODOLATER: needs testing too, not convinced it works properly
+// TODO: needs stars beside required consents.
+// TODO: needs testing too, not convinced it works properly
 /**
  * This component creates a consent form, it allows for multiple consent questions and renders the letter in markdown.
  */

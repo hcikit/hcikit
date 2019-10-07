@@ -1,37 +1,12 @@
 import React from "react";
-import { connect } from "react-redux";
 import { CenteredNicePaper, withGridItem } from "@hcikit/tasks";
 import { Typography } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 
-let INCREMENT = "INCREMENT";
-let DECREMENT = "DECREMENT";
-let RESET = "RESET";
-
-let increment = () => ({ type: INCREMENT });
-let decrement = () => ({ type: DECREMENT });
-let reset = () => ({ type: RESET });
-
-// TODO: Match to docs
-export const reducer = (state = 0, action) => {
-  switch (action.type) {
-    case INCREMENT:
-      return state + 1;
-    case DECREMENT:
-      return state - 1;
-    case RESET:
-      return 0;
-    default:
-      return state;
-  }
-};
-
 const IncrementTask = ({
   desiredValue,
-  value,
-  increment,
-  decrement,
-  reset,
+  value = 0,
+  modifyConfigAtDepth,
   taskComplete
 }) => {
   function checkAnswer() {
@@ -40,7 +15,17 @@ const IncrementTask = ({
     }
   }
 
-  console.log(value);
+  function decrement() {
+    modifyConfigAtDepth({ value: value - 1 });
+  }
+
+  function increment() {
+    modifyConfigAtDepth({ value: value + 1 });
+  }
+
+  function reset() {
+    modifyConfigAtDepth({ value: 0 });
+  }
 
   return (
     <CenteredNicePaper>
@@ -60,15 +45,4 @@ const IncrementTask = ({
   );
 };
 
-export default withGridItem(
-  connect(
-    state => ({
-      value: state.IncrementTask
-    }),
-    {
-      increment,
-      decrement,
-      reset
-    }
-  )(IncrementTask)
-);
+export default withGridItem(IncrementTask);

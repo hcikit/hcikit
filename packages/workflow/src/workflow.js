@@ -1,4 +1,3 @@
-import { connect } from "react-redux";
 import { mergeWith, pickBy, isEqual, pick } from "lodash-es";
 
 // TODO: mergeWith is very slow which slows everything down with lots of onlogs.
@@ -6,7 +5,7 @@ import { mergeWith, pickBy, isEqual, pick } from "lodash-es";
 // TODO: should this work with a config with no children? Does it work with no children?
 
 // TODO: some of these functions I can maybe use generators to reduce computation and make things faster?
-// TODO some of these should definitely be immutable but aren't... I'd rather everything here is immutable
+// TODO: some of these should definitely be immutable but aren't... I'd rather everything here is immutable
 
 // TODO: configuration => config, order should be standardised so the config always comes first.
 
@@ -80,7 +79,7 @@ export function getLeafIndex(index, configuration) {
   return index;
 }
 
-export function taskComplete(configuration) {
+export function markTaskComplete(configuration) {
   if (experimentComplete(configuration)) {
     return [];
   }
@@ -111,14 +110,14 @@ export function taskComplete(configuration) {
   return getLeafIndex(index, configuration);
 }
 
-export function log(config, log) {
+export function logToConfig(config, log) {
   if (experimentComplete(config)) {
     console.error("Attempting to log when the experiment is complete.");
     return;
   }
   let index = config[__INDEX__] || getLeafIndex([0], config);
 
-  modifyConfig(
+  modifyConfiguration(
     config,
     index,
     {
@@ -131,18 +130,23 @@ export function log(config, log) {
   );
 }
 
-export function logAction(config, action) {
-  log(config, { ...action, eventType: "ACTION" });
+export function logActionToConfig(config, action) {
+  logToConfig(config, { ...action, eventType: "ACTION" });
 }
 
 // TODO: this should maybe fail on completed experiments because it cannot log properly.
-export function modifyConfig(config, index, modifiedConfig, logResult = true) {
+export function modifyConfiguration(
+  config,
+  index,
+  modifiedConfig,
+  logResult = true
+) {
   const originalConfig = config;
 
   if (logResult) {
     let configToEdit = getConfigAtIndex(index, config);
 
-    log(originalConfig, {
+    logToConfig(originalConfig, {
       from: pick(configToEdit, Object.keys(modifiedConfig)),
       to: modifiedConfig,
       index,
@@ -175,7 +179,7 @@ export function modifyConfig(config, index, modifiedConfig, logResult = true) {
  * @param {object} newConfig The key/values to overwrite
  * @param {int} depth the depth where 0 is the root, negative numbers work from the current config upwards (-1 being one up from the current position, and positive numbers move downwards). Not passing a depth results in the current level being edited
  */
-export function modifyConfigAtDepth(config, newConfig, depth) {
+export function modifyConfigurationAtDepth(config, newConfig, depth) {
   // TODO: this function is not consistent with modify config (config, newconfig, depth) vs (config, index, newconfig)
   if (experimentComplete(config)) {
     console.error(
@@ -193,7 +197,7 @@ export function modifyConfigAtDepth(config, newConfig, depth) {
 
   let indexToEdit = index.slice(0, depth);
 
-  modifyConfig(config, indexToEdit, newConfig);
+  modifyConfiguration(config, indexToEdit, newConfig);
 }
 
 // TODO: this can be replaced with iterate config maybe?
@@ -291,7 +295,3 @@ export function iterateConfigWithProps(config) {
     getPropsFor(index, config)
   );
 }
-
-export const withRawConfiguration = connect(state => {
-  return { configuration: state.Configuration };
-});

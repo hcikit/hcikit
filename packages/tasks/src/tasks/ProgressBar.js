@@ -1,13 +1,13 @@
 import React from "react";
 import { LinearProgress } from "@material-ui/core";
 import {
-  withRawConfiguration,
   getConfigAtIndex,
   indexToTaskNumber,
   getTotalTasks,
   __INDEX__,
   getLeafIndex
 } from "@hcikit/workflow";
+import { withRawConfiguration } from "../core/withRawConfiguration";
 
 import { withGridItem } from "../withGridItem";
 import PropTypes from "prop-types";

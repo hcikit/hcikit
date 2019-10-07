@@ -11,3 +11,7 @@ export * from "./components";
 // }
 
 export { withGridItem } from "./withGridItem";
+export * from "./utils";
+
+export { default as GridLayout } from "./GridLayout";
+export { default } from "./core/Experiment";

@@ -8,7 +8,6 @@ import {
 } from "@material-ui/icons";
 import styled from "styled-components";
 import {
-  withRawConfiguration,
   taskNumberToIndex,
   indexToTaskNumber,
   getPropsFor,
@@ -16,6 +15,7 @@ import {
   getLeafIndex,
   getTotalTasks
 } from "@hcikit/workflow";
+import { withRawConfiguration } from "../core/withRawConfiguration";
 
 import PropTypes from "prop-types";
 

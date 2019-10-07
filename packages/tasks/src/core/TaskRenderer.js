@@ -1,66 +1,24 @@
 import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
 import {
+  getCurrentProps,
+  scopePropsForTask,
+  experimentComplete,
+  __INDEX__,
+  TaskRegistry,
   log,
   modifyConfigAtDepth,
   modifyConfig,
   taskComplete,
   setWorkflowIndex
-} from "./Workflow.actions";
+} from "@hcikit/workflow";
 
-import {
-  withRawConfiguration,
-  getCurrentProps,
-  scopePropsForTask,
-  experimentComplete,
-  __INDEX__
-} from "./Workflow";
+import { withRawConfiguration } from "./withRawConfiguration";
+import GridLayout from "../GridLayout";
 
-import TaskRegistry from "./TaskRegistry";
-
-import PropTypes from "prop-types";
-
-import { connect } from "react-redux";
-
-// const DefaultGridLayout = styled.div`
-//   display: grid;
-//   width: 100vw;
-//   height: 100vh;
-//   grid-template-columns: 1fr;
-//   grid-template-rows: min-content 1fr min-content;
-//   grid-template-areas:
-//     "header"
-//     "task"
-//     "footer";
-// `;
-
-export const GridLayout = ({ children }) => {
-  return (
-    <div
-      style={{
-        display: "grid",
-        width: "100vw",
-        height: "100vh",
-        gridTemplateColumns: "1fr",
-        gridTemplateRows: "min-content 1fr min-content",
-        gridTemplateAreas: `
-      "header"
-      "task"
-      "footer"`
-      }}
-    >
-      {children}
-    </div>
-  );
-};
-
-GridLayout.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ]).isRequired
-};
-
-export const App = ({
+const TaskRenderer = ({
   // TODO: Ideally we don't pass the entire configuration... That should reduce the number of renders
   configuration,
   log,
@@ -140,7 +98,7 @@ export const App = ({
   return <Layout>{tasksFilled}</Layout>;
 };
 
-App.propTypes = {
+TaskRenderer.propTypes = {
   configuration: PropTypes.object,
   log: PropTypes.func,
   taskComplete: PropTypes.func,
@@ -170,5 +128,5 @@ export default withRawConfiguration(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(App)
+  )(TaskRenderer)
 );

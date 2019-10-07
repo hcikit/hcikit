@@ -1,7 +1,7 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 import InformationScreen from "./tasks/InformationScreen";
-import { GridLayout } from "@hcikit/workflow";
+import GridLayout from "./GridLayout";
 import { WizardProgress } from "./tasks/WizardProgress";
 import { ProgressBar } from "./tasks/ProgressBar";
 

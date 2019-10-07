@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { Button, Typography, CircularProgress } from "@material-ui/core";
-import { withRawConfiguration } from "@hcikit/workflow";
+import { withRawConfiguration } from "../core/withRawConfiguration";
 
 import { CenteredNicePaper, CenteredText } from "../components";
 const UploadDisplay = ({ error, filename, log, experimenter, onClick }) => {

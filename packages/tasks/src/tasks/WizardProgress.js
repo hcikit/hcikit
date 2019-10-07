@@ -1,6 +1,8 @@
 import React from "react";
 import { Stepper, Step, StepLabel } from "@material-ui/core";
-import { withRawConfiguration, __INDEX__ } from "@hcikit/workflow";
+import { __INDEX__ } from "@hcikit/workflow";
+import { withRawConfiguration } from "../core/withRawConfiguration";
+
 import { withGridItem } from "../withGridItem";
 import PropTypes from "prop-types";
 

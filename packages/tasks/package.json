@@ -49,11 +49,11 @@
   },
   "peerDependencies": {
     "@hcikit/workflow": "0.x",
-    "@material-ui/core": "^4.3.2",
-    "@material-ui/icons": "^4.2.1",
-    "react": "^16.8.6",
-    "react-redux": "^7.1.0",
-    "styled-components": "^4.3.2"
+    "@material-ui/core": "^4.5.0",
+    "@material-ui/icons": "^4.4.3",
+    "react": "^16.10.2",
+    "react-redux": "^7.1.1",
+    "styled-components": "^4.4.0"
   },
   "dependencies": {
     "lodash-es": "^4.17.15",
@@ -62,7 +62,7 @@
   },
   "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86",
   "devDependencies": {
-    "react-scripts": "^3.1.0",
-    "react-styleguidist": "^9.1.14"
+    "react-scripts": "^3.2.0",
+    "react-styleguidist": "^9.1.16"
   }
 }

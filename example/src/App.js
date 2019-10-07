@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import Experiment, { TaskRegistry } from "@hcikit/workflow";
-import {
+import Experiment, {
   ConsentForm,
   InformationScreen,
   DisplayText,
@@ -9,13 +8,13 @@ import {
   DevTools,
   DOMEventLogger
 } from "@hcikit/tasks";
-import IncrementTask, { reducer } from "./IncrementTask";
+import IncrementTask from "./IncrementTask";
 import CustomTask from "./CustomTask";
 
 import configuration from "./configuration";
 // import ConfigUnroller from "./ConfigUnroller";
 
-let taskRegistry = new TaskRegistry({
+let tasks = {
   CustomTask,
   ConsentForm,
   InformationScreen,
@@ -23,15 +22,12 @@ let taskRegistry = new TaskRegistry({
   ProgressBar,
   WizardProgress,
   DevTools,
-  DOMEventLogger
-});
-
-taskRegistry.registerTask("IncrementTask", IncrementTask, reducer);
+  DOMEventLogger,
+  IncrementTask
+};
 
 export default class App extends Component {
   render() {
-    return (
-      <Experiment taskRegistry={taskRegistry} configuration={configuration} />
-    );
+    return <Experiment tasks={tasks} configuration={configuration} />;
   }
 }
