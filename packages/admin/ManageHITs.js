@@ -120,7 +120,7 @@ class HITDetail extends React.Component {
   };
 
   handleSubmit = () => {
-    // TODO: move to textual piece, create a dry run that overwrites the function being called and records attempts to call it.
+    // TODOLATER: move to textual piece, create a dry run that overwrites the function being called and records attempts to call it.
     if (!this.state.amount || this.state.amount > 5) {
       console.log("whoops too much money!");
       return;

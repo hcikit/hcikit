@@ -58,7 +58,7 @@ const SetQualifications = withStyles(styles)(({ classes, ...props }) => (
   </Button>
 ));
 
-// TODO: can this be generalised...
+// TODOLATER: can this be generalised...
 function getAllQualifications(params, data = [], results) {
   if (results) {
     data = data.concat(results.Qualifications);
@@ -219,8 +219,8 @@ class QualificationList extends React.Component {
   componentDidMount() {
     this.loadData();
   }
-  // TODO: could write code that autofetches everything at once, then generalise these stupid components.
-  // TODO: just write a picker, and have that map columns etc. Pass a function into the component, and the rest as props.
+  // TODOLATER: could write code that autofetches everything at once, then generalise these stupid components.
+  // TODOLATER: just write a picker, and have that map columns etc. Pass a function into the component, and the rest as props.
   loadData(
     MaxResults = 20,
     MustBeRequestable = true,
@@ -237,7 +237,7 @@ class QualificationList extends React.Component {
       this.setState({ error, data });
     });
   }
-  // TODO: load all of the workers with the qualification we want on our account.
+  // TODOLATER: load all of the workers with the qualification we want on our account.
   render() {
     let headers = ["ID", "Name", "Description"];
     if (this.state.error) {

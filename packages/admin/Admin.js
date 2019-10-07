@@ -22,7 +22,7 @@ import {
 import ManageWorkers from "./ManageWorkers";
 import ManageHITs from "./ManageHITs";
 
-// TODO: this should all be inside of a CRA.
+// TODOLATER: this should all be inside of a CRA.
 
 const drawerWidth = 240;
 
@@ -172,7 +172,7 @@ class MiniDrawer extends React.Component {
                 </ListItemIcon>
                 <ListItemText primary="Playback" />
               </ListItem>
-              {/* TODO: should be nested... */}
+              {/* TODOLATER: should be nested... */}
               <ListItem button component={Link} to="/admin/workers">
                 <ListItemIcon>
                   <Icon>person</Icon>

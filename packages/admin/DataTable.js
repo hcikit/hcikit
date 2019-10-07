@@ -10,11 +10,11 @@ import {
 
 import { Link } from "react-router-dom";
 
-// TODO: we could also have the promise return a function to get the next row as well, and then support pagination somehow...
-// TODO: hmmm, this is a bumch mixed together. This should juts take data.
-// TODO: There's another component that takes a promise or something and displays an error or whatever until the data comes.
-// TODO: pagination becomes really hard unless you pass that data to the table too.
-// TODO: should look at adding checkboxes as well.
+// TODOLATER we could also have the promise return a function to get the next row as well, and then support pagination somehow...
+// TODOLATER: hmmm, this is a bumch mixed together. This should juts take data.
+// TODOLATER: There's another component that takes a promise or something and displays an error or whatever until the data comes.
+// TODOLATER: pagination becomes really hard unless you pass that data to the table too.
+// TODOLATER: should look at adding checkboxes as well.
 
 export const dateTransform = date => {
   return new Date(date).toDateString();
@@ -81,7 +81,7 @@ export class DataTable extends React.Component {
 //   ... props to pass to the Cell
 // }];
 
-// TODO: links still need to be done.
+// TODOLATER: links still need to be done.
 const Cell = ({ content, transform, Component, ...props }) => {
   if (transform) {
     content = transform(content);
