@@ -130,10 +130,6 @@ export function logToConfig(config, log) {
   );
 }
 
-export function logActionToConfig(config, action) {
-  logToConfig(config, { ...action, eventType: "ACTION" });
-}
-
 // TODO: this should maybe fail on completed experiments because it cannot log properly.
 export function modifyConfiguration(
   config,
@@ -150,7 +146,7 @@ export function modifyConfiguration(
       from: pick(configToEdit, Object.keys(modifiedConfig)),
       to: modifiedConfig,
       index,
-      type: "CONFIG_MODIFICATION"
+      eventType: "CONFIG_MODIFICATION"
     });
   }
 

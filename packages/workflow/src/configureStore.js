@@ -1,4 +1,4 @@
-import { logAction, log, LOG, LOG_ACTION, TASK_COMPLETE } from "./actions";
+import { log, LOG, TASK_COMPLETE } from "./actions";
 import { createStore, combineReducers } from "redux";
 
 import ConfigurationReducer from "./reducers";
@@ -35,12 +35,8 @@ export default (configuration, reducers, saveState) => {
   let dispatch = store.dispatch;
 
   store.dispatch = action => {
-    if ([LOG, LOG_ACTION].indexOf(action.type) === -1) {
-      dispatch(logAction(action));
-    }
-
     if (action.type === TASK_COMPLETE) {
-      dispatch(log({ type: "end" }));
+      dispatch(log({ eventType: "end" }));
     }
 
     dispatch(action);
@@ -49,11 +45,11 @@ export default (configuration, reducers, saveState) => {
       action.type === TASK_COMPLETE &&
       !experimentComplete(store.getState().Configuration)
     ) {
-      dispatch(log({ type: "start" }));
+      dispatch(log({ eventType: "start" }));
     }
   };
 
-  dispatch(log({ type: "start" }));
+  dispatch(log({ eventType: "start" }));
 
   return store;
 };

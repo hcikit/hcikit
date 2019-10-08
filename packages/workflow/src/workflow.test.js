@@ -293,30 +293,6 @@ describe("log", () => {
   });
 });
 
-describe("logActionToConfig", () => {
-  it("logs to the correct place", () => {
-    let patch = Date.now;
-    let i = 10;
-    Date.now = () => i++;
-
-    logActionToConfig(config, { type: "hello" });
-    expect(config.children[0].logs[0]).toEqual({
-      eventType: "ACTION",
-      type: "hello",
-      timestamp: 10
-    });
-
-    logActionToConfig(config, { type: "you" });
-    expect(config.children[0].logs[1]).toEqual({
-      eventType: "ACTION",
-      type: "you",
-      timestamp: 11
-    });
-
-    Date.now = patch;
-  });
-});
-
 describe("getConfigAtIndex", () => {
   it("empty returns everything", () => {
     expect(getConfigAtIndex([], config)).toEqual(config);
@@ -700,7 +676,7 @@ describe("modifyConfiguration", () => {
     modifyConfiguration(config, [1, 0], { hello: "world", stimulus: "hi" });
 
     expect(config.children[0].logs[0]).toEqual({
-      type: "CONFIG_MODIFICATION",
+      eventType: "CONFIG_MODIFICATION",
       to: { hello: "world", stimulus: "hi" },
       from: { hello: undefined, stimulus: "overwritten" },
       index: [1, 0],

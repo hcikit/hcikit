@@ -18,13 +18,6 @@ export const log = log => {
   };
 };
 
-export const logAction = action => {
-  return {
-    type: LOG_ACTION,
-    action
-  };
-};
-
 export const modifyConfigAtDepth = (newConfig, depth) => {
   return {
     type: MODIFY_CONFIG_AT_DEPTH,
@@ -44,6 +37,5 @@ export const modifyConfig = (newConfig, index) => {
 export const TASK_COMPLETE = "TASK_COMPLETE";
 export const SET_WORKFLOW_INDEX = "SET_WORKFLOW_INDEX";
 export const LOG = "LOG";
-export const LOG_ACTION = "LOG_ACTION";
 export const MODIFY_CONFIG = "MODIFY_CONFIG";
 export const MODIFY_CONFIG_AT_DEPTH = "MODIFY_CONFIG_AT_DEPTH";

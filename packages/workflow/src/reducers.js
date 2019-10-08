@@ -29,10 +29,6 @@ const configuration = (state = { events: [] }, action) => {
       state = { ...state };
       logToConfig(state, action.log);
       return state;
-    case LOG_ACTION:
-      state = { ...state };
-      logActionToConfig(state, action.action);
-      return state;
     case MODIFY_CONFIG_AT_DEPTH:
       state = { ...state };
       modifyConfigurationAtDepth(state, action.newConfig, action.depth);
