@@ -2,7 +2,7 @@ import { logAction, log, LOG, LOG_ACTION, TASK_COMPLETE } from "./actions";
 import { createStore, combineReducers } from "redux";
 
 import ConfigurationReducer from "./reducers";
-import { experimentComplete, getLeafIndex, __INDEX__ } from "./Workflow";
+import { experimentComplete, getLeafIndex, __INDEX__ } from "./workflow";
 
 export default (configuration, reducers, saveState) => {
   let store = {};
