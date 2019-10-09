@@ -7,7 +7,6 @@ import {
   scopePropsForTask,
   experimentComplete,
   __INDEX__,
-  TaskRegistry,
   log,
   modifyConfigAtDepth,
   modifyConfig,
@@ -15,7 +14,6 @@ import {
   setWorkflowIndex
 } from "@hcikit/workflow";
 
-import { withRawConfiguration } from "./withRawConfiguration";
 import GridLayout from "../GridLayout";
 
 const TaskRenderer = ({
@@ -26,7 +24,7 @@ const TaskRenderer = ({
   setWorkflowIndex,
   modifyConfig,
   modifyConfigAtDepth,
-  taskRegistry,
+  tasks,
   Layout = GridLayout,
   ErrorHandler = null,
   forceRemountEveryTask = true,
@@ -37,21 +35,21 @@ const TaskRenderer = ({
     window.configuration = configuration;
   }
 
-  let tasks = currentProps.tasks || [];
+  let tasksToRender = currentProps.tasks || [];
 
   if (currentProps.task) {
-    tasks = [...tasks, currentProps.task];
+    tasksToRender.push(currentProps.task);
   }
 
   let tasksFilled;
 
   if (!experimentComplete(configuration)) {
-    if (!tasks.length) {
+    if (!tasksToRender.length) {
       throw new Error(`No task selected at ${configuration[__INDEX__]}`);
     }
 
-    tasksFilled = tasks.map((task, i) => {
-      let Task = taskRegistry.getTask(task);
+    tasksFilled = tasksToRender.map((task, i) => {
+      let Task = tasks[task];
       let key = `${task}-${i.toString()}`;
       let props = scopePropsForTask(currentProps, task);
 
@@ -105,15 +103,15 @@ TaskRenderer.propTypes = {
   setWorkflowIndex: PropTypes.func,
   modifyConfig: PropTypes.func,
   modifyConfigAtDepth: PropTypes.func,
-  taskRegistry: PropTypes.instanceOf(TaskRegistry),
+  tasks: PropTypes.objectOf(PropTypes.elementType),
   Layout: PropTypes.node,
   ErrorHandler: PropTypes.node,
   forceRemountEveryTask: PropTypes.bool,
   currentProps: PropTypes.object
 };
 
-const mapStateToProps = state => {
-  return { currentProps: getCurrentProps(state.Configuration) };
+const mapStateToProps = configuration => {
+  return { currentProps: getCurrentProps(configuration), configuration };
 };
 
 const mapDispatchToProps = {
@@ -124,9 +122,7 @@ const mapDispatchToProps = {
   setWorkflowIndex
 };
 
-export default withRawConfiguration(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(TaskRenderer)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TaskRenderer);

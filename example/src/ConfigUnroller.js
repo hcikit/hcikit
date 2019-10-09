@@ -4,9 +4,9 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 
 // TODO: this doesn't have a store so everything breaks
-export default ({ configuration, taskRegistry }) => {
+export default ({ configuration, taskMappings }) => {
   return iterateConfigWithProps(configuration).map(({ task, ...props }) => {
-    let Task = taskRegistry.getTask(task);
+    let Task = taskMappings[task];
     let store = createStore(({ x = {} }) => x, {});
     return (
       <Provider store={store}>

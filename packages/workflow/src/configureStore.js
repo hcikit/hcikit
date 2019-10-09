@@ -1,31 +1,27 @@
-import { log, LOG, TASK_COMPLETE } from "./actions";
-import { createStore, combineReducers } from "redux";
+import { log, TASK_COMPLETE } from "./actions";
+import { createStore } from "redux";
 
 import ConfigurationReducer from "./reducers";
 import { experimentComplete, getLeafIndex, __INDEX__ } from "./workflow";
 
-export default (configuration, reducers, saveState) => {
-  let store = {};
-  reducers["Configuration"] = ConfigurationReducer;
-  let reducer = combineReducers(reducers);
+export default (configuration, saveState) => {
+  let store;
 
-  if (!configuration.Configuration[__INDEX__]) {
+  if (!configuration[__INDEX__]) {
     // TODO: maybe use setIndex
-    configuration.Configuration[__INDEX__] = getLeafIndex(
-      [],
-      configuration.Configuration
-    );
+    configuration[__INDEX__] = getLeafIndex([], configuration);
   }
 
+  // TODO: this maybe is simplifiable
   if (process.env.NODE_ENV !== "production") {
     store = createStore(
-      reducer,
+      ConfigurationReducer,
       configuration,
       window.__REDUX_DEVTOOLS_EXTENSION__ &&
         window.__REDUX_DEVTOOLS_EXTENSION__()
     );
   } else {
-    store = createStore(reducer, configuration);
+    store = createStore(ConfigurationReducer, configuration);
   }
 
   if (saveState) {
@@ -43,7 +39,7 @@ export default (configuration, reducers, saveState) => {
 
     if (
       action.type === TASK_COMPLETE &&
-      !experimentComplete(store.getState().Configuration)
+      !experimentComplete(store.getState())
     ) {
       dispatch(log({ eventType: "start" }));
     }

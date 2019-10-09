@@ -1,14 +1,13 @@
 import {
   markTaskComplete,
   logToConfig,
-  logActionToConfig,
   __INDEX__,
   modifyConfiguration,
   modifyConfigurationAtDepth
 } from "./workflow";
+
 import {
   LOG,
-  LOG_ACTION,
   TASK_COMPLETE,
   MODIFY_CONFIG_AT_DEPTH,
   MODIFY_CONFIG,

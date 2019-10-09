@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { mount } from "enzyme";
-import { TaskRegistry } from "@hcikit/workflow";
 import Experiment, { saveStateToSessionStorage } from "./Experiment";
 
 const config = {
@@ -70,14 +69,11 @@ describe("Experiment", () => {
   let experiment;
 
   beforeEach(() => {
-    let taskRegistry = new TaskRegistry({ ButtonTask });
-    taskRegistry.registerTask("AuxTask", AuxTask);
-
     experiment = mount(
       <Experiment
         loadState={null}
         saveState={null}
-        taskRegistry={taskRegistry}
+        tasks={{ ButtonTask, AuxTask }}
         configuration={config}
       />
     );
@@ -117,12 +113,7 @@ describe("Experiment", () => {
     let error;
     try {
       mount(
-        <Experiment
-          loadState={null}
-          saveState={null}
-          taskRegistry={new TaskRegistry()}
-          configuration={config}
-        />
+        <Experiment loadState={null} saveState={null} configuration={config} />
       );
     } catch (e) {
       error = e;
@@ -133,10 +124,7 @@ describe("Experiment", () => {
   describe("uses sessionStorage properly", () => {
     it("loads from empty localStorage", () => {
       let experiment = mount(
-        <Experiment
-          taskRegistry={new TaskRegistry({ ButtonTask, AuxTask })}
-          configuration={config}
-        />
+        <Experiment tasks={{ ButtonTask, AuxTask }} configuration={config} />
       );
 
       experiment.find("button").simulate("click");
@@ -146,10 +134,7 @@ describe("Experiment", () => {
       experiment.unmount();
 
       experiment = mount(
-        <Experiment
-          taskRegistry={new TaskRegistry({ ButtonTask, AuxTask })}
-          configuration={config}
-        />
+        <Experiment tasks={{ ButtonTask, AuxTask }} configuration={config} />
       );
 
       expect(experiment.find("button").text()).toEqual(config.children[1].text);
@@ -177,7 +162,7 @@ describe("Experiment", () => {
           loadState={null}
           saveState={null}
           forceRemountEveryTask
-          taskRegistry={new TaskRegistry({ MultiTask })}
+          tasks={{ MultiTask }}
           configuration={config}
         />
       );
@@ -206,7 +191,7 @@ describe("Experiment", () => {
           loadState={null}
           saveState={null}
           forceRemountEveryTask={false}
-          taskRegistry={new TaskRegistry({ MultiTask })}
+          tasks={{ MultiTask }}
           configuration={config}
         />
       );
