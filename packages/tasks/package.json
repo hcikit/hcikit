@@ -64,5 +64,8 @@
   "devDependencies": {
     "react-scripts": "^3.2.0",
     "react-styleguidist": "^9.1.16"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   }
 }

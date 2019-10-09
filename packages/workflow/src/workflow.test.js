@@ -3,7 +3,6 @@ import {
   getConfigAtIndex,
   getCurrentProps,
   logToConfig,
-  logActionToConfig,
   scopePropsForTask,
   mergeArraysSpecial,
   markTaskComplete,

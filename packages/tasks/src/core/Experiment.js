@@ -39,6 +39,7 @@ let Experiment = ({
 
   let [store, setStore] = useState();
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     let storedState;
 

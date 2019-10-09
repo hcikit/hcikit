@@ -3,13 +3,15 @@ import styled, { keyframes } from "styled-components";
 import { isEqual } from "lodash-es";
 import PropTypes from "prop-types";
 
+// TODO: could make this with a functional component instead
+
 export class ScreenFlash extends React.Component {
   propTypes = {
     times: PropTypes.number
   };
 
   state = { displayed: false };
-  componentWillReceiveProps(newProps) {
+  UNSAFE_componentWillReceiveProps(newProps) {
     if (!isEqual(newProps.times, this.props.times)) {
       this.interval = setInterval(this.resetState, 500);
       this.setState({ displayed: true });

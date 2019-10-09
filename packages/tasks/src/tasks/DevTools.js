@@ -59,7 +59,7 @@ export const DevTools = ({ taskComplete, configuration, setWorkflowIndex }) => {
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [isDragging]);
+  });
 
   // TODO: set the marks to the top level sections
 

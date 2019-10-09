@@ -55,11 +55,13 @@ const DOMEventLogger = ({
       log(event);
     };
 
-    if (!events) {
-      events = Object.keys(eventMapping);
+    let allEvents = events;
+
+    if (!allEvents) {
+      allEvents = Object.keys(eventMapping);
     }
 
-    let listeners = events.reduce((listeners, event) => {
+    let listeners = allEvents.reduce((listeners, event) => {
       // TODO: this really needs a flush call I think. It is unlikely to cause problems but it could.
       // TODO: what happens if this gets called after the task is over? Maybe we need to be able to sign up for events before changing to the next task?
       let func = throttle(logEvent.bind(null, log), delay, { trailing: true });
