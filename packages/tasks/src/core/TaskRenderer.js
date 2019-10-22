@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { isEqual } from "lodash";
 
 import {
   getCurrentProps,
@@ -50,6 +51,9 @@ const TaskRenderer = ({
 
     tasksFilled = tasksToRender.map((task, i) => {
       let Task = tasks[task];
+
+      // TODO: ensure that it throws a useful error if the task is not registered
+
       let key = `${task}-${i.toString()}`;
       let props = scopePropsForTask(currentProps, task);
 
@@ -58,7 +62,8 @@ const TaskRenderer = ({
       }
 
       return (
-        <Task
+        <SingleTaskRenderer
+          Task={Task}
           key={key}
           setWorkflowIndex={setWorkflowIndex}
           log={log}
@@ -95,6 +100,12 @@ const TaskRenderer = ({
 
   return <Layout>{tasksFilled}</Layout>;
 };
+
+const SingleTaskRenderer = React.memo(props => {
+  let { Task } = props;
+  return <Task {...props} />;
+  // TODO: this deep equals could be somewhat expensive, maybe not the best solution
+}, isEqual);
 
 TaskRenderer.propTypes = {
   configuration: PropTypes.object,

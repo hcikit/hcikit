@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { mount } from "enzyme";
 import Experiment, { saveStateToSessionStorage } from "./Experiment";
 
@@ -15,6 +15,29 @@ const config = {
     }
   ]
 };
+
+let RenderCounter = ({ numRendersBeforeContinue = 2, taskComplete }) => {
+  let renders = useRef(0);
+
+  useEffect(() => {
+    renders.current++;
+    console.log(renders.current);
+    if (renders.current >= numRendersBeforeContinue) {
+      taskComplete();
+    }
+  });
+
+  return null;
+};
+
+let LogOnClick = ({ log }) => (
+  <button
+    onClick={() => {
+      console.log("logging");
+      log("log");
+    }}
+  />
+);
 
 /* eslint-disable react/prop-types */
 let ButtonTask = ({
@@ -98,8 +121,33 @@ describe("Experiment", () => {
     );
   });
 
+  fit("logs don't cause a re-render", () => {
+    const config = {
+      children: [
+        {
+          tasks: ["LogOnClick", "RenderCounter"]
+        }
+      ]
+    };
+
+    let experiment = mount(
+      <Experiment
+        tasks={{ RenderCounter, LogOnClick }}
+        loadState={null}
+        saveState={null}
+        configuration={config}
+      />
+    );
+
+    experiment.find("button").simulate("click");
+
+    expect(experiment.exists("h1")).toBeFalsy();
+  });
+
   it("throws errors for unregistered tasks", () => {
-    jest.spyOn(console, "error").mockImplementation(() => {});
+    let consoleError = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     const config = {
       children: [
@@ -110,15 +158,13 @@ describe("Experiment", () => {
       ]
     };
 
-    let error;
-    try {
+    expect(() => {
       mount(
         <Experiment loadState={null} saveState={null} configuration={config} />
       );
-    } catch (e) {
-      error = e;
-    }
-    expect(error).toBeInstanceOf(Error);
+    }).toThrow(Error);
+
+    expect(consoleError).toHaveBeenCalled();
   });
 
   describe("uses sessionStorage properly", () => {
