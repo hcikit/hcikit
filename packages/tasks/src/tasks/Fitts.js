@@ -10,11 +10,10 @@ const Target = styled.circle`
 `;
 
 const FullSVG = styled.svg`
-  ${"" /* position: fixed;
-  top: 0;
-  left: 0; */}
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: auto;
+  margin: auto;
+  display: block;
 `;
 
 const Fitts = ({
@@ -32,7 +31,7 @@ const Fitts = ({
 
   return (
     <FullSVG
-      width={"100%"}
+      height={"100%"}
       viewBox={`-50 -50 100 100`}
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -59,10 +58,10 @@ const Fitts = ({
 };
 
 Fitts.propTypes = {
-  numTargets: PropTypes.number,
-  distance: PropTypes.number,
-  width: PropTypes.number,
-  targetIndex: PropTypes.number,
+  numTargets: PropTypes.number.isRequired,
+  distance: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
+  targetIndex: PropTypes.number.isRequired,
   idPrefix: PropTypes.string,
   taskComplete: PropTypes.func
 };
