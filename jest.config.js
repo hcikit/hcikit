@@ -1,5 +1,5 @@
 module.exports = {
-  projects: ["./example/", "./packages/tasks", "./packages/workflow"],
+  projects: ["./example/", "./packages/react", "./packages/workflow"],
   collectCoverageFrom: [
     "src/**/*.{js,jsx}",
     "!/node_modules/",

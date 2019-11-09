@@ -1,5 +1,5 @@
 export default {
-  tasks: ["DevTools", "DOMEventLogger", "WizardProgress"],
+  tasks: ["DevTools", "WizardProgress"],
   CustomTask: {
     text: "Click to continue"
   },

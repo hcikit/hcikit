@@ -4,7 +4,7 @@ import Experiment, {
   Fitts,
   ConsentForm,
   InformationScreen
-} from "@hcikit/tasks";
+} from "@hcikit/react";
 
 // import configuration from "./configuration";
 import configuration from "./fitts-configuration";

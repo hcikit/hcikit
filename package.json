@@ -3,12 +3,12 @@
   "private": true,
   "workspaces": [
     "packages/workflow",
-    "packages/tasks",
+    "packages/react",
     "example",
     "replay"
   ],
   "scripts": {
-    "lint": "eslint example/src packages/tasks/src packages/workflow/src",
+    "lint": "eslint example/src packages/react/src packages/workflow/src",
     "test": "jest --verbose --colors",
     "test:watch": "jest --watch --verbose --colors",
     "build": "yarn workspaces run build"

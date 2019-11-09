@@ -1,5 +1,5 @@
 import React from "react";
-import { CenteredNicePaper, withGridItem } from "@hcikit/tasks";
+import { CenteredNicePaper, withGridItem } from "@hcikit/react";
 import { Typography } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 

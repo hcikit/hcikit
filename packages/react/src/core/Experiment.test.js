@@ -21,7 +21,6 @@ let RenderCounter = ({ numRendersBeforeContinue = 2, taskComplete }) => {
 
   useEffect(() => {
     renders.current++;
-    console.log(renders.current);
     if (renders.current >= numRendersBeforeContinue) {
       taskComplete();
     }
@@ -33,7 +32,6 @@ let RenderCounter = ({ numRendersBeforeContinue = 2, taskComplete }) => {
 let LogOnClick = ({ log }) => (
   <button
     onClick={() => {
-      console.log("logging");
       log("log");
     }}
   />
@@ -121,7 +119,7 @@ describe("Experiment", () => {
     );
   });
 
-  fit("logs don't cause a re-render", () => {
+  it("logs don't cause a re-render", () => {
     const config = {
       children: [
         {

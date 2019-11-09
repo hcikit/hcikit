@@ -5,15 +5,12 @@ import Experiment, {
   DisplayText,
   ProgressBar,
   WizardProgress,
-  DevTools,
-  DOMEventLogger,
-  Fitts
-} from "@hcikit/tasks";
+  DevTools
+} from "@hcikit/react";
 import IncrementTask from "./IncrementTask";
 import CustomTask from "./CustomTask";
 
-import configuration from "./fitts-configuration";
-// import ConfigUnroller from "./ConfigUnroller";
+import configuration from "./configuration";
 
 let tasks = {
   CustomTask,
@@ -23,9 +20,7 @@ let tasks = {
   ProgressBar,
   WizardProgress,
   DevTools,
-  DOMEventLogger: () => null,
-  IncrementTask,
-  Fitts
+  IncrementTask
 };
 
 export default class App extends Component {

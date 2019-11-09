@@ -1,4 +1,4 @@
-import { TaskRenderer } from "@hcikit/tasks";
+import { TaskRenderer } from "@hcikit/react";
 import React, { useEffect, useState, useRef } from "react";
 import {
   configureStore,
