@@ -10,7 +10,7 @@ import { Provider } from "react-redux";
 import styled from "styled-components";
 
 const Mouse = styled.div`
-  position: absolute;
+  position: relative;
   width: 10px;
   height: 10px;
   background-color: black;
@@ -95,10 +95,13 @@ export default ({ log, index, tasks, transformTime, onReplayComplete }) => {
     return null;
   }
 
+  // TODO: set these widths properly.
   return (
-    <Provider store={store}>
-      <Mouse {...mouse} />
-      <TaskRenderer tasks={tasks} configuration={log}></TaskRenderer>
-    </Provider>
+    <div style={{ width: 800, height: 800 }}>
+      <Provider store={store}>
+        <Mouse {...mouse} />
+        <TaskRenderer tasks={tasks} configuration={log}></TaskRenderer>
+      </Provider>
+    </div>
   );
 };

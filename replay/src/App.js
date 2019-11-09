@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import { DOMEventLogger, Fitts } from "@hcikit/tasks";
+import Experiment, {
+  DOMEventLogger,
+  Fitts,
+  ConsentForm,
+  InformationScreen
+} from "@hcikit/tasks";
 
 // import configuration from "./configuration";
 import configuration from "./fitts-configuration";
@@ -7,10 +12,13 @@ import configuration from "./fitts-configuration";
 // import ConfigUnroller from "./ConfigUnroller";
 import Replayer from "./Replayer";
 import log from "./log";
+import ReplayGrid from "./ReplayGrid";
 
 let tasks = {
-  DOMEventLogger,
-  Fitts
+  DOMEventLogger, //: () => null,
+  Fitts,
+  ConsentForm,
+  InformationScreen
 };
 
 let firstTime = log.children[0].children[0].logs[0].timestamp;
@@ -26,13 +34,13 @@ let transformTime = t => {
 export default class App extends Component {
   render() {
     return (
-      <Replayer
-        tasks={tasks}
-        log={log}
-        index={[0, 0]}
-        transformTime={transformTime}
-        onReplayComplete={() => {}}
-      />
+      <Experiment tasks={tasks} configuration={configuration} />
+      // <ReplayGrid
+      //   tasks={tasks}
+      //   logs={[log, log, log, log]}
+      //   index={[0, 0]}
+      //   transformTime={transformTime}
+      // ></ReplayGrid>
     );
   }
 }

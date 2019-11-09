@@ -6,7 +6,19 @@ import PropTypes from "prop-types";
 // TODO: need something better than "target", a unique identifier or something maybe? https://github.com/ericclemmons/unique-selector/
 
 // TODO: maybe the eventMapping can take an object that just logs whatever you want to it?
+
+// TODO: doesn't work if you need to scroll...
 const defaults = ["type"];
+
+function resizeEventHandler({ type }) {
+  return {
+    type,
+    clientHeight: document.body.clientHeight,
+    clientWidth: document.body.clientWidth,
+    screenWidth: window.screen.width,
+    screenHeight: window.screen.height
+  };
+}
 
 const mouseEvents = [
   "clientX",
@@ -39,7 +51,9 @@ const defaultEventMapping = {
 
   keydown: keyboardEvents,
   keyup: keyboardEvents,
-  keypress: keyboardEvents
+  keypress: keyboardEvents,
+
+  resize: resizeEventHandler
 };
 
 // TODO: this is fine for pulling some stuff out of the event but maybe not fine if you ened to aughment it
@@ -51,7 +65,11 @@ const DOMEventLogger = ({
 }) => {
   useEffect(() => {
     const logEvent = (log, event) => {
+      // if (typeof eventMapping[event.type] === "function") {
+      //   event = eventMapping[event.type]();
+      // } else {
       event = pick(event, eventMapping[event.type]);
+      // }
       log(event);
     };
 
@@ -62,9 +80,13 @@ const DOMEventLogger = ({
     }
 
     let listeners = allEvents.reduce((listeners, event) => {
+      // TODO: log original size.
       // TODO: this really needs a flush call I think. It is unlikely to cause problems but it could.
       // TODO: what happens if this gets called after the task is over? Maybe we need to be able to sign up for events before changing to the next task?
       let func = throttle(logEvent.bind(null, log), delay, { trailing: true });
+
+      // log({ type: "initialSize" });
+
       window.addEventListener(event, func, {
         passive: true,
         capture: true
@@ -84,6 +106,7 @@ const DOMEventLogger = ({
       });
     };
   });
+  // }, [eventMapping, delay, events]);
 
   return null;
 };

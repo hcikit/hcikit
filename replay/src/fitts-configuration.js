@@ -12,25 +12,54 @@ function generateFittsBlock(numTargets) {
 
 export default {
   tasks: ["DOMEventLogger"],
-  task: "Fitts",
   children: [
     {
-      width: 5,
-      distance: 10,
-      numTargets: 7,
-      children: generateFittsBlock(7)
+      task: "InformationScreen",
+      label: "Information",
+      shortcutEnabled: true,
+      centerY: true,
+      centerX: true,
+      content: `# Hello World
+this is *markdown*`
+    },
+
+    {
+      label: "Consent",
+
+      task: "ConsentForm",
+      letter: `# Consent Form
+
+The consent form uses markdown to create a letter, and it automatically generates as many checkboxes as needed to consent.`,
+      questions: [
+        {
+          label:
+            "I consent of my free will to complete this example experiment",
+          required: true
+        }
+      ]
     },
     {
-      width: 1,
-      distance: 45,
-      numTargets: 7,
-      children: generateFittsBlock(7)
-    },
-    {
-      width: 3,
-      distance: 20,
-      numTargets: 7,
-      children: generateFittsBlock(7)
+      task: "Fitts",
+      children: [
+        {
+          width: 5,
+          distance: 10,
+          numTargets: 7,
+          children: generateFittsBlock(7)
+        },
+        {
+          width: 1,
+          distance: 45,
+          numTargets: 7,
+          children: generateFittsBlock(7)
+        },
+        {
+          width: 3,
+          distance: 20,
+          numTargets: 7,
+          children: generateFittsBlock(7)
+        }
+      ]
     }
   ]
 };
