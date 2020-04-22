@@ -1,6 +1,6 @@
 {
   "name": "@hcikit/workflow",
-  "version": "0.3.0",
+  "version": "1.0.0-alpha.0",
   "description": "A workflow manager for running experiments using React.",
   "author": "blainelewis1",
   "license": "MIT",
@@ -42,11 +42,11 @@
     ]
   },
   "dependencies": {
-    "core-js": "^3.4.0",
+    "core-js": "^3.6.5",
     "lodash-es": "^4.17.15",
     "prop-types": "^15.7.2",
-    "redux": "^4.0.4",
-    "regenerator-runtime": "^0.13.3"
+    "redux": "^4.0.5",
+    "regenerator-runtime": "^0.13.5"
   },
   "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86"
 }

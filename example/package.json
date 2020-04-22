@@ -1,6 +1,6 @@
 {
   "name": "@hcikit/example",
-  "version": "0.3.0",
+  "version": "1.0.0-alpha.0",
   "homepage": "https://hcikit.github.io",
   "license": "MIT",
   "private": true,
@@ -11,7 +11,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "styled-components": "^5.1.0",
-    "@hcikit/react": "1.0.0"
+    "@hcikit/react": "1.0.0-alpha.0"
   },
   "jest": {
     "setupFilesAfterEnv": [
