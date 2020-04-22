@@ -1,6 +1,6 @@
 import babel from "rollup-plugin-babel";
-import commonjs from "rollup-plugin-commonjs";
-import resolve from "rollup-plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
+import resolve from "@rollup/plugin-node-resolve";
 import pkg from "./package.json";
 
 export default {
@@ -9,36 +9,40 @@ export default {
     {
       file: pkg.main,
       format: "cjs",
-      sourcemap: true
+      sourcemap: true,
     },
     {
       file: pkg.module,
       format: "es",
-      sourcemap: true
-    }
+      sourcemap: true,
+    },
   ],
   external: Object.keys(pkg.peerDependencies || {}),
   plugins: [
     resolve(),
     commonjs({
-      exclude: ["src/**"],
+      exclude: [
+        "src/**",
+        "../../node_modules/lodash-es/**",
+        "../../node_modules/symbol-observable/es/**",
+      ],
       include: ["../../node_modules/**"],
       namedExports: {
         "../../node_modules/react-redux/node_modules/react-is/index.js": [
           "isValidElementType",
-          "isContextConsumer"
+          "isContextConsumer",
         ],
 
         "../../node_modules/react-is/index.js": [
           "isValidElementType",
           "isElement",
-          "ForwardRef"
-        ]
-      }
+          "ForwardRef",
+        ],
+      },
     }),
     babel({
       exclude: "../../node_modules/**",
-      runtimeHelpers: true
-    })
-  ]
+      runtimeHelpers: true,
+    }),
+  ],
 };
