@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
 import { mount } from "enzyme";
 import Experiment, { saveStateToSessionStorage } from "./Experiment";
+import DevTools from "../tasks/DevTools";
+import DisplayText from "../tasks/DisplayTextTask";
 
 const config = {
   tasks: ["AuxTask"],
   children: [
     {
       text: "hello",
-      task: "ButtonTask"
+      task: "ButtonTask",
     },
     {
       text: "hi",
-      task: "ButtonTask"
-    }
-  ]
+      task: "ButtonTask",
+    },
+  ],
 };
 
 let RenderCounter = ({ numRendersBeforeContinue = 2, taskComplete }) => {
@@ -37,6 +39,8 @@ let LogOnClick = ({ log }) => (
   />
 );
 
+let InfiniteRenderer = ({ log }) => <button onClick={log("log")} />;
+
 /* eslint-disable react/prop-types */
 let ButtonTask = ({
   taskComplete,
@@ -44,7 +48,7 @@ let ButtonTask = ({
   text,
   log,
   logs,
-  configVal = "hello"
+  configVal = "hello",
 }) => (
   <>
     <button
@@ -119,13 +123,35 @@ describe("Experiment", () => {
     );
   });
 
+  fit("logs definitely don't cause a re-render", () => {
+    // TODO:
+    // I added this test because I had a log() statement that occurred on render and it caused an infinite loop.
+    // I *think* this is an issue with the withrawconfiguration, but I am not entirely convinced because devtools should not be renderering...
+    // This issue only occurs when I have two levels of tasks in the configuration *and* there is a log statement in the renderer. I guess it is not an issue with withrawconfiguration.
+
+    const config = {
+      tasks: ["DisplayText"],
+      content: "Hello",
+      children: [{ tasks: ["DisplayText"], task: "InfiniteRenderer" }],
+    };
+
+    mount(
+      <Experiment
+        tasks={{ InfiniteRenderer, DevTools, DisplayText }}
+        loadState={null}
+        saveState={null}
+        configuration={config}
+      />
+    );
+  });
+
   it("logs don't cause a re-render", () => {
     const config = {
       children: [
         {
-          tasks: ["LogOnClick", "RenderCounter"]
-        }
-      ]
+          tasks: ["LogOnClick", "RenderCounter"],
+        },
+      ],
     };
 
     let experiment = mount(
@@ -151,9 +177,9 @@ describe("Experiment", () => {
       children: [
         {
           times: 2,
-          task: "MultiTask"
-        }
-      ]
+          task: "MultiTask",
+        },
+      ],
     };
 
     expect(() => {
@@ -192,13 +218,13 @@ describe("Experiment", () => {
         children: [
           {
             times: 2,
-            task: "MultiTask"
+            task: "MultiTask",
           },
           {
             times: 4,
-            task: "MultiTask"
-          }
-        ]
+            task: "MultiTask",
+          },
+        ],
       };
 
       experiment = mount(
@@ -221,13 +247,13 @@ describe("Experiment", () => {
         children: [
           {
             times: 2,
-            task: "MultiTask"
+            task: "MultiTask",
           },
           {
             times: 4,
-            task: "MultiTask"
-          }
-        ]
+            task: "MultiTask",
+          },
+        ],
       };
 
       experiment = mount(

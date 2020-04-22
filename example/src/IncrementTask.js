@@ -33,7 +33,10 @@ const IncrementTask = ({
   return (
     <CenteredNicePaper>
       <div style={{ textAlign: "center" }}>
-        <Typography variant="h1" onMouseOver={log("Rolled over with mouse")}>
+        <Typography
+          variant="h1"
+          onMouseOver={log.bind(null, "Rolled over with mouse")}
+        >
           {value}
         </Typography>
         <Button onClick={decrement}>-</Button>
