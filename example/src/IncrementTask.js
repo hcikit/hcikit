@@ -7,7 +7,8 @@ const IncrementTask = ({
   desiredValue,
   value = 0,
   modifyConfigAtDepth,
-  taskComplete
+  taskComplete,
+  log,
 }) => {
   function checkAnswer() {
     if (value === desiredValue) {
@@ -27,10 +28,14 @@ const IncrementTask = ({
     modifyConfigAtDepth({ value: 0 });
   }
 
+  // console.log(log("Rolled over with mouse"));
+
   return (
     <CenteredNicePaper>
       <div style={{ textAlign: "center" }}>
-        <Typography variant="h1">{value}</Typography>
+        <Typography variant="h1" onMouseOver={log("Rolled over with mouse")}>
+          {value}
+        </Typography>
         <Button onClick={decrement}>-</Button>
         <Button onClick={reset}>RESET</Button>
         <Button onClick={increment}>+</Button>
