@@ -123,7 +123,7 @@ describe("Experiment", () => {
     );
   });
 
-  fit("logs definitely don't cause a re-render", () => {
+  it("logs definitely don't cause a re-render", () => {
     // TODO:
     // I added this test because I had a log() statement that occurred on render and it caused an infinite loop.
     // I *think* this is an issue with the withrawconfiguration, but I am not entirely convinced because devtools should not be renderering...
