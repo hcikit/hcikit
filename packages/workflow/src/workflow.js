@@ -115,7 +115,12 @@ export function logToConfig(config, log) {
     console.error("Attempting to log when the experiment is complete.");
     return;
   }
+
   let index = config[__INDEX__] || getLeafIndex([0], config);
+
+  if (typeof log !== "object") {
+    log = { value: log };
+  }
 
   modifyConfiguration(
     config,
@@ -123,8 +128,8 @@ export function logToConfig(config, log) {
     {
       logs: [
         ...(getConfigAtIndex(index, config).logs || []),
-        { ...log, timestamp: Date.now() }
-      ]
+        { ...log, timestamp: Date.now() },
+      ],
     },
     false
   );
@@ -146,7 +151,7 @@ export function modifyConfiguration(
       from: pick(configToEdit, Object.keys(modifiedConfig)),
       to: modifiedConfig,
       index,
-      eventType: "CONFIG_MODIFICATION"
+      eventType: "CONFIG_MODIFICATION",
     });
   }
 
@@ -156,9 +161,9 @@ export function modifyConfiguration(
     config.children = [
       ...config.children.slice(0, nextLevelIndex),
       {
-        ...config.children[nextLevelIndex]
+        ...config.children[nextLevelIndex],
       },
-      ...config.children.slice(nextLevelIndex + 1)
+      ...config.children.slice(nextLevelIndex + 1),
     ];
 
     config = config.children[nextLevelIndex];
@@ -287,7 +292,7 @@ export function* iterateConfig(config) {
 }
 
 export function iterateConfigWithProps(config) {
-  return Array.from(iterateConfig(config)).map(index =>
+  return Array.from(iterateConfig(config)).map((index) =>
     getPropsFor(index, config)
   );
 }

@@ -1,5 +1,4 @@
 module.exports = {
-  projects: ["./example/", "./packages/react", "./packages/workflow"],
   collectCoverageFrom: [
     "src/**/*.{js,jsx}",
     "!/node_modules/",
@@ -9,5 +8,10 @@ module.exports = {
     "!src/setupTests.js",
     "!src/**/*.stories.js",
   ],
-  transformIgnorePatterns: ["/node_modules/(?!lodash-es).+\\.js$"],
+  transformIgnorePatterns: [
+    "../../node_modules/(?!lodash-es|@babel/runtime).+\\.js$",
+  ],
+  transform: {
+    "^.+\\.[t|j]sx?$": "babel-jest",
+  },
 };

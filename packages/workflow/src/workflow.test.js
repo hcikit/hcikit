@@ -13,7 +13,7 @@ import {
   iterateConfig,
   iterateConfigWithProps,
   modifyConfigurationAtDepth,
-  modifyConfiguration
+  modifyConfiguration,
 } from "./workflow";
 import deepFreeze from "deep-freeze";
 
@@ -21,7 +21,7 @@ const configuration = {
   configprop: "section",
   StimulusResponse: {
     hello: "world",
-    yolo: "yoyololo"
+    yolo: "yoyololo",
   },
   children: [
     { task: "real task without children" },
@@ -33,30 +33,30 @@ const configuration = {
           stimulus: "overwritten",
           children: [
             {
-              stimulus: "bear"
+              stimulus: "bear",
             },
             {
               stimulus: "pig",
               StimulusResponse: {
-                hello: "hello"
-              }
-            }
-          ]
+                hello: "hello",
+              },
+            },
+          ],
         },
         {
           // Note: no index given
           children: [
             {
-              stimulus: "bird"
+              stimulus: "bird",
             },
             {
-              stimulus: "dog"
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              stimulus: "dog",
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };
 
 let config;
@@ -87,14 +87,14 @@ describe("scopePropsForTask", () => {
         {
           hello: "world",
           StimulusResponse: {
-            you: "too"
-          }
+            you: "too",
+          },
         },
         "StimulusResponse"
       )
     ).toEqual({
       hello: "world",
-      you: "too"
+      you: "too",
     });
   });
 
@@ -104,13 +104,13 @@ describe("scopePropsForTask", () => {
         {
           hello: "world",
           StimulusResponse: {
-            hello: "you"
-          }
+            hello: "you",
+          },
         },
         "StimulusResponse"
       )
     ).toEqual({
-      hello: "you"
+      hello: "you",
     });
   });
   it("wrong scopes are thrown away", () => {
@@ -119,16 +119,16 @@ describe("scopePropsForTask", () => {
         {
           hello: "world",
           StimulusResponse: {
-            hello: "you"
+            hello: "you",
           },
           WrongScope: {
-            hello: "dude"
-          }
+            hello: "dude",
+          },
         },
         "StimulusResponse"
       )
     ).toEqual({
-      hello: "you"
+      hello: "you",
     });
   });
 });
@@ -149,8 +149,8 @@ describe("getCurrentProps", () => {
       stimulus: "bear",
       StimulusResponse: {
         hello: "world",
-        yolo: "yoyololo"
-      }
+        yolo: "yoyololo",
+      },
     });
   });
 
@@ -165,8 +165,8 @@ describe("getCurrentProps", () => {
       stimulus: "bear",
       StimulusResponse: {
         hello: "world",
-        yolo: "yoyololo"
-      }
+        yolo: "yoyololo",
+      },
     });
   });
 
@@ -182,15 +182,15 @@ describe("getCurrentProps", () => {
       stimulus: "pig",
       StimulusResponse: {
         hello: "hello",
-        yolo: "yoyololo"
-      }
+        yolo: "yoyololo",
+      },
     });
   });
 
   it("lists get over written", () => {
     let config = {
       tasks: ["hello", "world"],
-      children: [{ tasks: ["foo", "bar"] }]
+      children: [{ tasks: ["foo", "bar"] }],
     };
     let props = getCurrentProps(config);
 
@@ -216,6 +216,32 @@ describe("log", () => {
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
+  it("logs strings properly", () => {
+    let patch = Date.now;
+    Date.now = () => 10;
+
+    logToConfig(config, "hello world");
+    expect(config.children[0].logs[0]).toEqual({
+      value: "hello world",
+      timestamp: 10,
+    });
+
+    Date.now = patch;
+  });
+
+  it("logs numbers properly", () => {
+    let patch = Date.now;
+    Date.now = () => 10;
+
+    logToConfig(config, 10);
+    expect(config.children[0].logs[0]).toEqual({
+      value: 10,
+      timestamp: 10,
+    });
+
+    Date.now = patch;
+  });
+
   it("logs correctly with timestamp", () => {
     let patch = Date.now;
     Date.now = () => 10;
@@ -223,7 +249,7 @@ describe("log", () => {
     logToConfig(config, { hello: "world" });
     expect(config.children[0].logs[0]).toEqual({
       hello: "world",
-      timestamp: 10
+      timestamp: 10,
     });
 
     Date.now = patch;
@@ -239,7 +265,7 @@ describe("log", () => {
     logToConfig(config, { hello: "world" });
     expect(config.children[1].children[0].children[0].logs[0]).toEqual({
       hello: "world",
-      timestamp: 10
+      timestamp: 10,
     });
 
     config[__INDEX__] = markTaskComplete(config);
@@ -247,21 +273,21 @@ describe("log", () => {
     logToConfig(config, { hello: "world" });
     expect(config.children[1].children[0].children[1].logs[0]).toEqual({
       hello: "world",
-      timestamp: 11
+      timestamp: 11,
     });
     config[__INDEX__] = markTaskComplete(config);
 
     logToConfig(config, { hello: "world" });
     expect(config.children[1].children[1].children[0].logs[0]).toEqual({
       hello: "world",
-      timestamp: 12
+      timestamp: 12,
     });
 
     config[__INDEX__] = markTaskComplete(config);
     logToConfig(config, { hello: "world" });
     expect(config.children[1].children[1].children[1].logs[0]).toEqual({
       hello: "world",
-      timestamp: 13
+      timestamp: 13,
     });
     Date.now = patch;
   });
@@ -306,33 +332,33 @@ describe("getConfigAtIndex", () => {
           stimulus: "overwritten",
           children: [
             {
-              stimulus: "bear"
+              stimulus: "bear",
             },
             {
               stimulus: "pig",
               StimulusResponse: {
-                hello: "hello"
-              }
-            }
-          ]
+                hello: "hello",
+              },
+            },
+          ],
         },
         {
           // Note: no index given
           children: [
             {
-              stimulus: "bird"
+              stimulus: "bird",
             },
             {
-              stimulus: "dog"
-            }
-          ]
-        }
-      ]
+              stimulus: "dog",
+            },
+          ],
+        },
+      ],
     });
   });
   it("leaves are returned", () => {
     expect(getConfigAtIndex([1, 0, 0], config)).toEqual({
-      stimulus: "bear"
+      stimulus: "bear",
     });
   });
 });
@@ -391,8 +417,8 @@ describe("indexToTaskNumber", () => {
       __INDEX__: [0, 1],
       children: [
         { task: "Hello", children: [{}, {}, {}] },
-        { task: "World", children: [{}, {}, {}] }
-      ]
+        { task: "World", children: [{}, {}, {}] },
+      ],
     };
     expect(indexToTaskNumber([0, 1], config)).toEqual(1);
     expect(indexToTaskNumber([1, 2], config)).toEqual(5);
@@ -436,8 +462,8 @@ describe("getTotalTasks", () => {
       __INDEX__: [0, 1],
       children: [
         { task: "Hello", children: [{}, {}, {}] },
-        { task: "World", children: [{}, {}, {}] }
-      ]
+        { task: "World", children: [{}, {}, {}] },
+      ],
     };
     expect(getTotalTasks(config)).toEqual(6);
   });
@@ -457,7 +483,7 @@ describe("getTotalTasks", () => {
           centerY: true,
           centerX: true,
           content: "# Hello World",
-          start: 1565928398460
+          start: 1565928398460,
         },
         { label: "Text", task: "DisplayText", content: "Hello" },
         {
@@ -469,9 +495,9 @@ describe("getTotalTasks", () => {
             {
               label:
                 "I consent of my free will to complete this example experiment",
-              required: true
-            }
-          ]
+              required: true,
+            },
+          ],
         },
         { label: "Custom", task: "CustomTask" },
         {
@@ -486,11 +512,11 @@ describe("getTotalTasks", () => {
             { desiredValue: 10 },
             { desiredValue: 20 },
             { desiredValue: 4 },
-            { desiredValue: 1 }
-          ]
-        }
+            { desiredValue: 1 },
+          ],
+        },
       ],
-      __INDEX__: [0]
+      __INDEX__: [0],
     };
 
     expect(getTotalTasks(config)).toEqual(10);
@@ -504,7 +530,7 @@ describe("iterateConfig", () => {
       [1, 0, 0],
       [1, 0, 1],
       [1, 1, 0],
-      [1, 1, 1]
+      [1, 1, 1],
     ]);
   });
 });
@@ -519,8 +545,8 @@ describe("iterateConfigWithProps", () => {
 
         StimulusResponse: {
           hello: "world",
-          yolo: "yoyololo"
-        }
+          yolo: "yoyololo",
+        },
       },
       {
         // __INDEX__: [1, 0, 0],
@@ -531,8 +557,8 @@ describe("iterateConfigWithProps", () => {
 
         StimulusResponse: {
           hello: "world",
-          yolo: "yoyololo"
-        }
+          yolo: "yoyololo",
+        },
       },
       {
         // __INDEX__: [1, 0, 1],
@@ -543,8 +569,8 @@ describe("iterateConfigWithProps", () => {
 
         StimulusResponse: {
           hello: "hello",
-          yolo: "yoyololo"
-        }
+          yolo: "yoyololo",
+        },
       },
       {
         // __INDEX__: [1, 1, 0],
@@ -553,9 +579,9 @@ describe("iterateConfigWithProps", () => {
 
         StimulusResponse: {
           hello: "world",
-          yolo: "yoyololo"
+          yolo: "yoyololo",
         },
-        stimulus: "bird"
+        stimulus: "bird",
       },
       {
         // __INDEX__: [1, 1, 1],
@@ -564,10 +590,10 @@ describe("iterateConfigWithProps", () => {
 
         StimulusResponse: {
           hello: "world",
-          yolo: "yoyololo"
+          yolo: "yoyololo",
         },
-        stimulus: "dog"
-      }
+        stimulus: "dog",
+      },
     ]);
   });
 });
@@ -679,7 +705,7 @@ describe("modifyConfiguration", () => {
       to: { hello: "world", stimulus: "hi" },
       from: { hello: undefined, stimulus: "overwritten" },
       index: [1, 0],
-      timestamp: 10
+      timestamp: 10,
     });
 
     Date.now = patch;
