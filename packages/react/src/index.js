@@ -8,7 +8,7 @@ export * from "./components";
 //   Object.keys(tasks).forEach(key => registerTask(key, tasks[key]));
 // }
 
-export { withGridItem } from "./withGridItem";
+export { withGridItem } from "./GridLayout";
 export * from "./utils";
 
 export { default as GridLayout } from "./GridLayout";

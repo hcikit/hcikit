@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { withGridItem } from "../withGridItem";
+import { withGridItem } from "../GridLayout";
 import PropTypes from "prop-types";
 
 // TODO: ideally this should prefill as many fields as you would like.
@@ -9,7 +9,7 @@ const GoogleFormQuestionnaire = ({
   prefillParticipant,
   formId,
   participant,
-  taskComplete
+  taskComplete,
 }) => {
   let src = `https://docs.google.com/forms/d/e/${formId}/viewform?embedded=true`;
 
@@ -30,7 +30,7 @@ const GoogleFormQuestionnaire = ({
     <iframe
       style={{
         width: "100%",
-        height: "100vh"
+        height: "100vh",
       }}
       // ref='iframe'
       title="Questionnaire"
@@ -49,7 +49,7 @@ GoogleFormQuestionnaire.propTypes = {
   formId: PropTypes.string,
   taskComplete: PropTypes.func,
   participant: PropTypes.string,
-  prefillParticipant: PropTypes.string
+  prefillParticipant: PropTypes.string,
 };
 
 export default withGridItem(GoogleFormQuestionnaire);

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { withGridItem } from "../withGridItem";
+import { withGridItem } from "../GridLayout";
 import { CenteredDiv } from "../components";
 import PropTypes from "prop-types";
 
@@ -30,7 +30,7 @@ class MouseCenteringTask extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mouseOver: false
+      mouseOver: false,
     };
     this.buttonRef = React.createRef();
   }
@@ -72,7 +72,7 @@ class MouseCenteringTask extends Component {
     );
   }
 
-  handleKey = e => {
+  handleKey = (e) => {
     if (e.key === " " && this.state.mouseOver) {
       this.props.taskComplete();
     }
@@ -84,7 +84,7 @@ class MouseCenteringTask extends Component {
 }
 
 MouseCenteringTask.propTypes = {
-  taskComplete: PropTypes.func
+  taskComplete: PropTypes.func,
 };
 
 export default withGridItem(MouseCenteringTask);

@@ -113,6 +113,26 @@ describe("Experiment", () => {
     expect(experiment.find("button").text()).toEqual(config.children[1].text);
   });
 
+  it("works with empty tasks array", () => {
+    const config = {
+      content: "Hello",
+      children: [
+        {
+          task: "DisplayText",
+        },
+      ],
+    };
+
+    mount(
+      <Experiment
+        tasks={{ DisplayText }}
+        loadState={null}
+        saveState={null}
+        configuration={config}
+      />
+    );
+  });
+
   it("continues to the end", () => {
     experiment.find("button").simulate("click");
     experiment.find("button").simulate("click");
@@ -121,6 +141,42 @@ describe("Experiment", () => {
     expect(experiment.find("h1").text()).toEqual(
       "You've completed the experiment!"
     );
+  });
+
+  it("tasks does not get bigger", () => {
+    let Extender = ({ log, tasks, taskComplete }) => {
+      expect(tasks).toEqual(["Blank"]);
+
+      return <button onClick={taskComplete} />;
+    };
+    let Blank = () => null;
+    const config = {
+      tasks: [],
+      content: "Hello",
+      children: [
+        {
+          tasks: ["Blank"],
+
+          children: [
+            { task: "Extender" },
+            { task: "Extender" },
+            { task: "Extender" },
+            { task: "Extender" },
+          ],
+        },
+      ],
+    };
+
+    let experiment = mount(
+      <Experiment
+        tasks={{ Extender, DisplayText, Blank }}
+        loadState={null}
+        saveState={null}
+        configuration={config}
+      />
+    );
+    experiment.find("button").simulate("click");
+    experiment.find("button").simulate("click");
   });
 
   it("logs definitely don't cause a re-render", () => {

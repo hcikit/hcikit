@@ -3,7 +3,7 @@ import { Stepper, Step, StepLabel } from "@material-ui/core";
 import { __INDEX__ } from "@hcikit/workflow";
 import { withRawConfiguration } from "../core/withRawConfiguration";
 
-import { withGridItem } from "../withGridItem";
+import { withGridItem } from "../GridLayout";
 import PropTypes from "prop-types";
 
 // TODO: should we use a custom prop like the label or should we consider just using the task and then people can include spaces if they'd like?
@@ -23,7 +23,7 @@ let WizardProgress = ({ setWorkflowIndex, configuration }) => {
           <Step
             style={{
               cursor:
-                process.env.NODE_ENV === "development" ? "pointer" : "default"
+                process.env.NODE_ENV === "development" ? "pointer" : "default",
             }}
             onClick={() => {
               if (process.env.NODE_ENV === "development") {
@@ -42,7 +42,7 @@ let WizardProgress = ({ setWorkflowIndex, configuration }) => {
 
 WizardProgress.propTypes = {
   setWorkflowIndex: PropTypes.func,
-  configuration: PropTypes.object
+  configuration: PropTypes.object,
 };
 
 WizardProgress = withGridItem(WizardProgress, "header");

@@ -7,12 +7,12 @@ import {
   FormControlLabel,
   FormControl,
   FormHelperText,
-  FormGroup
+  FormGroup,
 } from "@material-ui/core";
 
 import { CenteredNicePaper } from "../components";
 import PropTypes from "prop-types";
-import { withGridItem } from "../withGridItem";
+import { withGridItem } from "../GridLayout";
 
 // TODO: needs stars beside required consents.
 // TODO: needs testing too, not convinced it works properly
@@ -24,16 +24,16 @@ export class ConsentForm extends React.Component {
     super(props);
     this.state = {};
   }
-  handleChange = name => event => {
+  handleChange = (name) => (event) => {
     this.setState({ [name]: event.target.checked });
   };
 
   requiredFieldNotFilled() {
-    let requiredNotFilled = this.props.questions.map(question =>
+    let requiredNotFilled = this.props.questions.map((question) =>
       question.required ? !this.state[question.label] : true
     );
 
-    return !requiredNotFilled.some(val => !val);
+    return !requiredNotFilled.some((val) => !val);
   }
 
   handleSubmit = () => {
@@ -51,7 +51,7 @@ export class ConsentForm extends React.Component {
         <Markdown>{letter}</Markdown>
         <FormControl required error={error}>
           <FormGroup>
-            {questions.map(question => {
+            {questions.map((question) => {
               return (
                 <FormGroup key={question.label}>
                   <FormControlLabel
@@ -91,11 +91,11 @@ ConsentForm.propTypes = {
   questions: PropTypes.arrayOf(
     PropTypes.shape({
       required: PropTypes.bool,
-      label: PropTypes.string
+      label: PropTypes.string,
     })
   ),
   /**  @ignore */
-  taskComplete: PropTypes.func
+  taskComplete: PropTypes.func,
 };
 
 export default withGridItem(ConsentForm, "task");

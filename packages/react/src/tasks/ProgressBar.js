@@ -5,11 +5,11 @@ import {
   indexToTaskNumber,
   getTotalTasks,
   __INDEX__,
-  getLeafIndex
+  getLeafIndex,
 } from "@hcikit/workflow";
 import { withRawConfiguration } from "../core/withRawConfiguration";
 
-import { withGridItem } from "../withGridItem";
+import { withGridItem } from "../GridLayout";
 import PropTypes from "prop-types";
 
 // BUG: I think there might be an off by one error, check the example
@@ -38,7 +38,7 @@ let ProgressBar = ({ depth = 0, configuration }) => {
 
 ProgressBar.propTypes = {
   configuration: PropTypes.object,
-  depth: PropTypes.number
+  depth: PropTypes.number,
 };
 
 ProgressBar = withGridItem(ProgressBar, "footer");

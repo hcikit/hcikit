@@ -12,7 +12,7 @@ import {
   modifyConfigAtDepth,
   modifyConfig,
   taskComplete,
-  setWorkflowIndex
+  setWorkflowIndex,
 } from "@hcikit/workflow";
 
 import GridLayout from "../GridLayout";
@@ -29,14 +29,14 @@ const TaskRenderer = ({
   Layout = GridLayout,
   ErrorHandler = null,
   forceRemountEveryTask = true,
-  currentProps
+  currentProps,
 }) => {
   if (process.env.NODE_ENV === "development") {
     window.currentProps = currentProps;
     window.configuration = configuration;
   }
 
-  let tasksToRender = currentProps.tasks || [];
+  let tasksToRender = currentProps.tasks ? [...currentProps.tasks] : [];
 
   if (currentProps.task) {
     tasksToRender.push(currentProps.task);
@@ -101,7 +101,7 @@ const TaskRenderer = ({
   return <Layout>{tasksFilled}</Layout>;
 };
 
-const SingleTaskRenderer = React.memo(props => {
+const SingleTaskRenderer = React.memo((props) => {
   let { Task } = props;
   return <Task {...props} />;
   // TODO: this deep equals could be somewhat expensive, maybe not the best solution
@@ -118,10 +118,10 @@ TaskRenderer.propTypes = {
   Layout: PropTypes.node,
   ErrorHandler: PropTypes.node,
   forceRemountEveryTask: PropTypes.bool,
-  currentProps: PropTypes.object
+  currentProps: PropTypes.object,
 };
 
-const mapStateToProps = configuration => {
+const mapStateToProps = (configuration) => {
   return { currentProps: getCurrentProps(configuration), configuration };
 };
 
@@ -130,10 +130,7 @@ const mapDispatchToProps = {
   log,
   modifyConfig,
   modifyConfigAtDepth,
-  setWorkflowIndex
+  setWorkflowIndex,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TaskRenderer);
+export default connect(mapStateToProps, mapDispatchToProps)(TaskRenderer);

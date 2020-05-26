@@ -1,30 +1,38 @@
 import React from "react";
 import PropTypes from "prop-types";
-// const DefaultGridLayout = styled.div`
-//   display: grid;
-//   width: 100vw;
-//   height: 100vh;
-//   grid-template-columns: 1fr;
-//   grid-template-rows: min-content 1fr min-content;
-//   grid-template-areas:
-//     "header"
-//     "task"
-//     "footer";
-// `;
 
-const GridLayout = ({ children }) => {
+export function withGridItem(WrappedComponent, defaultGrid = "task") {
+  let GridItem = (props) => {
+    return (
+      <div style={{ gridArea: props.gridArea || defaultGrid }}>
+        <WrappedComponent {...props} />
+      </div>
+    );
+  };
+  GridItem.propTypes = { gridArea: PropTypes.string };
+
+  return GridItem;
+}
+
+/**
+ *
+ * This component is a layout component that can be passed to an Experiment
+ * using <Experimnent Layout={GridLayout}/>. This is already done by default
+ */
+let GridLayout = ({ children }) => {
   return (
     <div
+      id="grid-layout"
       style={{
         display: "grid",
-        width: "100vw",
-        height: "100vh",
+        width: "100%",
+        height: "100%",
         gridTemplateColumns: "1fr",
         gridTemplateRows: "min-content 1fr min-content",
         gridTemplateAreas: `
       "header"
       "task"
-      "footer"`
+      "footer"`,
       }}
     >
       {children}
@@ -35,8 +43,8 @@ const GridLayout = ({ children }) => {
 GridLayout.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ]).isRequired
+    PropTypes.node,
+  ]).isRequired,
 };
 
 export default GridLayout;

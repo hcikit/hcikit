@@ -4,7 +4,7 @@ import {
   FastForward,
   SkipNext,
   SkipPrevious,
-  FastRewind
+  FastRewind,
 } from "@material-ui/icons";
 import styled from "styled-components";
 import {
@@ -13,7 +13,7 @@ import {
   getPropsFor,
   __INDEX__,
   getLeafIndex,
-  getTotalTasks
+  getTotalTasks,
 } from "@hcikit/workflow";
 import { withRawConfiguration } from "../core/withRawConfiguration";
 
@@ -31,6 +31,10 @@ const StyledSlider = styled(Slider)`
   margin-right: 10px;
 `;
 
+// TODO: move to the bottom right or somewhere instead.
+// TODO: find a better way to represent labels, maybe a way to expand it?
+// TODO: add other things like a reset session or soemthing
+
 export const DevTools = ({ taskComplete, configuration, setWorkflowIndex }) => {
   let [isDragging, setIsDragging] = useState(false);
   let [relativePosition, setRelativePosition] = useState();
@@ -43,7 +47,7 @@ export const DevTools = ({ taskComplete, configuration, setWorkflowIndex }) => {
         // TODO: use bottom right instead.
         setPosition({
           top: e.pageY - relativePosition.y,
-          left: e.pageX - relativePosition.x
+          left: e.pageX - relativePosition.x,
         });
       }
     }
@@ -69,16 +73,16 @@ export const DevTools = ({ taskComplete, configuration, setWorkflowIndex }) => {
 
   const topLevelTasks = configuration.children.map((_, i) => ({
     value: indexToTaskNumber(getLeafIndex([i], configuration), configuration),
-    label: getPropsFor([i], configuration).task
+    label: getPropsFor([i], configuration).task,
   }));
 
   return (
     <StyledCard
-      onMouseDown={e => {
+      onMouseDown={(e) => {
         setIsDragging(true);
         setRelativePosition({
           x: e.pageX - position.left,
-          y: e.pageY - position.top
+          y: e.pageY - position.top,
         });
       }}
       style={position}
@@ -115,7 +119,7 @@ export const DevTools = ({ taskComplete, configuration, setWorkflowIndex }) => {
 DevTools.propTypes = {
   configuration: PropTypes.object,
   setWorkflowIndex: PropTypes.func,
-  taskComplete: PropTypes.func
+  taskComplete: PropTypes.func,
 };
 
 export default withRawConfiguration(DevTools);

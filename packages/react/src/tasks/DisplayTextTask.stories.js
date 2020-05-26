@@ -1,11 +1,18 @@
-import React from "react";
-import { storiesOf } from "@storybook/react";
-import DisplayTextTask from "./DisplayTextTask";
-import { action } from "@storybook/addon-actions";
+import React from 'react';
+import DisplayTextTask from './DisplayTextTask';
+import { action } from '@storybook/addon-actions';
 
-storiesOf("DisplayTextTask", module).add("markdown", () => (
+export default {
+  title: 'DisplayTextTask',
+};
+
+export const Markdown = () => (
   <DisplayTextTask
-    content={"This task can show short text."}
-    taskComplete={action("taskComplete")}
+    content={'This task can show short text.'}
+    taskComplete={action('taskComplete')}
   />
-));
+);
+
+Markdown.story = {
+  name: 'markdown',
+};

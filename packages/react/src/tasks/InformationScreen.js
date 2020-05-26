@@ -4,7 +4,6 @@ import Markdown from "markdown-to-jsx";
 import { Button } from "@material-ui/core";
 import { CenteredNicePaper } from "../components";
 import PropTypes from "prop-types";
-import { withGridItem } from "../withGridItem";
 
 /**
  * Creates a screen with information or instructions and a continue button.
@@ -19,7 +18,7 @@ const InformationScreen = ({
   centerX,
   centerY,
   shortcutEnabled,
-  key = "Enter"
+  key = "Enter",
 }) => {
   useEffect(() => {
     function handleKeyDown(e) {
@@ -52,7 +51,7 @@ InformationScreen.propTypes = {
   withContinue: PropTypes.bool,
   shortcutEnabled: PropTypes.bool,
   /* The KeyboardEvent.key value to use as a shortcut */
-  key: PropTypes.string
+  key: PropTypes.string,
 };
 
-export default withGridItem(InformationScreen);
+export default InformationScreen;

@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@material-ui/core";
 import { CenteredDiv, CenteredText } from "../components";
 import PropTypes from "prop-types";
-import { withGridItem } from "../withGridItem";
+import { withGridItem } from "../GridLayout";
 /**
  * Creates a simple ane small piece of text in the middle of the screen with a continue button.
  */
@@ -22,7 +22,7 @@ const DisplayTextTask = ({ content, taskComplete }) => {
 DisplayTextTask.propTypes = {
   content: PropTypes.string,
   /**  @ignore */
-  taskComplete: PropTypes.func
+  taskComplete: PropTypes.func,
 };
 
 export default withGridItem(DisplayTextTask);
