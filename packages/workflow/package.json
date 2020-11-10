@@ -1,6 +1,6 @@
 {
   "name": "@hcikit/workflow",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "A workflow manager for running experiments using React.",
   "author": "blainelewis1",
   "license": "MIT",
