@@ -39,7 +39,7 @@ export function getCurrentProps(configuration) {
 }
 
 // TODO: should this add an index?
-export function getPropsFor(index, configuration) {
+export function getPropsFor(index, configuration, deleteLogs = true) {
   if (experimentComplete(configuration)) {
     return {};
   }
@@ -59,7 +59,9 @@ export function getPropsFor(index, configuration) {
 
   props = merge(props, configuration);
 
-  delete props.logs;
+  if (deleteLogs) {
+    delete props.logs;
+  }
 
   return props;
 }
@@ -294,5 +296,11 @@ export function* iterateConfig(config) {
 export function iterateConfigWithProps(config) {
   return Array.from(iterateConfig(config)).map((index) =>
     getPropsFor(index, config)
+  );
+}
+
+export function flatten(config) {
+  return Array.from(iterateConfig(config)).map((index) =>
+    getPropsFor(index, config, false)
   );
 }
