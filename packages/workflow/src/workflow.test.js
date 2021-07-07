@@ -139,7 +139,7 @@ describe("getCurrentProps", () => {
 
     logToConfig(config, { hello: "world" });
 
-    // expect(getCurrentProps(config)).not.toHaveProperty("logs");
+    expect(getCurrentProps(config)).not.toHaveProperty("logs");
 
     expect(getCurrentProps(config)).toEqual({
       __INDEX__: [1, 0, 0],
@@ -156,13 +156,15 @@ describe("getCurrentProps", () => {
 
   it("cascades properties from top to bottom", () => {
     config[__INDEX__] = markTaskComplete(config);
-
+    config.inheritance = "top";
+    config.children[1].children[0].children[0].inheritance = "bottom";
     expect(getCurrentProps(config)).toEqual({
       __INDEX__: [1, 0, 0],
       blockprop: "section",
       sectionprop: "section",
       configprop: "section",
       stimulus: "bear",
+      inheritance: "bottom",
       StimulusResponse: {
         hello: "world",
         yolo: "yoyololo",
@@ -450,6 +452,24 @@ describe("getLeafIndex", () => {
   it("works on middle task", () => {
     expect(getLeafIndex([1], config)).toEqual([1, 0, 0]);
   });
+
+  it("works on single level config", () => {
+    expect(getLeafIndex([], {})).toEqual([]);
+  });
+
+  // TODO: do we really expect it to work with empty children...? That doesn't really make sense...
+  // it("works with empty children", () => {
+  //   expect(
+  //     getLeafIndex([], {
+  //       children: [
+  //         {
+  //           children: [],
+  //         },
+  //         { task: "SendLogToServer" },
+  //       ],
+  //     })
+  //   );
+  // });
 });
 
 describe("getTotalTasks", () => {

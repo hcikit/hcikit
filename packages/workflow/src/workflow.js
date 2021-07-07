@@ -22,6 +22,14 @@ export function mergeArraysSpecial(object, source) {
 
 let merge = mergeArraysSpecial;
 
+/**
+ * Finds all of the props for a given task based on which ones start with a lowercase value
+ * and then also the ones that match the task name (which must start with a capital letter).
+ *
+ * @param {object} props
+ * @param {string} task
+ * @returns an object containing all of the props for a given task
+ */
 export function scopePropsForTask(props, task) {
   return merge(
     pickBy(props, (_, k) => k[0] === k[0].toLowerCase()),
@@ -29,34 +37,67 @@ export function scopePropsForTask(props, task) {
   );
 }
 
+/**
+ * Given a configuration, determines whether the experiment is complete or not.
+ *
+ * @param {object} configuration
+ * @returns {boolean} indicates whether an experiment is complete or not.
+ */
 export function experimentComplete(configuration) {
   return configuration[__INDEX__] === COMPLETE;
 }
 
 // TODO: Convert getcurrentprops into a "selector" function
+// TODO: why does it have a default, implicit index of [0]?
+/**
+ * This function reads the index of the configuration and outputs the current props for it.
+ * If there is no index it assumes the experiment is just beginning.
+ *
+ * @param {object} configuration
+ * @returns the props for the current index of an experiment
+ */
 export function getCurrentProps(configuration) {
   return getPropsFor(configuration[__INDEX__] || [0], configuration);
 }
 
 // TODO: should this add an index?
+// TODO: This has a bug, it returns an empty object if the experiment is complete which is a bad thing I think?
+// TODO: should throw an error if it is out of range.
+/**
+ * Gets the props for an experiment with a given index.
+ *
+ * @param {Array<number>} index
+ * @param {*} configuration
+ * @param {boolean} deleteLogs whether to include the logs or not.
+ * @returns the props for a given index on a configuration.
+ */
 export function getPropsFor(index, configuration, deleteLogs = true) {
   if (experimentComplete(configuration)) {
     return {};
   }
 
   let props = {};
+
   // TODO: should this be for a leaf index only?
   index = getLeafIndex(index, configuration);
 
+  // Loop over every level of the index, collecting the props from that level at every step.
+  // We work our way down from the top in order to let properties override each other,
+  // More specific props override other ones.
   for (const nextLevelIndex of index) {
     let properties = Object.assign({}, configuration);
 
+    // We want to ignore the children props.
     delete properties.children;
 
     configuration = configuration.children[nextLevelIndex];
+
+    // This gives us a deep merge, which means changes don't propagate.
     props = merge(props, properties);
   }
 
+  // Because the above for loop changes configuration, this configuration now talks about the bottom
+  // level which we haven't looked at quite yet.
   props = merge(props, configuration);
 
   if (deleteLogs) {
@@ -66,12 +107,28 @@ export function getPropsFor(index, configuration, deleteLogs = true) {
   return props;
 }
 
+/**
+ * Traverses down the tree to the requested index and then returns the config at that index.
+ *
+ * @param {Array<number>} index
+ * @param {*} initialConfig
+ * @returns the requested level of config
+ */
 export function getConfigAtIndex(index, initialConfig) {
+  // TODO: this can return a null object which is a problem.
+
   return index.reduce((config, value) => {
     return config.children[value];
   }, initialConfig);
 }
 
+/**
+ * Finds the nearest leaf index to a starting index by traversing down the tree and always choosing
+ * the first child.
+ * @param {Array<number>} index
+ * @param {*} configuration
+ * @returns {Array<number>} the nearest leaf index.
+ */
 export function getLeafIndex(index, configuration) {
   index = [...index];
 
@@ -81,6 +138,12 @@ export function getLeafIndex(index, configuration) {
   return index;
 }
 
+/**
+ * Returns the next leaf index after this task is complete. The function is slightly misnamed because it doesn't actually change any indices.
+ *
+ * @param {*} configuration
+ * @returns {Array<number>}
+ */
 export function markTaskComplete(configuration) {
   if (experimentComplete(configuration)) {
     return [];
@@ -112,6 +175,13 @@ export function markTaskComplete(configuration) {
   return getLeafIndex(index, configuration);
 }
 
+/**
+ * This function actually places a new log object on the config at the current index, or if the index isn't a leaf it finds the leaf index.
+ *
+ * @param {*} config
+ * @param {*} log
+ * @returns
+ */
 export function logToConfig(config, log) {
   if (experimentComplete(config)) {
     console.error("Attempting to log when the experiment is complete.");
@@ -137,13 +207,23 @@ export function logToConfig(config, log) {
   );
 }
 
-// TODO: this should maybe fail on completed experiments because it cannot log properly.
+/**
+ * Takes the config and actually modifies something about it according to the modified config.
+ * modifiedConfig is an object and all of the properties in it overwrite the current properties at the current leaf index.
+ *
+ * @param {*} config
+ * @param {Array<number>} index
+ * @param {object} modifiedConfig
+ * @param {*} logResult
+ */
 export function modifyConfiguration(
   config,
   index,
   modifiedConfig,
   logResult = true
 ) {
+  // TODO: this should maybe fail on completed experiments because it cannot log properly.
+
   const originalConfig = config;
 
   if (logResult) {
@@ -203,13 +283,22 @@ export function modifyConfigurationAtDepth(config, newConfig, depth) {
   modifyConfiguration(config, indexToEdit, newConfig);
 }
 
-// TODO: this can be replaced with iterate config maybe?
+/**
+ * Takes an index and tells us what task number it is. This is useful for progress bars.
+ * One trick to using this is we can truncate a config and just take one of the children, then
+ * that gives us the progress within a certain section of an experiment.
+ * @param {*} index
+ * @param {*} config
+ * @returns
+ */
 export function indexToTaskNumber(index, config) {
+  // TODO: this can be replaced with iterate config maybe?
   // TODO: maybe index can be converted to a leaf node
-  // TODO: this adds lots of nodes to a list which seems slow.. this might actually be best as a recursive function :(
   let number = 0;
   let toSearch = [[]];
 
+  // Basically just do a depth first search until we find the correct index.
+  // We can't know where the leaf nodes are so we need to search every node.
   while (toSearch.length !== 0) {
     let searchingIndex = toSearch.pop();
 
@@ -229,8 +318,15 @@ export function indexToTaskNumber(index, config) {
   }
 }
 
-// TODO: this can be replaced with iterate config maybe?
+/**
+ * Takes a task number and returns an index. This is useful for dev tools because it can let us
+ * move forward in the experiment.
+ * @param {*} taskNumber
+ * @param {*} config
+ * @returns
+ */
 export function taskNumberToIndex(taskNumber, config) {
+  // TODO: this can be replaced with iterate config maybe?
   let number = 0;
   let toSearch = [[]];
 
@@ -252,8 +348,8 @@ export function taskNumberToIndex(taskNumber, config) {
   }
 }
 
-// TODO: this can be replaced with iterate config maybe?
 export function getTotalTasks(config) {
+  // TODO: this can be replaced with iterate config maybe? Could be a one liner, just iterateConfig then return the length of it.
   let tasks = 0;
   let toSearch = [[]];
 
@@ -273,6 +369,7 @@ export function getTotalTasks(config) {
   return tasks;
 }
 
+// TODO: why is this even a generator... This is silly it adds so much complexity, it should just return all of the indices. I guess the upside is for searches. If it is a generator we can just search until we found something, which is really nice for some cases.
 // TODO: maybe this function should just return all of the indices?
 export function* iterateConfig(config) {
   let toSearch = [[]];
