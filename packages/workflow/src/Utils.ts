@@ -2,7 +2,7 @@
  * Shuffles array in place. ES6 version
  * @param {Array} a An array containing the items.
  */
-export function shuffle(a) {
+export function shuffle(a: Array<any>) {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
@@ -14,7 +14,7 @@ export function shuffle(a) {
  * Returns a random choice from the array.
  * @param {Array} a An array containing the options.
  */
-export function randomChoice(a) {
+export function randomChoice(a: Array<any>) {
   return a[Math.floor(Math.random() * a.length)];
 }
 
@@ -22,8 +22,8 @@ export function randomChoice(a) {
  * Returns a random choice from the array.
  * @param {Array} a An array containing the options.
  */
-export function randomChoiceNoReplacement(a) {
-  const index = [Math.floor(Math.random() * a.length)];
+export function randomChoiceNoReplacement(a: Array<any>) {
+  const index = Math.floor(Math.random() * a.length);
   const choice = a[index];
   a.splice(index, 1);
 
@@ -33,7 +33,7 @@ export function randomChoiceNoReplacement(a) {
 /**
  * Returns a random number between min (inclusive) and max (exclusive)
  */
-export function randInt(min, max) {
+export function randInt(min: number, max: number) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min; // The maximum is exclusive and the minimum is inclusive
@@ -43,7 +43,7 @@ export function randInt(min, max) {
  * Generates a random GUID.
  */
 export function uuidv4() {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
     var r = (Math.random() * 16) | 0;
 
     var v = c === "x" ? r : (r & 0x3) | 0x8;
@@ -55,7 +55,5 @@ export function uuidv4() {
  * Generates a random string.
  */
 export function randomString() {
-  return Math.random()
-    .toString(36)
-    .substring(2);
+  return Math.random().toString(36).substring(2);
 }
