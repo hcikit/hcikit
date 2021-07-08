@@ -4,8 +4,7 @@
   "workspaces": [
     "packages/workflow",
     "packages/react",
-    "example",
-    "replay"
+    "example"
   ],
   "scripts": {
     "lint": "eslint example/src packages/react/src packages/workflow/src",

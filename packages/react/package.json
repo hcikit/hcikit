@@ -1,6 +1,6 @@
 {
   "name": "@hcikit/react",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.2",
   "description": "An experiment runner with a set of pre-built experiment components for running hci experiments",
   "author": "blainelewis1",
   "license": "MIT",
@@ -53,7 +53,7 @@
     "react": "^16.13.1"
   },
   "dependencies": {
-    "@hcikit/workflow": "1.0.0-alpha.0",
+    "@hcikit/workflow": "^1.0.0-alpha.2",
     "lodash-es": "^4.17.15",
     "markdown-to-jsx": "^6.11.1",
     "prop-types": "^15.7.2",
