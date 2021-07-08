@@ -1,15 +1,12 @@
 import { mergeWith, pickBy, isEqual, pick } from "lodash-es";
 
-type ExperimentIndex = CompleteExperiment | IncompleteExperiment;
-
-type CompleteExperiment = "__COMPLETE__";
-type IncompleteExperiment = Array<number>;
+export type ExperimentIndex = Array<number>;
 
 interface LogRequired {
   timestamp: number;
 }
 
-type Log = LogRequired & {};
+export type Log = LogRequired & any;
 
 interface ConfigurationRequired {
   [__INDEX__]?: ExperimentIndex;
@@ -21,23 +18,16 @@ interface ConfigurationRequired {
   logs?: Array<Log>;
 }
 
-type Configuration = ConfigurationRequired & {};
+// TODO: I need to work on this type a lot
+export type Configuration = ConfigurationRequired & any;
 
 // TODO: mergeWith is very slow which slows everything down with lots of onlogs.
 // TODO: document everything here...
 // TODO: should this work with a config with no children? Does it work with no children?
-
 // TODO: some of these functions I can maybe use generators to reduce computation and make things faster?
 // TODO: some of these should definitely be immutable but aren't... I'd rather everything here is immutable
 
-// TODO: configuration => config, order should be standardised so the config always comes first.
-
-type __INDEX__ = "__INDEX__";
-
 export const __INDEX__ = "__INDEX__";
-
-// TODO: Why isn't complete experiment just an empty list?
-const COMPLETE: CompleteExperiment = "__COMPLETE__";
 
 export function mergeArraysSpecial(object: object, source: object) {
   return mergeWith(object, source, (value, srcValue) => {
@@ -71,28 +61,10 @@ export function scopePropsForTask(props: Object, task: string) {
  * @returns {boolean} indicates whether an experiment is complete or not.
  */
 // TODO: change boolean to something like
-export function experimentComplete(
-  configuration: Configuration
-): configuration is Omit<Configuration, __INDEX__> & {
-  [__INDEX__]: CompleteExperiment;
-} {
-  return configuration[__INDEX__] === COMPLETE;
+export function experimentComplete(configuration: Configuration): boolean {
+  return configuration[__INDEX__]?.length === 0;
 }
 
-/**
- * Detemines if a config is complete or not.
- *
- * @param {ExperimentIndex} index
- */
-// TODO: change boolean to something like Configuration[__INDEX__] is CompleteExperiment
-export function indexComplete(
-  index: ExperimentIndex
-): index is CompleteExperiment {
-  return index === "__COMPLETE__";
-}
-
-// TODO: Convert getcurrentprops into a "selector" function
-// TODO: why does it have a default, implicit index of [0]?
 /**
  * This function reads the index of the configuration and outputs the current props for it.
  * If there is no index it assumes the experiment is just beginning.
@@ -100,12 +72,10 @@ export function indexComplete(
  * @param {Configuration} configuration
  * @returns the props for the current index of an experiment
  */
-export function getCurrentProps(configuration: Configuration): Object {
+export function getCurrentProps(configuration: Configuration): Configuration {
   return getPropsFor(configuration[__INDEX__] || [0], configuration);
 }
 
-// TODO: should this add an index?
-// TODO: This has a bug, it returns an empty object if the experiment is complete which is a bad thing I think?
 // TODO: should throw an error if it is out of range.
 /**
  * Gets the props for an experiment with a given index.
@@ -126,7 +96,6 @@ export function getPropsFor(
 
   let props: Configuration = {};
 
-  // TODO: should this be for a leaf index only?
   index = getLeafIndex(index, configuration);
 
   // Loop over every level of the index, collecting the props from that level at every step.
@@ -166,12 +135,6 @@ export function getConfigAtIndex(
   index: ExperimentIndex,
   initialConfig: Configuration
 ): Configuration {
-  // TODO: this can return a null object which is a problem.
-
-  if (indexComplete(index)) {
-    return {};
-  }
-
   return index.reduce((config, value) => {
     return config.children[value];
   }, initialConfig);
@@ -188,9 +151,11 @@ export function getLeafIndex(
   index: ExperimentIndex,
   configuration: Configuration
 ): ExperimentIndex {
-  if (indexComplete(index)) {
-    return index;
-  }
+  // TODO: this is kind of at odds with other code because if you pass in an empty index (complete),
+  // then one might expect it to return back a still complete experiment. Modify experiment and modify experiment at depth rely on this odd behaviour though.
+  // if (index.length === 0) {
+  //   return index;
+  // }
 
   index = [...index];
 
@@ -211,14 +176,14 @@ export function markTaskComplete(
 ): ExperimentIndex {
   let index: ExperimentIndex = [0];
 
-  if (configuration[__INDEX__] && !experimentComplete(configuration)) {
+  if (configuration[__INDEX__]) {
     index = [...configuration[__INDEX__]];
   }
 
   index = getLeafIndex(index, configuration);
 
-  if (indexComplete(index)) {
-    return "__COMPLETE__";
+  if (index.length === 0) {
+    return [];
   }
 
   let newIndexValue;
@@ -233,10 +198,6 @@ export function markTaskComplete(
     }
   } while (index.length);
 
-  if (index.length === 0) {
-    return COMPLETE;
-  }
-
   return getLeafIndex(index, configuration);
 }
 
@@ -244,10 +205,10 @@ export function markTaskComplete(
  * This function actually places a new log object on the config at the current index, or if the index isn't a leaf it finds the leaf index.
  *
  * @param {Configuration} config
- * @param {Object} log
+ * @param {Log | any} log
  * @returns
  */
-export function logToConfig(config: Configuration, log: object) {
+export function logToConfig(config: Configuration, log: Log | any) {
   if (experimentComplete(config)) {
     console.error("Attempting to log when the experiment is complete.");
     return;
@@ -261,13 +222,13 @@ export function logToConfig(config: Configuration, log: object) {
 
   modifyConfiguration(
     config,
-    index,
     {
       logs: [
         ...(getConfigAtIndex(index, config).logs || []),
         { ...log, timestamp: Date.now() },
       ],
     },
+    index,
     false
   );
 }
@@ -287,7 +248,7 @@ export function modifyConfiguration(
   index: ExperimentIndex,
   logResult: boolean = true
 ) {
-  if (indexComplete(index)) {
+  if (index.length === 0) {
     // TODO: should log an error or something here
     console.error(
       "Attempted to modify an experiment that was already complete."
@@ -338,7 +299,7 @@ export function modifyConfiguration(
 export function modifyConfigurationAtDepth(
   config: Configuration,
   newConfig: object,
-  depth: number
+  depth?: number
 ) {
   if (experimentComplete(config)) {
     console.error(

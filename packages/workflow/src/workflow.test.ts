@@ -14,10 +14,11 @@ import {
   iterateConfigWithProps,
   modifyConfigurationAtDepth,
   modifyConfiguration,
+  Configuration,
 } from "./workflow";
 import deepFreeze from "deep-freeze";
 
-const configuration = {
+const configuration: Configuration = {
   configprop: "section",
   StimulusResponse: {
     hello: "world",
@@ -59,7 +60,7 @@ const configuration = {
   ],
 };
 
-let config;
+let config: Configuration;
 
 beforeEach(() => {
   config = JSON.parse(JSON.stringify(configuration));
@@ -190,7 +191,7 @@ describe("getCurrentProps", () => {
   });
 
   it("lists get over written", () => {
-    let config = {
+    let config: Configuration = {
       tasks: ["hello", "world"],
       children: [{ tasks: ["foo", "bar"] }],
     };
@@ -321,7 +322,7 @@ describe("log", () => {
 });
 
 describe("getConfigAtIndex", () => {
-  it("empty returns everything", () => {
+  it("empty returns nothing", () => {
     expect(getConfigAtIndex([], config)).toEqual(config);
   });
 
@@ -386,7 +387,7 @@ describe("markTaskComplete", () => {
     expect(config[__INDEX__]).toEqual([1, 1, 1]);
     config[__INDEX__] = markTaskComplete(config);
 
-    expect(config[__INDEX__]).toEqual("__COMPLETE__");
+    expect(config[__INDEX__]).toEqual([]);
     expect(getCurrentProps(config)).toEqual({});
   });
 
@@ -397,21 +398,21 @@ describe("markTaskComplete", () => {
     config[__INDEX__] = markTaskComplete(config);
     config[__INDEX__] = markTaskComplete(config);
 
-    expect(config[__INDEX__]).toEqual("__COMPLETE__");
+    expect(config[__INDEX__]).toEqual([]);
     expect(getCurrentProps(config)).toEqual({});
   });
 });
 
 describe("indexToTaskNumber", () => {
   it("works on first task", () => {
-    expect(indexToTaskNumber([0], config)).toEqual(0);
+    expect(indexToTaskNumber(config, [0])).toEqual(0);
   });
   it("works on last task", () => {
-    expect(indexToTaskNumber([1, 1, 1], config)).toEqual(4);
+    expect(indexToTaskNumber(config, [1, 1, 1])).toEqual(4);
   });
   it("works on middle task", () => {
-    expect(indexToTaskNumber([1, 0, 1], config)).toEqual(2);
-    expect(indexToTaskNumber([1, 1, 0], config)).toEqual(3);
+    expect(indexToTaskNumber(config, [1, 0, 1])).toEqual(2);
+    expect(indexToTaskNumber(config, [1, 1, 0])).toEqual(3);
   });
 
   it("works on a real config", () => {
@@ -422,21 +423,21 @@ describe("indexToTaskNumber", () => {
         { task: "World", children: [{}, {}, {}] },
       ],
     };
-    expect(indexToTaskNumber([0, 1], config)).toEqual(1);
-    expect(indexToTaskNumber([1, 2], config)).toEqual(5);
+    expect(indexToTaskNumber(config, [0, 1])).toEqual(1);
+    expect(indexToTaskNumber(config, [1, 2])).toEqual(5);
   });
 });
 
 describe("taskNumberToIndex", () => {
   it("works on first task", () => {
-    expect(taskNumberToIndex(0, config)).toEqual([0]);
+    expect(taskNumberToIndex(config, 0)).toEqual([0]);
   });
   it("works on last task", () => {
-    expect(taskNumberToIndex(4, config)).toEqual([1, 1, 1]);
+    expect(taskNumberToIndex(config, 4)).toEqual([1, 1, 1]);
   });
   it("works on middle task", () => {
-    expect(taskNumberToIndex(2, config)).toEqual([1, 0, 1]);
-    expect(taskNumberToIndex(3, config)).toEqual([1, 1, 0]);
+    expect(taskNumberToIndex(config, 2)).toEqual([1, 0, 1]);
+    expect(taskNumberToIndex(config, 3)).toEqual([1, 1, 0]);
   });
 });
 
@@ -489,7 +490,7 @@ describe("getTotalTasks", () => {
   });
 
   it("works on a real config", () => {
-    let config = {
+    let config: Configuration = {
       tasks: ["DevTools"],
       nextLevel: "section",
       fullProgress: true,
@@ -673,7 +674,7 @@ describe("modifyConfigurationAtDepth", () => {
 
 describe("modifyConfiguration", () => {
   it("overwrites existing properties", () => {
-    modifyConfiguration(config, [], { configprop: "section" });
+    modifyConfiguration(config, { configprop: "section" }, []);
     expect(config.configprop).toEqual("section");
   });
   it("works in place", () => {
@@ -682,7 +683,7 @@ describe("modifyConfiguration", () => {
 
     deepFreeze(config);
 
-    modifyConfiguration(c, [1, 0, 0], { hello: "world" });
+    modifyConfiguration(c, { hello: "world" }, [1, 0, 0]);
 
     expect(config).not.toBe(c);
     expect(config.children).not.toBe(c.children);
@@ -702,15 +703,15 @@ describe("modifyConfiguration", () => {
   });
 
   it("modifies top level", () => {
-    modifyConfiguration(config, [], { hello: "world" });
+    modifyConfiguration(config, { hello: "world" }, []);
     expect(config.hello).toEqual("world");
   });
   it("modifies leaf", () => {
-    modifyConfiguration(config, [1, 0, 0], { hello: "world" });
+    modifyConfiguration(config, { hello: "world" }, [1, 0, 0]);
     expect(config.children[1].children[0].children[0].hello).toEqual("world");
   });
   it("modifies inner", () => {
-    modifyConfiguration(config, [1, 0], { hello: "world" });
+    modifyConfiguration(config, { hello: "world" }, [1, 0]);
     expect(config.children[1].children[0].hello).toEqual("world");
   });
 
@@ -718,7 +719,7 @@ describe("modifyConfiguration", () => {
     let patch = Date.now;
     Date.now = () => 10;
 
-    modifyConfiguration(config, [1, 0], { hello: "world", stimulus: "hi" });
+    modifyConfiguration(config, { hello: "world", stimulus: "hi" }, [1, 0]);
 
     expect(config.children[0].logs[0]).toEqual({
       eventType: "CONFIG_MODIFICATION",
@@ -734,7 +735,7 @@ describe("modifyConfiguration", () => {
   it("works", () => {
     config[__INDEX__] = markTaskComplete(config);
 
-    modifyConfiguration(config, [1, 0], { hello: "world" });
+    modifyConfiguration(config, { hello: "world" }, [1, 0]);
     expect(config.children[1].children[0].hello).toEqual("world");
   });
 });
