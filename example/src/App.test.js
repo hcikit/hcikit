@@ -1,9 +1,68 @@
 import React from "react";
-import { shallow } from "enzyme";
 import App from "./App";
+import { render, screen } from "@testing-library/react";
 
 it("renders without crashing", () => {
-  shallow(<App />);
-});
+  render(<App />);
+  screen.getByText(/continue/i).click();
+  screen.getByText(/continue/i).click();
+  screen.getByRole("checkbox").click();
+  screen.getByText(/submit/i).click();
+  screen.getByText(/continue/i).click();
 
-// TODO: the above is a good smoke test, but ideally we would also do more like making sure we can do an end to end run of an experiment and get the expected logs out...
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/continue/i, { selector: "button > span" }).click();
+
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/continue/i, { selector: "button > span" }).click();
+
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/continue/i, { selector: "button > span" }).click();
+
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/continue/i, { selector: "button > span" }).click();
+
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/\+/i).click();
+  screen.getByText(/continue/i, { selector: "button > span" }).click();
+
+  screen.getByText(/\+/i).click();
+  screen.getByText(/continue/i, { selector: "button > span" }).click();
+
+  screen.getByText(/You've completed the experiment/i);
+});
