@@ -3,7 +3,7 @@ import {
   logToConfig,
   __INDEX__,
   modifyConfiguration,
-  modifyConfigurationAtDepth
+  modifyConfigurationAtDepth,
 } from "./workflow";
 
 import {
@@ -11,7 +11,7 @@ import {
   TASK_COMPLETE,
   MODIFY_CONFIG_AT_DEPTH,
   MODIFY_CONFIG,
-  SET_WORKFLOW_INDEX
+  SET_WORKFLOW_INDEX,
 } from "./actions";
 
 const configuration = (state = { events: [] }, action) => {
@@ -22,7 +22,7 @@ const configuration = (state = { events: [] }, action) => {
     case SET_WORKFLOW_INDEX:
       return {
         ...state,
-        [__INDEX__]: action.value
+        [__INDEX__]: action.value,
       };
     case LOG:
       state = { ...state };

@@ -18,6 +18,8 @@ import {
 } from "./workflow";
 import deepFreeze from "deep-freeze";
 
+// TODO: Should deep freeze more things
+
 const configuration: Configuration = {
   configprop: "section",
   StimulusResponse: {
@@ -72,7 +74,7 @@ afterEach(() => {
 
 describe("mergeArraysSpecial", () => {
   it("Overwrites arrays entirely.", () => {
-    let merged = mergeArraysSpecial(
+    const merged = mergeArraysSpecial(
       { tasks: ["hello", "world"] },
       { tasks: ["foo", "bar"] }
     );
@@ -191,11 +193,11 @@ describe("getCurrentProps", () => {
   });
 
   it("lists get over written", () => {
-    let config: Configuration = {
+    const config: Configuration = {
       tasks: ["hello", "world"],
       children: [{ tasks: ["foo", "bar"] }],
     };
-    let props = getCurrentProps(config);
+    const props = getCurrentProps(config);
 
     expect(props.tasks).toEqual(["foo", "bar"]);
   });
@@ -203,7 +205,8 @@ describe("getCurrentProps", () => {
 
 describe("log", () => {
   it("doesn't log when the experiment is finished", () => {
-    let spy = jest.spyOn(console, "error").mockImplementation(() => {});
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const spy = jest.spyOn(console, "error").mockImplementation(() => {});
 
     config[__INDEX__] = markTaskComplete(config);
     config[__INDEX__] = markTaskComplete(config);
@@ -220,7 +223,7 @@ describe("log", () => {
   });
 
   it("logs strings properly", () => {
-    let patch = Date.now;
+    const patch = Date.now;
     Date.now = () => 10;
 
     logToConfig(config, "hello world");
@@ -233,7 +236,7 @@ describe("log", () => {
   });
 
   it("logs numbers properly", () => {
-    let patch = Date.now;
+    const patch = Date.now;
     Date.now = () => 10;
 
     logToConfig(config, 10);
@@ -246,7 +249,7 @@ describe("log", () => {
   });
 
   it("logs correctly with timestamp", () => {
-    let patch = Date.now;
+    const patch = Date.now;
     Date.now = () => 10;
 
     logToConfig(config, { hello: "world" });
@@ -259,7 +262,7 @@ describe("log", () => {
   });
 
   it("logs after advancing correct place", () => {
-    let patch = Date.now;
+    const patch = Date.now;
     let i = 10;
     Date.now = () => i++;
 
@@ -296,7 +299,7 @@ describe("log", () => {
   });
 
   it("log replaces the required objects", () => {
-    let c = { ...config };
+    const c = { ...config };
     c[__INDEX__] = markTaskComplete(c);
 
     deepFreeze(config);
@@ -416,7 +419,7 @@ describe("indexToTaskNumber", () => {
   });
 
   it("works on a real config", () => {
-    let config = {
+    const config = {
       __INDEX__: [0, 1],
       children: [
         { task: "Hello", children: [{}, {}, {}] },
@@ -443,7 +446,7 @@ describe("taskNumberToIndex", () => {
 
 describe("getLeafIndex", () => {
   it("works with root task", () => {
-    expect(getLeafIndex([], config)).toEqual([0]);
+    expect(getLeafIndex([], config)).toEqual([]);
   });
 
   it("works with leaf task", () => {
@@ -479,7 +482,7 @@ describe("getTotalTasks", () => {
   });
 
   it("really works on a real config", () => {
-    let config = {
+    const config = {
       __INDEX__: [0, 1],
       children: [
         { task: "Hello", children: [{}, {}, {}] },
@@ -490,7 +493,7 @@ describe("getTotalTasks", () => {
   });
 
   it("works on a real config", () => {
-    let config: Configuration = {
+    const config: Configuration = {
       tasks: ["DevTools"],
       nextLevel: "section",
       fullProgress: true,
@@ -649,7 +652,8 @@ describe("modifyConfigurationAtDepth", () => {
   });
 
   it("fails on completed experiment", () => {
-    let spy = jest.spyOn(console, "error").mockImplementation(() => {});
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const spy = jest.spyOn(console, "error").mockImplementation(() => {});
 
     config[__INDEX__] = markTaskComplete(config);
     config[__INDEX__] = markTaskComplete(config);
@@ -678,7 +682,7 @@ describe("modifyConfiguration", () => {
     expect(config.configprop).toEqual("section");
   });
   it("works in place", () => {
-    let c = { ...config };
+    const c = { ...config };
     c[__INDEX__] = markTaskComplete(c);
 
     deepFreeze(config);
@@ -716,7 +720,7 @@ describe("modifyConfiguration", () => {
   });
 
   it("logs the modification", () => {
-    let patch = Date.now;
+    const patch = Date.now;
     Date.now = () => 10;
 
     modifyConfiguration(config, { hello: "world", stimulus: "hi" }, [1, 0]);

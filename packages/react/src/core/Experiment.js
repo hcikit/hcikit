@@ -21,7 +21,7 @@ export const loadStateFromSessionStorage = () => {
   return undefined;
 };
 
-export const saveStateToSessionStorage = throttle(state => {
+export const saveStateToSessionStorage = throttle((state) => {
   try {
     window.sessionStorage.setItem(STATE_KEY, JSON.stringify(state));
   } catch (err) {
@@ -38,7 +38,8 @@ let Experiment = ({
   // TODO: not sure how to create different sessions for the same task.
 
   let [store, setStore] = useState();
-
+  console.log(setStore);
+  console.log({ store });
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     let storedState;
@@ -67,7 +68,7 @@ Experiment.propTypes = {
   configuration: PropTypes.object.isRequired,
   loadState: PropTypes.func,
   saveState: PropTypes.func,
-  tasks: PropTypes.objectOf(PropTypes.elementType)
+  tasks: PropTypes.objectOf(PropTypes.elementType),
 };
 
 export default Experiment;

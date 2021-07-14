@@ -1,4 +1,4 @@
-import { mergeWith, pickBy, isEqual, pick } from "lodash-es";
+import { mergeWith, pickBy, isEqual, pick } from "lodash";
 
 export type ExperimentIndex = Array<number>;
 
@@ -6,38 +6,42 @@ interface LogRequired {
   timestamp: number;
 }
 
-export type Log = LogRequired & any;
+export type Log = LogRequired & Record<string, unknown>;
 
-interface ConfigurationRequired {
+export const __INDEX__ = "__INDEX__";
+
+interface ConfigurationRequired<T> {
   [__INDEX__]?: ExperimentIndex;
-  children?: Array<Configuration>;
+  children?: Array<Configuration<T>>;
 
-  task?: string;
-  tasks?: Array<string>;
+  task?: keyof T | string;
+  tasks?: Array<keyof T | string>;
 
   logs?: Array<Log>;
 }
 
-// TODO: I need to work on this type a lot
-export type Configuration = ConfigurationRequired & any;
+export type Configuration<T = Record<string, unknown>> =
+  ConfigurationRequired<T> &
+    Partial<Record<keyof T, unknown>> &
+    Record<string, unknown>;
 
 // TODO: mergeWith is very slow which slows everything down with lots of onlogs.
-// TODO: document everything here...
 // TODO: should this work with a config with no children? Does it work with no children?
 // TODO: some of these functions I can maybe use generators to reduce computation and make things faster?
 // TODO: some of these should definitely be immutable but aren't... I'd rather everything here is immutable
 
-export const __INDEX__ = "__INDEX__";
-
-export function mergeArraysSpecial(object: object, source: object) {
-  return mergeWith(object, source, (value, srcValue) => {
+export function mergeArraysSpecial(
+  object: Record<string, unknown>,
+  source: Record<string, unknown>
+): Record<string, unknown> {
+  return mergeWith(object, source, (value: unknown, srcValue: unknown) => {
     if (Array.isArray(value)) {
       return srcValue;
     }
   });
 }
 
-let merge = mergeArraysSpecial;
+const merge = mergeArraysSpecial;
 
 /**
  * Finds all of the props for a given task based on which ones start with a lowercase value
@@ -47,10 +51,14 @@ let merge = mergeArraysSpecial;
  * @param {string} task
  * @returns an object containing all of the props for a given task
  */
-export function scopePropsForTask(props: Object, task: string) {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function scopePropsForTask(
+  props: Record<string, unknown>,
+  task: string
+): Record<string, unknown> {
   return merge(
-    pickBy(props, (_, k) => k[0] === k[0].toLowerCase()),
-    props[task]
+    pickBy(props, (_: unknown, k: string) => k[0] === k[0].toLowerCase()),
+    props[task] as Record<string, unknown>
   );
 }
 
@@ -73,7 +81,7 @@ export function experimentComplete(configuration: Configuration): boolean {
  * @returns the props for the current index of an experiment
  */
 export function getCurrentProps(configuration: Configuration): Configuration {
-  return getPropsFor(configuration[__INDEX__] || [0], configuration);
+  return getPropsFor(getCurrentIndex(configuration), configuration);
 }
 
 // TODO: should throw an error if it is out of range.
@@ -88,8 +96,8 @@ export function getCurrentProps(configuration: Configuration): Configuration {
 export function getPropsFor(
   index: ExperimentIndex,
   configuration: Configuration,
-  deleteLogs: boolean = true
-): object {
+  deleteLogs = true
+): Record<string, unknown> {
   if (experimentComplete(configuration)) {
     return {};
   }
@@ -102,10 +110,14 @@ export function getPropsFor(
   // We work our way down from the top in order to let properties override each other,
   // More specific props override other ones.
   for (const nextLevelIndex of index) {
-    let properties = Object.assign({}, configuration);
+    const properties = Object.assign({}, configuration);
 
     // We want to ignore the children props.
     delete properties.children;
+
+    if (!configuration.children) {
+      break;
+    }
 
     configuration = configuration.children[nextLevelIndex];
 
@@ -135,9 +147,11 @@ export function getConfigAtIndex(
   index: ExperimentIndex,
   initialConfig: Configuration
 ): Configuration {
-  return index.reduce((config, value) => {
-    return config.children[value];
-  }, initialConfig);
+  return (
+    index.reduce<Configuration | undefined>((config, value) => {
+      return config?.children?.[value];
+    }, initialConfig) || {}
+  );
 }
 
 /**
@@ -151,17 +165,16 @@ export function getLeafIndex(
   index: ExperimentIndex,
   configuration: Configuration
 ): ExperimentIndex {
-  // TODO: this is kind of at odds with other code because if you pass in an empty index (complete),
-  // then one might expect it to return back a still complete experiment. Modify experiment and modify experiment at depth rely on this odd behaviour though.
-  // if (index.length === 0) {
-  //   return index;
-  // }
+  if (index.length === 0) {
+    return index;
+  }
 
   index = [...index];
 
   while ("children" in getConfigAtIndex(index, configuration)) {
     index.push(0);
   }
+
   return index;
 }
 
@@ -174,23 +187,32 @@ export function getLeafIndex(
 export function markTaskComplete(
   configuration: Configuration
 ): ExperimentIndex {
-  let index: ExperimentIndex = [0];
-
-  if (configuration[__INDEX__]) {
-    index = [...configuration[__INDEX__]];
-  }
-
-  index = getLeafIndex(index, configuration);
-
-  if (index.length === 0) {
+  if (experimentComplete(configuration)) {
     return [];
   }
+
+  let index = getCurrentIndex(configuration);
+
+  index = getLeafIndex(index, configuration);
 
   let newIndexValue;
 
   do {
-    newIndexValue = index.pop() + 1;
-    let currentChildren = getConfigAtIndex(index, configuration).children;
+    const nextIndexValue = index.pop();
+
+    if (nextIndexValue === undefined) {
+      break;
+    }
+
+    newIndexValue = 1 + nextIndexValue;
+    const currentChildren = getConfigAtIndex(index, configuration).children;
+
+    if (!currentChildren) {
+      console.error(
+        "Error advancing task. The config has changed or something went wrong"
+      );
+      return getCurrentIndex(configuration);
+    }
 
     if (newIndexValue < currentChildren.length) {
       index.push(newIndexValue);
@@ -208,13 +230,13 @@ export function markTaskComplete(
  * @param {Log | any} log
  * @returns
  */
-export function logToConfig(config: Configuration, log: Log | any) {
+export function logToConfig(config: Configuration, log: unknown): void {
   if (experimentComplete(config)) {
     console.error("Attempting to log when the experiment is complete.");
     return;
   }
 
-  let index = config[__INDEX__] || getLeafIndex([0], config);
+  const index = config[__INDEX__] || getLeafIndex([0], config);
 
   if (typeof log !== "object") {
     log = { value: log };
@@ -225,7 +247,8 @@ export function logToConfig(config: Configuration, log: Log | any) {
     {
       logs: [
         ...(getConfigAtIndex(index, config).logs || []),
-        { ...log, timestamp: Date.now() },
+        // eslint-disable-next-line @typescript-eslint/ban-types
+        { ...(log as object), timestamp: Date.now() },
       ],
     },
     index,
@@ -244,24 +267,24 @@ export function logToConfig(config: Configuration, log: Log | any) {
  */
 export function modifyConfiguration(
   config: Configuration,
-  modifiedConfig: object,
+  modifiedConfig: Record<string, unknown>,
   index: ExperimentIndex,
-  logResult: boolean = true
-) {
-  if (index.length === 0) {
-    // TODO: should log an error or something here
-    console.error(
-      "Attempted to modify an experiment that was already complete."
-    );
-    return;
-  }
+  logResult = true
+): void {
+  // if (index.length === 0) {
+  //   // TODO: should log an error or something here
+  //   console.error(
+  //     "Attempted to modify an experiment that was already complete."
+  //   );
+  //   return;
+  // }
 
   // TODO: this should maybe fail on completed experiments because it cannot log properly.
 
   const originalConfig = config;
 
   if (logResult) {
-    let configToEdit = getConfigAtIndex(index, config);
+    const configToEdit = getConfigAtIndex(index, config);
 
     logToConfig(originalConfig, {
       from: pick(configToEdit, Object.keys(modifiedConfig)),
@@ -272,7 +295,14 @@ export function modifyConfiguration(
   }
 
   for (let i = 0; i < index.length; i++) {
-    let nextLevelIndex = index[i];
+    const nextLevelIndex = index[i];
+
+    if (!config.children) {
+      console.error(
+        "There was an error modifying the config, the index did not exist."
+      );
+      return;
+    }
 
     config.children = [
       ...config.children.slice(0, nextLevelIndex),
@@ -288,6 +318,17 @@ export function modifyConfiguration(
   Object.assign(config, modifiedConfig);
 }
 
+function getCurrentIndex(config: Configuration): ExperimentIndex {
+  let index: ExperimentIndex = [0];
+
+  const myInd: ExperimentIndex | undefined = config[__INDEX__];
+
+  if (myInd !== undefined) {
+    index = [...myInd];
+  }
+
+  return index;
+}
 /**
  *
  * Edits a config by adding all of newConfig values at a certain depth. Depth works like slice (negative values start from the end, positive from the start)
@@ -298,9 +339,9 @@ export function modifyConfiguration(
  */
 export function modifyConfigurationAtDepth(
   config: Configuration,
-  newConfig: object,
+  newConfig: Record<string, unknown>,
   depth?: number
-) {
+): void {
   if (experimentComplete(config)) {
     console.error(
       "Attempting to modify config when the experiment is complete."
@@ -308,14 +349,11 @@ export function modifyConfigurationAtDepth(
     return;
   }
 
-  let index: ExperimentIndex = [0];
-  if (config[__INDEX__]) {
-    index = [...config[__INDEX__]];
-  }
+  let index = getCurrentIndex(config);
 
   index = getLeafIndex(index, config);
 
-  let indexToEdit: ExperimentIndex = index.slice(0, depth);
+  const indexToEdit: ExperimentIndex = index.slice(0, depth);
 
   modifyConfiguration(config, newConfig, indexToEdit);
 }
@@ -335,16 +373,20 @@ export function indexToTaskNumber(
   // TODO: this can be replaced with iterate config maybe?
   // TODO: maybe index can be converted to a leaf node
   let number = 0;
-  let toSearch = [[]];
+  const toSearch: Array<ExperimentIndex> = [[]];
 
   // Basically just do a depth first search until we find the correct index.
   // We can't know where the leaf nodes are so we need to search every node.
   while (toSearch.length !== 0) {
-    let searchingIndex = toSearch.pop();
+    const searchingIndex = toSearch.pop();
 
-    let searchingConfig = getConfigAtIndex(searchingIndex, config);
+    if (searchingIndex === undefined) {
+      break;
+    }
 
-    if ("children" in searchingConfig) {
+    const searchingConfig = getConfigAtIndex(searchingIndex, config);
+
+    if (searchingConfig.children) {
       for (let i = searchingConfig.children.length - 1; i >= 0; i--) {
         toSearch.push([...searchingIndex, i]);
       }
@@ -356,6 +398,8 @@ export function indexToTaskNumber(
       number++;
     }
   }
+
+  return -1;
 }
 
 /**
@@ -371,14 +415,18 @@ export function taskNumberToIndex(
 ): ExperimentIndex {
   // TODO: this can be replaced with iterate config maybe?
   let number = 0;
-  let toSearch = [[]];
+  const toSearch: Array<ExperimentIndex> = [[]];
 
   while (toSearch.length > 0) {
-    let searchingIndex = toSearch.pop();
+    const searchingIndex = toSearch.pop();
 
-    let searchingConfig = getConfigAtIndex(searchingIndex, config);
+    if (searchingIndex === undefined) {
+      break;
+    }
 
-    if ("children" in searchingConfig) {
+    const searchingConfig = getConfigAtIndex(searchingIndex, config);
+
+    if (searchingConfig.children) {
       for (let i = searchingConfig.children.length - 1; i >= 0; i--) {
         toSearch.push([...searchingIndex, i]);
       }
@@ -389,18 +437,25 @@ export function taskNumberToIndex(
       number++;
     }
   }
+
+  return [];
 }
 
 export function getTotalTasks(config: Configuration): number {
   // TODO: this can be replaced with iterate config maybe? Could be a one liner, just iterateConfig then return the length of it.
   let tasks = 0;
-  let toSearch = [[]];
+  const toSearch: Array<ExperimentIndex> = [[]];
 
   while (toSearch.length > 0) {
-    let searchingIndex = toSearch.pop();
-    let searchingConfig = getConfigAtIndex(searchingIndex, config);
+    const searchingIndex = toSearch.pop();
 
-    if ("children" in searchingConfig) {
+    if (searchingIndex === undefined) {
+      break;
+    }
+
+    const searchingConfig = getConfigAtIndex(searchingIndex, config);
+
+    if (searchingConfig.children) {
       for (let i = searchingConfig.children.length - 1; i >= 0; i--) {
         toSearch.push([...searchingIndex, i]);
       }
@@ -414,14 +469,21 @@ export function getTotalTasks(config: Configuration): number {
 
 // TODO: why is this even a generator... This is silly it adds so much complexity, it should just return all of the indices. I guess the upside is for searches. If it is a generator we can just search until we found something, which is really nice for some cases.
 // TODO: maybe this function should just return all of the indices?
-export function* iterateConfig(config: Configuration) {
-  let toSearch = [[]];
+export function* iterateConfig(
+  config: Configuration
+): Generator<ExperimentIndex> {
+  const toSearch: Array<ExperimentIndex> = [[]];
 
   while (toSearch.length > 0) {
-    let searchingIndex = toSearch.pop();
-    let searchingConfig = getConfigAtIndex(searchingIndex, config);
+    const searchingIndex = toSearch.pop();
 
-    if ("children" in searchingConfig) {
+    if (searchingIndex === undefined) {
+      break;
+    }
+
+    const searchingConfig = getConfigAtIndex(searchingIndex, config);
+
+    if (searchingConfig.children) {
       for (let i = searchingConfig.children.length - 1; i >= 0; i--) {
         toSearch.push([...searchingIndex, i]);
       }
@@ -433,13 +495,16 @@ export function* iterateConfig(config: Configuration) {
   return;
 }
 
-export function iterateConfigWithProps(config: Configuration) {
+// TODO: I think these functions are the same...
+export function iterateConfigWithProps(
+  config: Configuration
+): Array<Record<string, unknown>> {
   return Array.from(iterateConfig(config)).map((index) =>
     getPropsFor(index, config)
   );
 }
 
-export function flatten(config: Configuration) {
+export function flatten(config: Configuration): Array<Record<string, unknown>> {
   return Array.from(iterateConfig(config)).map((index) =>
     getPropsFor(index, config, false)
   );

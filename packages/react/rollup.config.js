@@ -33,6 +33,10 @@ export default {
           "isValidElementType",
           "isContextConsumer",
         ],
+        "../../node_modules/@material-ui/utils/node_modules/react-is/index.js": [
+          "ForwardRef",
+          "Memo",
+        ],
         "../../node_modules/react-dom/index.js": [
           "findDOMNode",
           "unstable_batchedUpdates",

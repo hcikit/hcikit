@@ -21,7 +21,6 @@
   },
   "scripts": {
     "start": "tsc",
-    "postbuild": "cp ./src/CreateBucket.yml ./dist/.",
     "build": "tsc --build",
     "test": "jest",
     "test:watch": "jest --watch --colors --verbose",
@@ -37,17 +36,17 @@
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!lodash-es).+\\.js$"
-    ],
-    "setupFilesAfterEnv": [
-      "./src/setupTests.js"
     ]
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "lodash-es": "^4.17.15",
+    "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "redux": "^4.0.5",
     "regenerator-runtime": "^0.13.5"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.171"
   },
   "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86"
 }
