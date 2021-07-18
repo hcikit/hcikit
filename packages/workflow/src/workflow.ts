@@ -236,7 +236,7 @@ export function logToConfig(config: Configuration, log: unknown): void {
     return;
   }
 
-  const index = config[__INDEX__] || getLeafIndex([0], config);
+  const index = getCurrentIndex(config);
 
   if (typeof log !== "object") {
     log = { value: log };
@@ -318,7 +318,7 @@ export function modifyConfiguration(
   Object.assign(config, modifiedConfig);
 }
 
-function getCurrentIndex(config: Configuration): ExperimentIndex {
+export function getCurrentIndex(config: Configuration): ExperimentIndex {
   let index: ExperimentIndex = [0];
 
   const myInd: ExperimentIndex | undefined = config[__INDEX__];

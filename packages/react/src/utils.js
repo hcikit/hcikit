@@ -6,7 +6,7 @@ export function getOS() {
     Win: "Windows",
     Mac: "MacOS",
     X11: "UNIX",
-    Linux: "Linux"
+    Linux: "Linux",
   };
 
   for (const os of Object.keys(oss)) {
@@ -33,13 +33,11 @@ export function getBrowserInfo() {
     browserPlatform: navigator.platform,
     sizeScreenW: window.screen.width,
     sizeScreenH: window.screen.height,
-    sizeDocW: document.width,
-    sizeDocH: document.height,
     sizeInW: window.innerWidth,
     sizeInH: window.innerHeight,
     sizeAvailW: window.screen.availWidth,
     sizeAvailH: window.screen.availHeight,
     scrColorDepth: window.screen.colorDepth,
-    scrPixelDepth: window.screen.pixelDepth
+    scrPixelDepth: window.screen.pixelDepth,
   };
 }

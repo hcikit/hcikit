@@ -3,5 +3,6 @@
     "**/build/": true,
     "**/dist": true,
     "**/node_modules": true
-  }
+  },
+  "jest.jestCommandLine": "yarn workspace @hcikit/react run test"
 }

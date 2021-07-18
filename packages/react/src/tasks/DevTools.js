@@ -11,13 +11,13 @@ import {
   taskNumberToIndex,
   indexToTaskNumber,
   getPropsFor,
-  __INDEX__,
   getLeafIndex,
   getTotalTasks,
+  getCurrentIndex,
 } from "@hcikit/workflow";
-import { withRawConfiguration } from "../core/withRawConfiguration";
 
 import PropTypes from "prop-types";
+import { useConfig } from "../core/Experiment";
 
 const StyledCard = styled(Card)`
   display: inline-block;
@@ -35,7 +35,9 @@ const StyledSlider = styled(Slider)`
 // TODO: find a better way to represent labels, maybe a way to expand it?
 // TODO: add other things like a reset session or soemthing
 
-export const DevTools = ({ taskComplete, configuration, setWorkflowIndex }) => {
+export const DevTools = ({ taskComplete, setWorkflowIndex }) => {
+  let configuration = useConfig();
+
   let [isDragging, setIsDragging] = useState(false);
   let [relativePosition, setRelativePosition] = useState();
 
@@ -104,7 +106,7 @@ export const DevTools = ({ taskComplete, configuration, setWorkflowIndex }) => {
       <StyledSlider
         step={1}
         valueLabelDisplay="auto"
-        value={indexToTaskNumber(configuration[__INDEX__], configuration)}
+        value={indexToTaskNumber(getCurrentIndex(configuration), configuration)}
         marks={topLevelTasks}
         min={0}
         max={getTotalTasks(configuration)}
@@ -122,4 +124,4 @@ DevTools.propTypes = {
   taskComplete: PropTypes.func,
 };
 
-export default withRawConfiguration(DevTools);
+export default DevTools;

@@ -2,9 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { Button, Typography, CircularProgress } from "@material-ui/core";
-import { withRawConfiguration } from "../core/withRawConfiguration";
 
 import { CenteredNicePaper, CenteredText } from "../components";
+import { useConfig } from "../core/Experiment";
 const UploadDisplay = ({ error, filename, log, experimenter, onClick }) => {
   let contents;
 
@@ -51,15 +51,14 @@ UploadDisplay.propTypes = {
   experimenter: PropTypes.string,
   filename: PropTypes.string,
   log: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
 };
 
 // TODO: make this a functional component? Remove or standardise the experimenter property?
-
 export class Upload extends React.Component {
   state = {
     done: false,
-    error: null
+    error: null,
   };
 
   UNSAFE_componentWillMount() {
@@ -83,7 +82,7 @@ export class Upload extends React.Component {
           this.setState({ done: true });
         }
       })
-      .catch(upload_error => {
+      .catch((upload_error) => {
         this.props.log({ upload_error });
         console.error(upload_error);
         if (retries > 0) {
@@ -117,13 +116,12 @@ Upload.propTypes = {
   fireAndForget: PropTypes.bool,
   taskComplete: PropTypes.func,
   log: PropTypes.func,
-  upload: PropTypes.func
+  upload: PropTypes.func,
 };
 
-let ConnectedUpload = withRawConfiguration(Upload);
-
-export default upload => {
+export default (upload) => {
   return function UploadWrapper(props) {
-    return <ConnectedUpload upload={upload} {...props} />;
+    let config = useConfig();
+    return <Upload upload={upload} configuration={config} {...props} />;
   };
 };

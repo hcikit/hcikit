@@ -1,27 +1,24 @@
 import React from "react";
-import { mount } from "enzyme";
 import InformationScreen from "./InformationScreen";
-import { create, act } from "react-test-renderer";
+import { render, screen } from "@testing-library/react";
 
 describe("InformationScreen", () => {
   it("renders without crashing", () => {
-    mount(<InformationScreen content="hello" />);
+    render(<InformationScreen content="hello" />);
   });
 
   it("renders without continue", () => {
-    let wrapper = mount(
-      <InformationScreen withContinue={false} content="hello" />
-    );
-    expect(wrapper.find("button").exists()).toBeFalsy();
+    render(<InformationScreen withContinue={false} content="hello" />);
+    expect(screen.queryByText("Continue")).not.toBeInTheDocument();
   });
 
   it("advances to the next task", () => {
     let taskCompleteSpy = jest.fn();
-    let container = mount(
+    render(
       <InformationScreen taskComplete={taskCompleteSpy} content="Hello World" />
     );
 
-    container.find("button").simulate("click");
+    screen.getByText("Continue").click();
     expect(taskCompleteSpy).toBeCalledTimes(1);
   });
 
@@ -33,10 +30,11 @@ describe("InformationScreen", () => {
       map[event] = cb;
     });
 
-    mount(
+    render(
       <InformationScreen
         withContinue={false}
         taskComplete={taskCompleteSpy}
+        shortcutEnabled
         content="Hello World"
       />
     );
@@ -52,7 +50,7 @@ describe("InformationScreen", () => {
     });
 
     let taskCompleteSpy = jest.fn();
-    mount(
+    render(
       <InformationScreen
         taskComplete={taskCompleteSpy}
         shortcutEnabled
@@ -72,12 +70,8 @@ describe("InformationScreen", () => {
  - that should render *properly*
 `;
 
-    let root;
-
-    act(() => {
-      root = create(<InformationScreen content={markdown} />);
-    });
-
-    expect(root.toJSON()).toMatchSnapshot();
+    expect(
+      render(<InformationScreen content={markdown} />).asFragment()
+    ).toMatchSnapshot();
   });
 });

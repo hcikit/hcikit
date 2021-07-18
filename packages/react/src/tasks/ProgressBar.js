@@ -4,18 +4,20 @@ import {
   getConfigAtIndex,
   indexToTaskNumber,
   getTotalTasks,
-  __INDEX__,
+  getCurrentIndex,
   getLeafIndex,
 } from "@hcikit/workflow";
-import { withRawConfiguration } from "../core/withRawConfiguration";
 
 import { withGridItem } from "../GridLayout";
 import PropTypes from "prop-types";
+import { useConfig } from "../core/Experiment";
 
 // BUG: I think there might be an off by one error, check the example
 
-let ProgressBar = ({ depth = 0, configuration }) => {
-  let index = configuration[__INDEX__] || [];
+let ProgressBar = ({ depth = 0 }) => {
+  let configuration = useConfig();
+
+  let index = getCurrentIndex(configuration);
   let rightHalf = index.slice(depth);
   let leftHalf = index.slice(0, depth);
 
@@ -45,4 +47,4 @@ ProgressBar = withGridItem(ProgressBar, "footer");
 
 export { ProgressBar };
 
-export default withRawConfiguration(ProgressBar);
+export default ProgressBar;

@@ -36,7 +36,7 @@ const InformationScreen = ({
       <br />
       {withContinue && (
         <Button color="primary" onClick={taskComplete}>
-          continue {shortcutEnabled && `(${key})`}
+          Continue {shortcutEnabled && `(${key})`}
         </Button>
       )}
     </CenteredNicePaper>

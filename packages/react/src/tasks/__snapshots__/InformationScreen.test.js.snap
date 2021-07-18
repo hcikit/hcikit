@@ -1,19 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`InformationScreen renders markdown properly 1`] = `
-<div
-  style={
-    Object {
-      "gridArea": "task",
-    }
-  }
->
+<DocumentFragment>
   <div
-    className="sc-AxhUy gksciz"
+    class="sc-eCApnc eCdMwW"
   >
     <div>
       <div
-        className="MuiPaper-root sc-AxhCb iXTWPL MuiPaper-elevation1 MuiPaper-rounded"
+        class="MuiPaper-root sc-hKFxyN jgdOQn MuiPaper-elevation1 MuiPaper-rounded"
       >
         <div>
           <h1
@@ -35,33 +29,21 @@ exports[`InformationScreen renders markdown properly 1`] = `
         </div>
         <br />
         <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
-          disabled={false}
-          onBlur={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={0}
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
+          tabindex="0"
           type="button"
         >
           <span
-            className="MuiButton-label"
+            class="MuiButton-label"
           >
-            continue 
+            Continue 
           </span>
           <span
-            className="MuiTouchRipple-root"
+            class="MuiTouchRipple-root"
           />
         </button>
       </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;

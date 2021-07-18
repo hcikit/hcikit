@@ -58,7 +58,6 @@
     "lodash-es": "^4.17.15",
     "markdown-to-jsx": "^6.11.1",
     "prop-types": "^15.7.2",
-    "react-redux": "^7.2.0",
     "styled-components": "^5.1.0"
   },
   "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86",

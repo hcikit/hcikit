@@ -1,36 +1,35 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import { isEqual } from "lodash-es";
 
 import {
   getCurrentProps,
+  getCurrentIndex,
   scopePropsForTask,
   experimentComplete,
-  __INDEX__,
-  log,
-  modifyConfigAtDepth,
-  modifyConfig,
-  taskComplete,
-  setWorkflowIndex,
 } from "@hcikit/workflow";
 
 import GridLayout from "../GridLayout";
+import { useConfig, useExperiment } from "./Experiment";
 
 const TaskRenderer = ({
   // TODO: Ideally we don't pass the entire configuration... That should reduce the number of renders
-  configuration,
-  log,
-  taskComplete,
-  setWorkflowIndex,
-  modifyConfig,
-  modifyConfigAtDepth,
   tasks,
   Layout = GridLayout,
   ErrorHandler = null,
   forceRemountEveryTask = true,
-  currentProps,
 }) => {
+  let configuration = useConfig();
+  let currentProps = getCurrentProps(configuration);
+
+  const {
+    log,
+    taskComplete,
+    setWorkflowIndex,
+    modifyConfig,
+    modifyConfigAtDepth,
+  } = useExperiment();
+
   if (process.env.NODE_ENV === "development") {
     window.currentProps = currentProps;
     window.configuration = configuration;
@@ -46,7 +45,7 @@ const TaskRenderer = ({
 
   if (!experimentComplete(configuration)) {
     if (!tasksToRender.length) {
-      throw new Error(`No task selected at ${configuration[__INDEX__]}`);
+      throw new Error(`No task selected at ${getCurrentIndex(configuration)}`);
     }
 
     tasksFilled = tasksToRender.map((task, i) => {
@@ -58,7 +57,7 @@ const TaskRenderer = ({
       let props = scopePropsForTask(currentProps, task);
 
       if (forceRemountEveryTask) {
-        key += "-" + configuration[__INDEX__].join(":");
+        key += "-" + getCurrentIndex(configuration).join(":");
       }
 
       return (
@@ -101,19 +100,25 @@ const TaskRenderer = ({
   return <Layout>{tasksFilled}</Layout>;
 };
 
+// TODO: Why did I choose a deepEqual here...?
 const SingleTaskRenderer = React.memo((props) => {
   let { Task } = props;
   return <Task {...props} />;
   // TODO: this deep equals could be somewhat expensive, maybe not the best solution
 }, isEqual);
+//   (prevProps, nextProps) => {
+//     if (isEqual(prevProps, nextProps)) {
+//       // console.log();
+//       return true;
+//     } else {
+//       console.log(detailedDiff(prevProps, nextProps));
+//       return false;
+//     }
+//   }
+// );
 
 TaskRenderer.propTypes = {
   configuration: PropTypes.object,
-  log: PropTypes.func,
-  taskComplete: PropTypes.func,
-  setWorkflowIndex: PropTypes.func,
-  modifyConfig: PropTypes.func,
-  modifyConfigAtDepth: PropTypes.func,
   tasks: PropTypes.objectOf(PropTypes.elementType),
   Layout: PropTypes.node,
   ErrorHandler: PropTypes.node,
@@ -121,16 +126,4 @@ TaskRenderer.propTypes = {
   currentProps: PropTypes.object,
 };
 
-const mapStateToProps = (configuration) => {
-  return { currentProps: getCurrentProps(configuration), configuration };
-};
-
-const mapDispatchToProps = {
-  taskComplete,
-  log,
-  modifyConfig,
-  modifyConfigAtDepth,
-  setWorkflowIndex,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(TaskRenderer);
+export default TaskRenderer;

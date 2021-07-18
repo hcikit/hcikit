@@ -1,51 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DisplayTextTask renders properly 1`] = `
-<div
-  style={
-    Object {
-      "gridArea": "task",
-    }
-  }
->
+<DocumentFragment>
   <div
-    className="sc-AxhUy gYMEmy"
+    style="grid-area: task;"
   >
-    <div>
-      <div
-        className="sc-AxgMl ftqCsy"
-      >
-        <h1>
-          hello
-        </h1>
-        <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
-          disabled={false}
-          onBlur={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={0}
-          type="button"
+    <div
+      class="sc-eCApnc gPhTJn"
+    >
+      <div>
+        <div
+          class="sc-jSFjdj daZxok"
         >
-          <span
-            className="MuiButton-label"
+          <h1>
+            hello
+          </h1>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            tabindex="0"
+            type="button"
           >
-            Continue
-          </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
-        </button>
+            <span
+              class="MuiButton-label"
+            >
+              Continue
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;

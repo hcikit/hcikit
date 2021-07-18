@@ -1,36 +1,33 @@
 import React from "react";
-import { mount } from "enzyme";
 import DisplayTextTask from "./DisplayTextTask";
-import { create, act } from "react-test-renderer";
+import { screen, render } from "@testing-library/react";
 
 describe("DisplayTextTask", () => {
   it("renders without crashing", () => {
-    mount(<DisplayTextTask content="hello" />);
+    render(<DisplayTextTask content="hello" />);
   });
 
+  // TODO: this will kind of be ruined.. Unless I mock the provider.
   it("advances to the next task", () => {
     let taskCompleteSpy = jest.fn();
-    let container = mount(
+
+    render(
       <DisplayTextTask taskComplete={taskCompleteSpy} content="Hello World" />
     );
 
-    container.find("button").simulate("click");
+    screen.getByText("Continue").click();
     expect(taskCompleteSpy).toBeCalledTimes(1);
   });
 
   it("renders properly", () => {
-    let root;
-
-    act(() => {
-      root = create(<DisplayTextTask content="hello" />);
-    });
-
-    expect(root.toJSON()).toMatchSnapshot();
+    expect(
+      render(<DisplayTextTask content="hello" />).asFragment()
+    ).toMatchSnapshot();
   });
 
   it("renders plain text", () => {
-    let container = mount(<DisplayTextTask content="hello" />);
+    render(<DisplayTextTask content="hello" />);
 
-    expect(container.find("h1").text()).toBe("hello");
+    screen.getByText("hello", { selector: "h1" });
   });
 });
