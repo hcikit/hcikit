@@ -5,7 +5,7 @@
   "author": "blainelewis1",
   "license": "MIT",
   "repository": "hcikit/hcikit",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
   "publishConfig": {
@@ -21,7 +21,7 @@
   },
   "scripts": {
     "start": "tsc",
-    "build": "tsc --build",
+    "build": "tsc --build && cp \"./package.json\" ./dist/",
     "test": "jest",
     "test:watch": "jest --watch --colors --verbose",
     "test:coverage": "jest --coverage --colors",
@@ -41,7 +41,6 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "lodash": "^4.17.15",
-    "prop-types": "^15.7.2",
     "regenerator-runtime": "^0.13.5"
   },
   "devDependencies": {

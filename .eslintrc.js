@@ -1,24 +1,16 @@
 module.exports = {
-  parser: "babel-eslint",
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    tsconfigRootDir: __dirname,
+    project: ["./tsconfig.json", "./packages/*/tsconfig.json"],
+  },
   extends: [
     "eslint:recommended",
-    "plugin:import/recommended",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended"
+    "standard",
+    "prettier",
+    "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint",
   ],
-  env: {
-    es6: true,
-    jest: true,
-    browser: true,
-    node: true
-  },
-  settings: {
-    react: {
-      version: "detect"
-    }
-  },
-  plugins: ["react", "jest", "import"],
-  parserOptions: {
-    sourceType: "module"
-  }
+  plugins: ["@typescript-eslint"],
+  ignorePatterns: ["dist", "node_modules", "scripts"],
 };

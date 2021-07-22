@@ -10,7 +10,9 @@ export type Log = LogRequired & Record<string, unknown>;
 
 export const __INDEX__ = "__INDEX__";
 
-interface ConfigurationRequired<T> {
+interface ConfigurationRequired<
+  T extends Record<string, unknown> = Record<string, unknown>
+> {
   [__INDEX__]?: ExperimentIndex;
   children?: Array<Configuration<T>>;
 
@@ -20,10 +22,11 @@ interface ConfigurationRequired<T> {
   logs?: Array<Log>;
 }
 
-export type Configuration<T = Record<string, unknown>> =
-  ConfigurationRequired<T> &
-    Partial<Record<keyof T, unknown>> &
-    Record<string, unknown>;
+export type Configuration<
+  T extends Record<string, unknown> = Record<string, unknown>
+> = ConfigurationRequired<T> &
+  Partial<Record<keyof T, unknown>> &
+  Record<string, unknown>;
 
 // TODO: mergeWith is very slow which slows everything down with lots of onlogs.
 // TODO: should this work with a config with no children? Does it work with no children?
@@ -55,7 +58,7 @@ const merge = mergeArraysSpecial;
 export function scopePropsForTask(
   props: Record<string, unknown>,
   task: string
-): Record<string, unknown> {
+): Configuration {
   return merge(
     pickBy(props, (_: unknown, k: string) => k[0] === k[0].toLowerCase()),
     props[task] as Record<string, unknown>
@@ -97,7 +100,7 @@ export function getPropsFor(
   index: ExperimentIndex,
   configuration: Configuration,
   deleteLogs = true
-): Record<string, unknown> {
+): Configuration {
   if (experimentComplete(configuration)) {
     return {};
   }

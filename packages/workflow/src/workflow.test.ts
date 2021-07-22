@@ -160,7 +160,11 @@ describe("getCurrentProps", () => {
   it("cascades properties from top to bottom", () => {
     config[__INDEX__] = markTaskComplete(config);
     config.inheritance = "top";
-    config.children[1].children[0].children[0].inheritance = "bottom";
+    if (config?.children?.[1]?.children?.[0]?.children?.[0]) {
+      config.children[1].children[0].children[0].inheritance = "bottom";
+    } else {
+      throw new Error();
+    }
     expect(getCurrentProps(config)).toEqual({
       __INDEX__: [1, 0, 0],
       blockprop: "section",
@@ -217,7 +221,7 @@ describe("log", () => {
     deepFreeze(config);
 
     logToConfig(config, { hello: "world" });
-    expect(config.children.length).toBe(2);
+    expect(config?.children?.length).toBe(2);
     expect(config.children).not.toHaveProperty("logs");
     expect(spy).toHaveBeenCalledTimes(1);
   });
@@ -227,7 +231,7 @@ describe("log", () => {
     Date.now = () => 10;
 
     logToConfig(config, "hello world");
-    expect(config.children[0].logs[0]).toEqual({
+    expect(config?.children?.[0]?.logs?.[0]).toEqual({
       value: "hello world",
       timestamp: 10,
     });
@@ -240,7 +244,7 @@ describe("log", () => {
     Date.now = () => 10;
 
     logToConfig(config, 10);
-    expect(config.children[0].logs[0]).toEqual({
+    expect(config?.children?.[0]?.logs?.[0]).toEqual({
       value: 10,
       timestamp: 10,
     });
@@ -253,7 +257,7 @@ describe("log", () => {
     Date.now = () => 10;
 
     logToConfig(config, { hello: "world" });
-    expect(config.children[0].logs[0]).toEqual({
+    expect(config?.children?.[0]?.logs?.[0]).toEqual({
       hello: "world",
       timestamp: 10,
     });
@@ -269,7 +273,9 @@ describe("log", () => {
     config[__INDEX__] = markTaskComplete(config);
 
     logToConfig(config, { hello: "world" });
-    expect(config.children[1].children[0].children[0].logs[0]).toEqual({
+    expect(
+      config?.children?.[1]?.children?.[0]?.children?.[0]?.logs?.[0]
+    ).toEqual({
       hello: "world",
       timestamp: 10,
     });
@@ -277,21 +283,23 @@ describe("log", () => {
     config[__INDEX__] = markTaskComplete(config);
 
     logToConfig(config, { hello: "world" });
-    expect(config.children[1].children[0].children[1].logs[0]).toEqual({
-      hello: "world",
-      timestamp: 11,
-    });
+    expect(config?.children?.[1].children?.[0].children?.[1].logs?.[0]).toEqual(
+      {
+        hello: "world",
+        timestamp: 11,
+      }
+    );
     config[__INDEX__] = markTaskComplete(config);
 
     logToConfig(config, { hello: "world" });
-    expect(config.children[1].children[1].children[0].logs[0]).toEqual({
+    expect(config.children?.[1].children?.[1].children?.[0].logs?.[0]).toEqual({
       hello: "world",
       timestamp: 12,
     });
 
     config[__INDEX__] = markTaskComplete(config);
     logToConfig(config, { hello: "world" });
-    expect(config.children[1].children[1].children[1].logs[0]).toEqual({
+    expect(config.children?.[1].children?.[1].children?.[1].logs?.[0]).toEqual({
       hello: "world",
       timestamp: 13,
     });
@@ -308,18 +316,22 @@ describe("log", () => {
 
     expect(config).not.toBe(c);
     expect(config.children).not.toBe(c.children);
-    expect(config.children[1]).not.toBe(c.children[1]);
-    expect(config.children[1].children).not.toBe(c.children[1].children);
-    expect(config.children[1].children[1]).toBe(c.children[1].children[1]);
-    expect(config.children[1].children[0]).not.toBe(c.children[1].children[0]);
-    expect(config.children[1].children[0].children).not.toBe(
-      c.children[1].children[0].trials
+    expect(config.children?.[1]).not.toBe(c.children?.[1]);
+    expect(config.children?.[1].children).not.toBe(c.children?.[1].children);
+    expect(config.children?.[1].children?.[1]).toBe(
+      c.children?.[1].children?.[1]
     );
-    expect(config.children[1].children[0].children[1]).toBe(
-      c.children[1].children[0].children[1]
+    expect(config.children?.[1].children?.[0]).not.toBe(
+      c.children?.[1].children?.[0]
     );
-    expect(config.children[1].children[0].children[0]).not.toBe(
-      c.children[1].children[0].children[0]
+    expect(config.children?.[1].children?.[0].children).not.toBe(
+      c.children?.[1].children?.[0].trials
+    );
+    expect(config.children?.[1].children?.[0].children?.[1]).toBe(
+      c.children?.[1].children?.[0].children?.[1]
+    );
+    expect(config.children?.[1].children?.[0].children?.[0]).not.toBe(
+      c.children?.[1].children?.[0].children?.[0]
     );
   });
 });
@@ -627,14 +639,14 @@ describe("modifyConfigurationAtDepth", () => {
     config[__INDEX__] = markTaskComplete(config);
 
     modifyConfigurationAtDepth(config, { hello: "world" }, -1);
-    expect(config.children[1].children[0].hello).toEqual("world");
+    expect(config.children?.[1].children?.[0].hello).toEqual("world");
   });
 
   it("edits positive indices", () => {
     config[__INDEX__] = markTaskComplete(config);
 
     modifyConfigurationAtDepth(config, { hello: "world" }, 1);
-    expect(config.children[1].hello).toEqual("world");
+    expect(config.children?.[1].hello).toEqual("world");
   });
 
   it("edits global", () => {
@@ -648,7 +660,9 @@ describe("modifyConfigurationAtDepth", () => {
     config[__INDEX__] = markTaskComplete(config);
 
     modifyConfigurationAtDepth(config, { hello: "world" });
-    expect(config.children[1].children[0].children[0].hello).toEqual("world");
+    expect(config.children?.[1].children?.[0].children?.[0].hello).toEqual(
+      "world"
+    );
   });
 
   it("fails on completed experiment", () => {
@@ -664,7 +678,7 @@ describe("modifyConfigurationAtDepth", () => {
     deepFreeze(config);
 
     modifyConfigurationAtDepth(config, { hello: "world" });
-    expect(config.children[1].children[0].children[0]).not.toHaveProperty(
+    expect(config.children?.[1].children?.[0].children?.[0]).not.toHaveProperty(
       "hello"
     );
     expect(spy).toHaveBeenCalledTimes(1);
@@ -672,7 +686,7 @@ describe("modifyConfigurationAtDepth", () => {
 
   it("works correctly on unstarted experiment?", () => {
     modifyConfigurationAtDepth(config, { hello: "world" }, 1);
-    expect(config.children[0].hello).toEqual("world");
+    expect(config.children?.[0].hello).toEqual("world");
   });
 });
 
@@ -682,7 +696,7 @@ describe("modifyConfiguration", () => {
     expect(config.configprop).toEqual("section");
   });
   it("works in place", () => {
-    const c = { ...config };
+    const c: Configuration = { ...config };
     c[__INDEX__] = markTaskComplete(c);
 
     deepFreeze(config);
@@ -690,19 +704,23 @@ describe("modifyConfiguration", () => {
     modifyConfiguration(c, { hello: "world" }, [1, 0, 0]);
 
     expect(config).not.toBe(c);
-    expect(config.children).not.toBe(c.children);
-    expect(config.children[1]).not.toBe(c.children[1]);
-    expect(config.children[1].children).not.toBe(c.children[1].children);
-    expect(config.children[1].children[1]).toBe(c.children[1].children[1]);
-    expect(config.children[1].children[0]).not.toBe(c.children[1].children[0]);
-    expect(config.children[1].children[0].children).not.toBe(
-      c.children[1].children[0].trials
+    expect(config?.children).not.toBe(c.children);
+    expect(config?.children?.[1]).not.toBe(c.children?.[1]);
+    expect(config?.children?.[1].children).not.toBe(c.children?.[1].children);
+    expect(config?.children?.[1].children?.[1]).toBe(
+      c.children?.[1].children?.[1]
     );
-    expect(config.children[1].children[0].children[1]).toBe(
-      c.children[1].children[0].children[1]
+    expect(config?.children?.[1].children?.[0]).not.toBe(
+      c.children?.[1].children?.[0]
     );
-    expect(config.children[1].children[0].children[0]).not.toBe(
-      c.children[1].children[0].children[0]
+    expect(config?.children?.[1].children?.[0].children).not.toBe(
+      c.children?.[1].children?.[0].trials
+    );
+    expect(config.children?.[1].children?.[0].children?.[1]).toBe(
+      c.children?.[1].children?.[0].children?.[1]
+    );
+    expect(config.children?.[1].children?.[0].children?.[0]).not.toBe(
+      c.children?.[1].children?.[0].children?.[0]
     );
   });
 
@@ -712,11 +730,13 @@ describe("modifyConfiguration", () => {
   });
   it("modifies leaf", () => {
     modifyConfiguration(config, { hello: "world" }, [1, 0, 0]);
-    expect(config.children[1].children[0].children[0].hello).toEqual("world");
+    expect(config.children?.[1].children?.[0].children?.[0].hello).toEqual(
+      "world"
+    );
   });
   it("modifies inner", () => {
     modifyConfiguration(config, { hello: "world" }, [1, 0]);
-    expect(config.children[1].children[0].hello).toEqual("world");
+    expect(config.children?.[1].children?.[0].hello).toEqual("world");
   });
 
   it("logs the modification", () => {
@@ -725,7 +745,7 @@ describe("modifyConfiguration", () => {
 
     modifyConfiguration(config, { hello: "world", stimulus: "hi" }, [1, 0]);
 
-    expect(config.children[0].logs[0]).toEqual({
+    expect(config.children?.[0].logs?.[0]).toEqual({
       eventType: "CONFIG_MODIFICATION",
       to: { hello: "world", stimulus: "hi" },
       from: { hello: undefined, stimulus: "overwritten" },
@@ -740,6 +760,6 @@ describe("modifyConfiguration", () => {
     config[__INDEX__] = markTaskComplete(config);
 
     modifyConfiguration(config, { hello: "world" }, [1, 0]);
-    expect(config.children[1].children[0].hello).toEqual("world");
+    expect(config.children?.[1].children?.[0].hello).toEqual("world");
   });
 });

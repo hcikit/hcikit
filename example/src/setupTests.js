@@ -1,3 +1,5 @@
+import "@testing-library/jest-dom";
+
 // let error = console.error;
 
 // console.error = function (message) {

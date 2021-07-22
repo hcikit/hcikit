@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "outDir": "./dist",
+    "jsx": "react",
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./packages",
+    "lib": ["dom", "esnext"],
+    "module": "esnext",
+
+    "paths": {
+      "@hciikit/workflow/*": ["workflow/src/*"],
+      "@hciikit/react/*": ["react/src/*"]
+    }
+  }
+}

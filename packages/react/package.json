@@ -22,8 +22,8 @@
   "scripts": {
     "test": "jest --env=jsdom",
     "test:watch": "jest --watch --env=jsdom --colors --verbose",
-    "build": "rollup -c",
-    "start": "rollup -c -w",
+    "start": "tsc",
+    "build": "tsc --build  && cp \"./package.json\" ./dist/",
     "prepare": "npm run build",
     "styleguide": "styleguidist server",
     "styleguide:build": "styleguidist build",
@@ -42,28 +42,26 @@
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!lodash-es).+\\.js$"
-    ],
-    "setupFilesAfterEnv": [
-      "./setupTests.js"
     ]
   },
   "peerDependencies": {
     "@material-ui/core": "^4.9.11",
     "@material-ui/icons": "^4.9.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "dependencies": {
     "@hcikit/workflow": "^1.0.0-alpha.2",
-    "lodash-es": "^4.17.15",
-    "markdown-to-jsx": "^6.11.1",
+    "core-js": "^3.15.2",
+    "lodash": "^4.17.21",
+    "markdown-to-jsx": "^7.1.3",
     "prop-types": "^15.7.2",
     "styled-components": "^5.1.0"
   },
   "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86",
   "devDependencies": {
-    "react-scripts": "^3.2.0",
-    "react-styleguidist": "^9.1.16"
+    "react-scripts": "^4.0.3",
+    "react-styleguidist": "^11.1.7"
   },
   "eslintConfig": {
     "extends": "react-app"
