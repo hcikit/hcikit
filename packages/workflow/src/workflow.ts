@@ -14,6 +14,7 @@ interface ConfigurationRequired<
   T extends Record<string, unknown> = Record<string, unknown>
 > {
   [__INDEX__]?: ExperimentIndex;
+  // eslint-disable-next-line no-use-before-define
   children?: Array<Configuration<T>>;
 
   task?: keyof T | string;
@@ -494,8 +495,6 @@ export function* iterateConfig(
       yield searchingIndex;
     }
   }
-
-  return;
 }
 
 // TODO: I think these functions are the same...

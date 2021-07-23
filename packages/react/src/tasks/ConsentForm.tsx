@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 
 import { CenteredNicePaper } from "../components";
-import PropTypes from "prop-types";
 import { withGridItem } from "../GridLayout";
 import { useState } from "react";
 import { useExperiment } from "../core/Experiment";

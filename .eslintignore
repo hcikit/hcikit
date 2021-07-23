@@ -1,1 +1,2 @@
 packages/admin
+*.stories.js
