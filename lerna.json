@@ -1,7 +1,8 @@
 {
   "packages": [
     "packages/*",
-    "example"
+    "example",
+    "example-typescript"
   ],
   "version": "independent",
   "npmClient": "yarn",

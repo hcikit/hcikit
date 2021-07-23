@@ -3,8 +3,6 @@ import styled, { keyframes } from "styled-components";
 import { isEqual } from "lodash";
 import PropTypes from "prop-types";
 
-// TODO: could make this with a functional component instead
-
 export class ScreenFlash extends React.Component<{ times: number }> {
   propTypes = {
     times: PropTypes.number,

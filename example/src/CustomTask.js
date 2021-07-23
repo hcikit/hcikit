@@ -1,5 +1,7 @@
 import React from "react";
 
-export default ({ text, taskComplete }) => {
+const CustomTask = ({ text, taskComplete }) => {
   return <button onClick={taskComplete}>{text}</button>;
 };
+
+export default CustomTask;

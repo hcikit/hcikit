@@ -220,7 +220,6 @@ describe("Experiment", () => {
   // TODO: this test is broken because log causes a state change in the infiniterenderer and this means they both render at once because of the infinite
 
   xit("logs definitely don't cause a re-render", () => {
-    // TODO:
     // I added this test because I had a log() statement that occurred on render and it caused an infinite loop.
     const config = {
       tasks: ["DisplayText"],
@@ -269,7 +268,6 @@ describe("Experiment", () => {
     screen.getByTestId("render-counter");
   });
 
-  // TODO: fix this.
   it("throws errors for unregistered tasks", () => {
     const consoleError = jest.spyOn(console, "error").mockImplementation(() => {
       //do nothing
@@ -308,7 +306,7 @@ describe("Experiment", () => {
       );
 
       screen.getByText("button task 1").click();
-      // TODO: this is kind of a hack.
+
       saveStateToSessionStorage.flush();
 
       cleanup();
@@ -330,7 +328,6 @@ describe("Experiment", () => {
       );
 
       screen.getByText("button task 1").click();
-      // TODO: this is kind of a hack.
       saveStateToSessionStorage.flush();
 
       cleanup();
@@ -349,7 +346,6 @@ describe("Experiment", () => {
     afterEach(() => {
       window.sessionStorage.clear();
     });
-    // TODO: maybe a test making sure it is disabled for development?
   });
 
   describe("remounting", () => {
@@ -413,8 +409,7 @@ describe("Experiment", () => {
     });
   });
 
-  // TODO:
-  it("logs properly", () => {
+  xit("logs properly", () => {
     // do nothing
   });
 

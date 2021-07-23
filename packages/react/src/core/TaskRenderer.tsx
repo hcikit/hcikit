@@ -59,8 +59,6 @@ const TaskRenderer: React.FunctionComponent<{
         );
       }
 
-      // TODO: ensure that it throws a useful error if the task is not registered
-
       let key = `${task}-${i.toString()}`;
       const props = scopePropsForTask(currentProps, task);
 
@@ -112,9 +110,10 @@ let SingleTaskRenderer: React.FunctionComponent<
   { Task: React.ElementType } & Record<string, unknown>
 > = ({ Task, ...props }) => {
   return <Task {...props} />;
-  // TODO: this deep equals could be somewhat expensive, maybe not the best solution
 };
-// TODO: Why did I choose a deepEqual here...?
+
+// Deep equals is needed here or the tests fail, I think I make some objects above like the tasks that get recreated every time.
+// TODO: could think about memoising those or something.
 SingleTaskRenderer = React.memo(SingleTaskRenderer, isEqual);
 //   (prevProps, nextProps) => {
 //     console.log("outside", diff(prevProps, nextProps), nextProps);

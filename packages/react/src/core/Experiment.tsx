@@ -82,7 +82,6 @@ export const saveStateToSessionStorage = throttle((state: Configuration) => {
   }
 }, 3000);
 
-// TODO: I never call savestate.
 const Experiment: React.FunctionComponent<{
   saveState?: ((config: Configuration) => void) | null;
   loadState?: (() => Configuration) | null;
@@ -100,7 +99,6 @@ const Experiment: React.FunctionComponent<{
   forceRemountEveryTask,
   configuration,
 }) => {
-  // TODO: maybe we should hide the task registry and instead just pass a list of objects?
   // TODO: not sure how to create different sessions for the same task.
 
   const [config, setConfig] = useState<Configuration>(() => {
@@ -118,7 +116,7 @@ const Experiment: React.FunctionComponent<{
     return { ...(configuration || {}), ...storedState };
   });
 
-  // // TODO: it might be better to do this as we save state rather than waiting a render, I chose this way because it is easier to implement than adding it to each of the modifying functions below.
+  // TODO: it might be better to do this as we save state rather than waiting a render, I chose this way because it is easier to implement than adding it to each of the modifying functions below.
   // useEffect(() => {
   //   if (saveState) {
   //     saveState(config);
@@ -126,7 +124,6 @@ const Experiment: React.FunctionComponent<{
   //   }
   // }, [config, saveState]);
 
-  // TODO: I can use usecallback here if I want.
   const taskComplete = useCallback(
     () =>
       setConfig((c: Configuration) => {
@@ -227,7 +224,6 @@ const Experiment: React.FunctionComponent<{
     return null;
   }
 
-  // TODO: maybe these props shouldn't drill like this?
   return (
     <ConfigMutatorContext.Provider value={experiment}>
       <ConfigContext.Provider value={config}>

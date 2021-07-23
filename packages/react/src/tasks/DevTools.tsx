@@ -44,6 +44,7 @@ export const DevTools: React.FunctionComponent = () => {
 
   const [position, setPosition] = useState({ top: 0, left: 0 });
 
+  // TODO: I broke dragging
   useEffect(() => {
     function handleMouseMove(e: MouseEvent) {
       if (isDragging) {

@@ -1,6 +1,6 @@
 /** @type {import('@ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
-  preset: "ts-jest/presets/js-with-ts",
+  preset: "ts-jest",
   // testEnvironment: "jsdom",
   // moduleNameMapper: {
   //   // "@hcikit/example(.*)$": "<rootDir>/./example/src/$1",
@@ -14,6 +14,7 @@ module.exports = {
     "<rootDir>/packages/react",
     "<rootDir>/packages/workflow",
     "<rootDir>/example",
+    "<rootDir>/example-typescript",
   ],
   // collectCoverageFrom: [
   //   "src/**/*.{js,jsx}",

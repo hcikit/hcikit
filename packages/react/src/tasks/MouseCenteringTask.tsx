@@ -43,7 +43,6 @@ const MouseCenteringTask: React.FunctionComponent = () => {
     }
     document.addEventListener("keydown", handleKey, false);
 
-    // TODO: test if the mouse is already over the element
     /* if (
       window.mousex > box.left &&
       window.mousex < box.right &&

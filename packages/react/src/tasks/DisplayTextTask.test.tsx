@@ -1,6 +1,6 @@
 import React from "react";
 import DisplayTextTask from "./DisplayTextTask";
-import { screen, render } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { renderWithProvider } from "./InformationScreen.test";
 
 describe("DisplayTextTask", () => {
@@ -8,7 +8,6 @@ describe("DisplayTextTask", () => {
     renderWithProvider(<DisplayTextTask content="hello" />);
   });
 
-  // TODO: this will kind of be ruined.. Unless I mock the provider.
   it("advances to the next task", () => {
     const taskComplete = jest.fn();
 

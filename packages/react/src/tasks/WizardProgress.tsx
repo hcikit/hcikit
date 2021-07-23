@@ -1,26 +1,40 @@
 import React from "react";
 import { Stepper, Step, StepLabel } from "@material-ui/core";
-
 import { withGridItem } from "../GridLayout";
-import { getCurrentIndex } from "@hcikit/workflow";
+import {
+  getCurrentIndex,
+  getConfigAtIndex,
+  getLeafIndex,
+} from "@hcikit/workflow";
 import { useConfig, useExperiment } from "../core/Experiment";
+import { startCase } from "lodash";
 
-// TODO: should we use a custom prop like the label or should we consider just using the task and then people can include spaces if they'd like?
-// What does include spaces even mean....
-
-// TODO: we could also use a depth parameter here
-const NoGridWizardProgress: React.FunctionComponent = () => {
+const NoGridWizardProgress: React.FunctionComponent<{ depth: number }> = ({
+  depth = 0,
+}) => {
   const experiment = useExperiment();
   const configuration = useConfig();
-  const currentStep = getCurrentIndex(configuration)[0];
+  const pathToIndex = getCurrentIndex(configuration).slice(0, depth);
 
-  if (!configuration.children) {
+  let configurationAtIndex = getConfigAtIndex(pathToIndex, configuration);
+
+  const currentStep = getLeafIndex(
+    getCurrentIndex(configuration),
+    configuration
+  )[depth];
+
+  if (!configurationAtIndex || !configurationAtIndex.children) {
+    console.error(
+      "Attempted to render WizardProgress at a depth that does not have any children"
+    );
     return null;
   }
 
+  console.log({ currentStep, pathToIndex });
+
   return (
     <Stepper activeStep={currentStep}>
-      {configuration.children.map(({ task }, index) => {
+      {configurationAtIndex.children.map(({ task, label }, index) => {
         return (
           <Step
             style={{
@@ -29,12 +43,12 @@ const NoGridWizardProgress: React.FunctionComponent = () => {
             }}
             onClick={() => {
               if (process.env.NODE_ENV === "development") {
-                experiment.setWorkflowIndex([index]);
+                experiment.setWorkflowIndex([...pathToIndex, index]);
               }
             }}
-            key={task}
+            key={index}
           >
-            <StepLabel>{task}</StepLabel>
+            <StepLabel>{(label as string) || startCase(task)}</StepLabel>
           </Step>
         );
       })}
