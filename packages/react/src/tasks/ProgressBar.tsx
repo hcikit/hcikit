@@ -1,7 +1,7 @@
 import React from "react";
 import { LinearProgress } from "@material-ui/core";
 import {
-  getConfigAtIndex,
+  getConfigurationAtIndex,
   indexToTaskNumber,
   getTotalTasks,
   getCurrentIndex,
@@ -23,7 +23,7 @@ const ProgressBarNoGrid: React.FunctionComponent<{ depth?: number }> = ({
   const rightHalf = index.slice(depth);
   const leftHalf = index.slice(0, depth);
 
-  configuration = getConfigAtIndex(leftHalf, configuration);
+  configuration = getConfigurationAtIndex(leftHalf, configuration);
   const currentTaskNumber = indexToTaskNumber(
     configuration,
     getLeafIndex(rightHalf, configuration)

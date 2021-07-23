@@ -6,6 +6,7 @@ import React, {
   useCallback,
   ElementType,
   useMemo,
+  useEffect,
 } from "react";
 
 import TaskRenderer from "./TaskRenderer";
@@ -127,11 +128,15 @@ const Experiment: React.FunctionComponent<{
   const taskComplete = useCallback(
     () =>
       setConfig((c: Configuration) => {
+        // TODO: need to make the experiment log before and after
         // TODO: push the ...c into the library? deepfreeze it in all tests
+
+        // logToConfig(c, { type: "END" });
         const newConfig: Configuration = {
           ...c,
           [__INDEX__]: markTaskComplete(c),
         };
+        // logToConfig(newConfig, { type: "START" });
 
         if (saveState) {
           saveState(newConfig);
@@ -217,8 +222,11 @@ const Experiment: React.FunctionComponent<{
     [taskComplete, setWorkflowIndex, log, modifyConfigAtDepth, modifyConfig]
   );
 
-  // NOTE: you *might* need to memoize this value
-  // Learn more in http://kcd.im/optimize-context
+  // useEffect(() => {
+  //   experiment.log({ type: "START" });
+  //   // This is on purpose, we actually never want to rerun this. But also experiment should never actually change.
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   if (isEmpty(config)) {
     return null;

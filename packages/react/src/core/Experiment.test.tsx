@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import Experiment, {
   saveStateToSessionStorage,
+  useConfig,
   useExperiment,
 } from "./Experiment";
 import DevTools from "../tasks/DevTools";
 import DisplayText from "../tasks/DisplayTextTask";
 import { render, screen, cleanup } from "@testing-library/react";
-import { Log } from "@hcikit/workflow";
+import { Configuration, Log } from "@hcikit/workflow";
+
+import userEvent from "@testing-library/user-event";
 
 const config = {
   tasks: ["AuxTask"],
@@ -372,6 +375,7 @@ describe("Experiment", () => {
           configuration={{ ...config }}
         />
       );
+
       screen.getByText("0").click();
       screen.getByText("1").click();
       screen.getByText("0").click();
@@ -409,8 +413,68 @@ describe("Experiment", () => {
     });
   });
 
-  xit("logs properly", () => {
+  fit("logs properly", () => {
+    var endConfiguration: Configuration = {};
+
+    let Logger = () => {
+      const { log } = useExperiment();
+      const [logValue, setLogValue] = useState("");
+      return (
+        <div>
+          <input
+            data-testid="log-value"
+            type="text"
+            value={logValue}
+            onChange={(e) => setLogValue}
+          />
+          <button onClick={() => log(logValue)}>log</button>
+          <button onClick={() => log({ logValue })}>log as object</button>
+        </div>
+      );
+    };
+
+    let LogOutput = () => {
+      const config = useConfig();
+      endConfiguration = config;
+
+      return null;
+    };
+
+    let configuration: Configuration = {
+      tasks: ["Logger", "LogOutput"],
+      children: [
+        { task: "ButtonTask", text: "button" },
+        { task: "ButtonTask", text: "button" },
+      ],
+    };
     // do nothing
+
+    render(
+      <Experiment
+        tasks={{ Logger, LogOutput, ButtonTask }}
+        configuration={configuration}
+      />
+    );
+
+    // It should have empty logs.
+
+    // It should have entered without object
+    userEvent.type(screen.getByTestId("log-value"), "logString");
+    screen.getByText("log").click();
+
+    screen.getByText("button").click();
+
+    // With object
+
+    userEvent.type(screen.getByTestId("log-value"), "logObject");
+    screen.getByText("log as object").click();
+    // button task (logs start and end)
+    screen.getByText("button").click();
+    if (endConfiguration?.children) {
+      for (let child of endConfiguration.children) {
+        console.log(child);
+      }
+    }
   });
 
   it("doesn't pass logs to components", () => {

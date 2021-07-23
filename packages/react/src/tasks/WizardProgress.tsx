@@ -3,7 +3,7 @@ import { Stepper, Step, StepLabel } from "@material-ui/core";
 import { withGridItem } from "../GridLayout";
 import {
   getCurrentIndex,
-  getConfigAtIndex,
+  getConfigurationAtIndex,
   getLeafIndex,
 } from "@hcikit/workflow";
 import { useConfig, useExperiment } from "../core/Experiment";
@@ -16,7 +16,10 @@ const NoGridWizardProgress: React.FunctionComponent<{ depth: number }> = ({
   const configuration = useConfig();
   const pathToIndex = getCurrentIndex(configuration).slice(0, depth);
 
-  let configurationAtIndex = getConfigAtIndex(pathToIndex, configuration);
+  let configurationAtIndex = getConfigurationAtIndex(
+    pathToIndex,
+    configuration
+  );
 
   const currentStep = getLeafIndex(
     getCurrentIndex(configuration),
