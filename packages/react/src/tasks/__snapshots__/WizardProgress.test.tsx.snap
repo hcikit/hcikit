@@ -7,6 +7,106 @@ exports[`WizardProgress renders correctly 1`] = `
     style="display: grid; width: 100%; height: 100%; grid-template-columns: 1fr; grid-template-rows: min-content 1fr min-content; grid-template-areas: \\"header\\"
       \\"task\\"
       \\"footer\\";"
-  />
+  >
+    <div
+      style="grid-area: header;"
+    >
+      <div
+        class="MuiPaper-root MuiStepper-root MuiStepper-horizontal MuiPaper-elevation0"
+      >
+        <div
+          class="MuiStep-root MuiStep-horizontal"
+          style="cursor: default;"
+        >
+          <span
+            class="MuiStepLabel-root MuiStepLabel-horizontal"
+          >
+            <span
+              class="MuiStepLabel-iconContainer"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiStepIcon-root MuiStepIcon-active"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="12"
+                />
+                <text
+                  class="MuiStepIcon-text"
+                  text-anchor="middle"
+                  x="12"
+                  y="16"
+                >
+                  1
+                </text>
+              </svg>
+            </span>
+            <span
+              class="MuiStepLabel-labelContainer"
+            >
+              <span
+                class="MuiTypography-root MuiStepLabel-label MuiStepLabel-active MuiTypography-body2 MuiTypography-displayBlock"
+              >
+                0,0
+              </span>
+            </span>
+          </span>
+        </div>
+        <div
+          class="MuiStepConnector-root MuiStepConnector-horizontal Mui-disabled"
+        >
+          <span
+            class="MuiStepConnector-line MuiStepConnector-lineHorizontal"
+          />
+        </div>
+        <div
+          class="MuiStep-root MuiStep-horizontal"
+          style="cursor: default;"
+        >
+          <span
+            class="MuiStepLabel-root MuiStepLabel-horizontal Mui-disabled"
+          >
+            <span
+              class="MuiStepLabel-iconContainer"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiStepIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="12"
+                />
+                <text
+                  class="MuiStepIcon-text"
+                  text-anchor="middle"
+                  x="12"
+                  y="16"
+                >
+                  2
+                </text>
+              </svg>
+            </span>
+            <span
+              class="MuiStepLabel-labelContainer"
+            >
+              <span
+                class="MuiTypography-root MuiStepLabel-label MuiTypography-body2 MuiTypography-displayBlock"
+              >
+                0,1
+              </span>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
 </DocumentFragment>
 `;

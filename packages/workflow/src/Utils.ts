@@ -2,7 +2,7 @@
  * Shuffles array in place. ES6 version
  * @param {Array} a An array containing the items.
  */
-export function shuffle(a: Array<any>) {
+export function shuffle<T>(a: Array<T>): Array<T> {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
@@ -14,7 +14,7 @@ export function shuffle(a: Array<any>) {
  * Returns a random choice from the array.
  * @param {Array} a An array containing the options.
  */
-export function randomChoice(a: Array<any>) {
+export function randomChoice<T>(a: Array<T>): T {
   return a[Math.floor(Math.random() * a.length)];
 }
 
@@ -22,7 +22,7 @@ export function randomChoice(a: Array<any>) {
  * Returns a random choice from the array.
  * @param {Array} a An array containing the options.
  */
-export function randomChoiceNoReplacement(a: Array<any>) {
+export function randomChoiceNoReplacement<T>(a: Array<T>): T {
   const index = Math.floor(Math.random() * a.length);
   const choice = a[index];
   a.splice(index, 1);
@@ -33,7 +33,7 @@ export function randomChoiceNoReplacement(a: Array<any>) {
 /**
  * Returns a random number between min (inclusive) and max (exclusive)
  */
-export function randInt(min: number, max: number) {
+export function randInt(min: number, max: number): number {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min; // The maximum is exclusive and the minimum is inclusive
@@ -42,11 +42,11 @@ export function randInt(min: number, max: number) {
 /**
  * Generates a random GUID.
  */
-export function uuidv4() {
+export function uuidv4(): string {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0;
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
 
-    var v = c === "x" ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
@@ -54,6 +54,6 @@ export function uuidv4() {
 /**
  * Generates a random string.
  */
-export function randomString() {
+export function randomString(): string {
   return Math.random().toString(36).substring(2);
 }

@@ -68,6 +68,7 @@ export const DevTools: React.FunctionComponent = () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
     // TODO: I've done something wrong here. Like quite wrong.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // TODO: set the marks to the top level sections

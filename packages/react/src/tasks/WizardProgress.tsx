@@ -30,8 +30,6 @@ const NoGridWizardProgress: React.FunctionComponent<{ depth: number }> = ({
     return null;
   }
 
-  console.log({ currentStep, pathToIndex });
-
   return (
     <Stepper activeStep={currentStep}>
       {configurationAtIndex.children.map(({ task, label }, index) => {

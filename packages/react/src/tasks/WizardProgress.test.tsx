@@ -87,7 +87,7 @@ describe("WizardProgress", () => {
     expect(screen.getByText("labels")).not.toHaveClass("MuiStepLabel-active");
   });
 
-  fit("renders correct depth parameter", () => {
+  it("renders correct depth parameter", () => {
     render(
       <Experiment
         tasks={{
