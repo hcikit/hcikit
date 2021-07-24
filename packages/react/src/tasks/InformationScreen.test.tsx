@@ -10,30 +10,19 @@ import { ConfigMutatorContext, ControlFunctions } from "../core/Experiment";
 import { ExperimentIndex } from "@hcikit/workflow";
 
 const identities: ControlFunctions = {
-  taskComplete: () => {
-    // do nothing.
-  },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  setWorkflowIndex: (_index: ExperimentIndex) => {
+  advance: (_index?: ExperimentIndex) => {
     // do nothing.
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   log: (_log: unknown) => {
     // do nothing.
   },
-  modifyConfigAtDepth: (
+  modifyConfig: (
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _modifiedConfig: Record<string, unknown>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _depth?: number | undefined
-  ) => {
-    // do nothing.
-  },
-  modifyConfig: (
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _index: ExperimentIndex,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _modifiedConfig: Record<string, unknown>
+    _index?: ExperimentIndex
   ) => {
     // do nothing.
   },
@@ -62,17 +51,17 @@ describe("InformationScreen", () => {
   });
 
   it("advances to the next task", () => {
-    const taskComplete = jest.fn();
+    const advance = jest.fn();
     renderWithProvider(<InformationScreen content="Hello World" />, {
-      taskComplete,
+      advance,
     });
 
     screen.getByText("Continue").click();
-    expect(taskComplete).toBeCalledTimes(1);
+    expect(advance).toBeCalledTimes(1);
   });
 
   it("doesn't advance when withContinue is false", () => {
-    const taskComplete = jest.fn();
+    const advance = jest.fn();
 
     const rendered = renderWithProvider(
       <InformationScreen
@@ -80,23 +69,23 @@ describe("InformationScreen", () => {
         shortcutEnabled
         content="Hello World"
       />,
-      { taskComplete }
+      { advance }
     );
 
     fireEvent.keyDown(rendered.baseElement, { key: "Enter", code: "Enter" });
 
-    expect(taskComplete).not.toHaveBeenCalled();
+    expect(advance).not.toHaveBeenCalled();
   });
 
   it("advances with a keyboard press", () => {
-    const taskComplete = jest.fn();
+    const advance = jest.fn();
     const rendered = renderWithProvider(
       <InformationScreen shortcutEnabled content="Hello World" />,
-      { taskComplete }
+      { advance: advance }
     );
 
     fireEvent.keyDown(rendered.baseElement, { key: "Enter", code: "Enter" });
-    expect(taskComplete).toBeCalledTimes(1);
+    expect(advance).toBeCalledTimes(1);
   });
 
   it("renders markdown properly", () => {

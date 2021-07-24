@@ -14,13 +14,13 @@ const MousePositioner: React.FunctionComponent = () => {
   const experiment = useExperiment();
   return (
     <LeftCenter>
-      <Button onClick={experiment.taskComplete}>Next</Button>
+      <Button onClick={() => experiment.advance()}>Next</Button>
     </LeftCenter>
   );
 };
 
 MousePositioner.propTypes = {
-  taskComplete: PropTypes.func,
+  advance: PropTypes.func,
 };
 
 export default MousePositioner;

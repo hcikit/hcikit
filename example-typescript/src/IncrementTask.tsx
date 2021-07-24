@@ -7,23 +7,23 @@ const IncrementTask: React.FunctionComponent<{
   desiredValue: number;
   value: number;
 }> = ({ desiredValue, value = 0 }) => {
-  const { modifyConfigAtDepth, taskComplete, log } = useExperiment();
+  const { modifyConfig, advance, log } = useExperiment();
   function checkAnswer() {
     if (value === desiredValue) {
-      taskComplete();
+      advance();
     }
   }
 
   function decrement() {
-    modifyConfigAtDepth({ value: value - 1 });
+    modifyConfig({ value: value - 1 });
   }
 
   function increment() {
-    modifyConfigAtDepth({ value: value + 1 });
+    modifyConfig({ value: value + 1 });
   }
 
   function reset() {
-    modifyConfigAtDepth({ value: 0 });
+    modifyConfig({ value: 0 });
   }
 
   // console.log(log("Rolled over with mouse"));

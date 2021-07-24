@@ -9,14 +9,14 @@ describe("DisplayTextTask", () => {
   });
 
   it("advances to the next task", () => {
-    const taskComplete = jest.fn();
+    const advance = jest.fn();
 
     renderWithProvider(<DisplayTextTask content="Hello World" />, {
-      taskComplete,
+      advance,
     });
 
     screen.getByText("Continue").click();
-    expect(taskComplete).toBeCalledTimes(1);
+    expect(advance).toBeCalledTimes(1);
   });
 
   it("renders properly", () => {

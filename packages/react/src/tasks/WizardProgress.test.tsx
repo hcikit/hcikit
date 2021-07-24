@@ -41,7 +41,7 @@ let advancedConfig: Configuration = {
 
 let ClickToAdvance: React.FunctionComponent = () => {
   const experiment = useExperiment();
-  return <button onClick={experiment.taskComplete}>advance</button>;
+  return <button onClick={() => experiment.advance()}>advance</button>;
 };
 
 describe("WizardProgress", () => {

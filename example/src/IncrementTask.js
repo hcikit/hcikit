@@ -1,31 +1,26 @@
 import React from "react";
-import { CenteredNicePaper, withGridItem } from "@hcikit/react";
+import { CenteredNicePaper, useExperiment, withGridItem } from "@hcikit/react";
 import { Typography } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 
-const IncrementTask = ({
-  desiredValue,
-  value = 0,
-  modifyConfigAtDepth,
-  taskComplete,
-  log,
-}) => {
+const IncrementTask = ({ desiredValue, value = 0, log }) => {
+  let { advance, modifyConfig } = useExperiment();
   function checkAnswer() {
     if (value === desiredValue) {
-      taskComplete();
+      advance();
     }
   }
 
   function decrement() {
-    modifyConfigAtDepth({ value: value - 1 });
+    modifyConfig({ value: value - 1 });
   }
 
   function increment() {
-    modifyConfigAtDepth({ value: value + 1 });
+    modifyConfig({ value: value + 1 });
   }
 
   function reset() {
-    modifyConfigAtDepth({ value: 0 });
+    modifyConfig({ value: 0 });
   }
 
   // console.log(log("Rolled over with mouse"));

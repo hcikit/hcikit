@@ -2,20 +2,18 @@ import {
   getLeafIndex,
   getConfigurationAtIndex,
   getCurrentProps,
-  logToConfig,
+  logToConfiguration,
   scopePropsForTask,
   mergeArraysSpecial,
-  markTaskComplete,
   __INDEX__,
   indexToTaskNumber,
   taskNumberToIndex,
   getTotalTasks,
   iterateConfiguration,
-  modifyConfigurationAtDepth,
   modifyConfiguration,
   Configuration,
   flattenConfigurationWithProps,
-  setIndexTo,
+  advanceConfiguration,
 } from "./workflow";
 import deepFreeze from "deep-freeze";
 import { getCurrentIndex } from "../../../dist/workflow";
@@ -140,9 +138,9 @@ describe("scopePropsForTask", () => {
 
 describe("getCurrentProps", () => {
   it("log isn't passed with props", () => {
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
 
-    config = logToConfig(config, { type: "world" });
+    config = logToConfiguration(config, { type: "world" });
 
     expect(getCurrentProps(config)).not.toHaveProperty("logs");
 
@@ -161,7 +159,7 @@ describe("getCurrentProps", () => {
 
   it("cascades properties from top to bottom", () => {
     config = JSON.parse(JSON.stringify(configuration));
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
     config.inheritance = "top";
 
     if (config?.children?.[1]?.children?.[0]?.children?.[0]) {
@@ -185,8 +183,8 @@ describe("getCurrentProps", () => {
   });
 
   it("handles object props", () => {
-    config = markTaskComplete(config);
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
+    config = advanceConfiguration(config);
 
     expect(getCurrentProps(config)).toEqual({
       __INDEX__: [1, 0, 1],
@@ -216,16 +214,16 @@ describe("log", () => {
   it("doesn't log when the experiment is finished", () => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
 
-    config = markTaskComplete(config);
-    config = markTaskComplete(config);
-    config = markTaskComplete(config);
-    config = markTaskComplete(config);
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
+    config = advanceConfiguration(config);
+    config = advanceConfiguration(config);
+    config = advanceConfiguration(config);
+    config = advanceConfiguration(config);
 
     deepFreeze(config);
 
     expect(() => {
-      config = logToConfig(config, { type: "world" });
+      config = logToConfiguration(config, { type: "world" });
     }).toThrow();
 
     expect(config?.children?.length).toBe(2);
@@ -236,7 +234,7 @@ describe("log", () => {
     const patch = Date.now;
     Date.now = () => 10;
 
-    config = logToConfig(config, { type: "test", value: "hello world" });
+    config = logToConfiguration(config, { type: "test", value: "hello world" });
     expect(config?.children?.[0]?.logs?.[0]).toEqual({
       type: "test",
       value: "hello world",
@@ -250,7 +248,7 @@ describe("log", () => {
     const patch = Date.now;
     Date.now = () => 10;
 
-    config = logToConfig(config, { value: 10, type: "number" });
+    config = logToConfiguration(config, { value: 10, type: "number" });
     expect(config?.children?.[0]?.logs?.[0]).toEqual({
       value: 10,
       timestamp: 10,
@@ -264,7 +262,7 @@ describe("log", () => {
     const patch = Date.now;
     Date.now = () => 10;
 
-    config = logToConfig(config, { value: "world", type: "test" });
+    config = logToConfiguration(config, { value: "world", type: "test" });
     expect(config?.children?.[0]?.logs?.[0]).toEqual({
       value: "world",
       type: "test",
@@ -279,9 +277,9 @@ describe("log", () => {
     let i = 10;
     Date.now = () => i++;
 
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
 
-    config = logToConfig(config, { type: "test", value: "world" });
+    config = logToConfiguration(config, { type: "test", value: "world" });
     expect(
       config?.children?.[1]?.children?.[0]?.children?.[0]?.logs?.[0]
     ).toEqual({
@@ -290,9 +288,9 @@ describe("log", () => {
       timestamp: 10,
     });
 
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
 
-    config = logToConfig(config, { value: "world", type: "test" });
+    config = logToConfiguration(config, { value: "world", type: "test" });
     expect(config?.children?.[1].children?.[0].children?.[1].logs?.[0]).toEqual(
       {
         value: "world",
@@ -300,17 +298,17 @@ describe("log", () => {
         timestamp: 11,
       }
     );
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
 
-    config = logToConfig(config, { value: "world", type: "test" });
+    config = logToConfiguration(config, { value: "world", type: "test" });
     expect(config.children?.[1].children?.[1].children?.[0].logs?.[0]).toEqual({
       value: "world",
       type: "test",
       timestamp: 12,
     });
 
-    config = markTaskComplete(config);
-    config = logToConfig(config, { value: "world", type: "test" });
+    config = advanceConfiguration(config);
+    config = logToConfiguration(config, { value: "world", type: "test" });
     expect(config.children?.[1].children?.[1].children?.[1].logs?.[0]).toEqual({
       value: "world",
       type: "test",
@@ -320,9 +318,9 @@ describe("log", () => {
   });
 
   it("log replaces the required objects", () => {
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
 
-    const c = logToConfig(config, { value: "world", type: "test" });
+    const c = logToConfiguration(config, { value: "world", type: "test" });
 
     expect(config).not.toBe(c);
     expect(config.children).not.toBe(c.children);
@@ -391,37 +389,37 @@ describe("getConfigAtIndex", () => {
   });
 });
 
-describe("markTaskComplete", () => {
+describe("advanceConfiguration", () => {
   it("advances experiments", () => {
-    expect(getCurrentIndex(markTaskComplete(config))).toEqual([1, 0, 0]);
+    expect(getCurrentIndex(advanceConfiguration(config))).toEqual([1, 0, 0]);
   });
 
   it("advances from second", () => {
-    config = setIndexTo(config, [1, 0, 0]);
-    expect(getCurrentIndex(markTaskComplete(config))).toEqual([1, 0, 1]);
+    config = advanceConfiguration(config, [1, 0, 0]);
+    expect(getCurrentIndex(advanceConfiguration(config))).toEqual([1, 0, 1]);
   });
 
   it("ends gracefully", () => {
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
     expect(config[__INDEX__]).toEqual([1, 0, 0]);
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
     expect(config[__INDEX__]).toEqual([1, 0, 1]);
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
     expect(config[__INDEX__]).toEqual([1, 1, 0]);
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
     expect(config[__INDEX__]).toEqual([1, 1, 1]);
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
 
     expect(config[__INDEX__]).toEqual([]);
     expect(getCurrentProps(config)).toEqual({});
   });
 
   it("cant advance past end", () => {
-    config = markTaskComplete(config);
-    config = markTaskComplete(config);
-    config = markTaskComplete(config);
-    config = markTaskComplete(config);
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
+    config = advanceConfiguration(config);
+    config = advanceConfiguration(config);
+    config = advanceConfiguration(config);
+    config = advanceConfiguration(config);
 
     expect(config[__INDEX__]).toEqual([]);
     expect(getCurrentProps(config)).toEqual({});
@@ -644,66 +642,13 @@ describe("flattenConfigurationWithProps", () => {
   });
 });
 
-describe("modifyConfigurationAtDepth", () => {
-  it("edits negative indices", () => {
-    config = markTaskComplete(config);
-
-    config = modifyConfigurationAtDepth(config, { hello: "world" }, -1);
-    expect(config.children?.[1].children?.[0].hello).toEqual("world");
-  });
-
-  it("edits positive indices", () => {
-    config = markTaskComplete(config);
-
-    config = modifyConfigurationAtDepth(config, { hello: "world" }, 1);
-    expect(config.children?.[1].hello).toEqual("world");
-  });
-
-  it("edits global", () => {
-    config = markTaskComplete(config);
-
-    config = modifyConfigurationAtDepth(config, { hello: "world" }, 0);
-    expect(config.hello).toEqual("world");
-  });
-
-  it("edits the current level", () => {
-    config = markTaskComplete(config);
-
-    config = modifyConfigurationAtDepth(config, { hello: "world" });
-    expect(config.children?.[1].children?.[0].children?.[0].hello).toEqual(
-      "world"
-    );
-  });
-
-  it("fails on completed experiment", () => {
-    config = markTaskComplete(config);
-    config = markTaskComplete(config);
-    config = markTaskComplete(config);
-    config = markTaskComplete(config);
-    config = markTaskComplete(config);
-
-    deepFreeze(config);
-    expect(() => {
-      config = modifyConfigurationAtDepth(config, { hello: "world" });
-    }).toThrow();
-    expect(config.children?.[1].children?.[0].children?.[0]).not.toHaveProperty(
-      "hello"
-    );
-  });
-
-  it("works correctly on unstarted experiment?", () => {
-    config = modifyConfigurationAtDepth(config, { hello: "world" }, 1);
-    expect(config.children?.[0].hello).toEqual("world");
-  });
-});
-
 describe("modifyConfiguration", () => {
   it("overwrites existing properties", () => {
     config = modifyConfiguration(config, { configprop: "section" }, []);
     expect(config.configprop).toEqual("section");
   });
   it("works in place", () => {
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
 
     deepFreeze(config);
 
@@ -767,10 +712,45 @@ describe("modifyConfiguration", () => {
   });
 
   it("works", () => {
-    config = markTaskComplete(config);
+    config = advanceConfiguration(config);
 
     const c = modifyConfiguration(config, { hello: "world" }, [1, 0]);
 
     expect(c.children?.[1].children?.[0].hello).toEqual("world");
+  });
+
+  it("index", () => {
+    config = advanceConfiguration(config);
+
+    config = modifyConfiguration(config, { hello: "world" }, [1, 0]);
+    expect(config.children?.[1].children?.[0].hello).toEqual("world");
+  });
+
+  it("edits positive indices", () => {
+    config = advanceConfiguration(config);
+
+    config = modifyConfiguration(config, { hello: "world" }, [1]);
+    expect(config.children?.[1].hello).toEqual("world");
+  });
+
+  it("edits global", () => {
+    config = advanceConfiguration(config);
+
+    config = modifyConfiguration(config, { hello: "world" }, []);
+    expect(config.hello).toEqual("world");
+  });
+
+  it("edits the current level", () => {
+    config = advanceConfiguration(config);
+
+    config = modifyConfiguration(config, { hello: "world" }, [1, 0, 0]);
+    expect(config.children?.[1].children?.[0].children?.[0].hello).toEqual(
+      "world"
+    );
+  });
+
+  it("works correctly on unstarted experiment?", () => {
+    config = modifyConfiguration(config, { hello: "world" }, [0]);
+    expect(config.children?.[0].hello).toEqual("world");
   });
 });

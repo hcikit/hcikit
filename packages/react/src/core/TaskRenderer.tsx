@@ -29,13 +29,7 @@ const TaskRenderer: React.FunctionComponent<{
   const configuration = useConfig();
   const currentProps = getCurrentProps(configuration);
 
-  const {
-    log,
-    taskComplete,
-    setWorkflowIndex,
-    modifyConfig,
-    modifyConfigAtDepth,
-  } = useExperiment();
+  const { log, advance, modifyConfig } = useExperiment();
 
   const tasksToRender = currentProps.tasks ? [...currentProps.tasks] : [];
 
@@ -62,6 +56,7 @@ const TaskRenderer: React.FunctionComponent<{
       let key = `${task}-${i.toString()}`;
       const props = scopePropsForTask(currentProps, task);
 
+      // By adding the index this forces the component to remount and lose the state it had before.
       if (forceRemountEveryTask) {
         key += "-" + getCurrentIndex(configuration).join(":");
       }
@@ -70,11 +65,9 @@ const TaskRenderer: React.FunctionComponent<{
         <SingleTaskRenderer
           Task={Task}
           key={key}
-          setWorkflowIndex={setWorkflowIndex}
           log={log}
-          taskComplete={taskComplete}
+          advance={advance}
           modifyConfig={modifyConfig}
-          modifyConfigAtDepth={modifyConfigAtDepth}
           {...props}
         />
       );

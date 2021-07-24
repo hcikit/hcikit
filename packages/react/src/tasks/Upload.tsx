@@ -39,7 +39,7 @@ const Upload: React.FunctionComponent<UploadProps> = ({
       upload(filename, logs)
         .then(() => {
           if (!fireAndForget) {
-            experiment.taskComplete();
+            experiment.advance();
             setDone(true);
           }
         })
@@ -56,7 +56,7 @@ const Upload: React.FunctionComponent<UploadProps> = ({
 
     if (fireAndForget) {
       attemptUploadWithRetries(1);
-      experiment.taskComplete();
+      experiment.advance();
     } else {
       attemptUploadWithRetries(3);
     }
@@ -97,7 +97,7 @@ const Upload: React.FunctionComponent<UploadProps> = ({
         <Button
           variant="contained"
           color="primary"
-          onClick={experiment.taskComplete}
+          onClick={() => experiment.advance()}
         >
           Continue
         </Button>

@@ -23,7 +23,7 @@ const GoogleFormQuestionnaire: React.FunctionComponent<{
 
   function handleLoad() {
     if (hasLoaded) {
-      experiment.taskComplete();
+      experiment.advance();
     } else {
       setHasLoaded(true);
     }

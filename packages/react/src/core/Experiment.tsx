@@ -6,34 +6,27 @@ import React, {
   useCallback,
   ElementType,
   useMemo,
+  useEffect,
 } from "react";
 
 import TaskRenderer from "./TaskRenderer";
 
 import {
-  markTaskComplete,
-  logToConfig,
+  advanceConfiguration,
+  logToConfiguration,
   modifyConfiguration,
-  modifyConfigurationAtDepth,
   Configuration,
   ExperimentIndex,
-  setIndexTo,
   UnfilledLog,
+  experimentComplete,
 } from "@hcikit/workflow";
 
-// Actually the functions for modifying the config are strange. It shouldn't be at depth, it should be at index. And then another one at the current index/.
-
 export interface ControlFunctions {
-  taskComplete: () => void;
-  setWorkflowIndex: (index: ExperimentIndex) => void;
+  advance: (index?: ExperimentIndex) => void;
   log: (log: UnfilledLog) => void;
-  modifyConfigAtDepth: (
-    modifiedConfig: Record<string, unknown>,
-    depth?: number | undefined
-  ) => void;
   modifyConfig: (
-    index: ExperimentIndex,
-    modifiedConfig: Record<string, unknown>
+    modifiedConfig: Record<string, unknown>,
+    index?: ExperimentIndex
   ) => void;
 }
 
@@ -103,7 +96,6 @@ const Experiment: React.FunctionComponent<{
   configuration,
 }) => {
   // TODO: not sure how to create different sessions for the same task.
-
   const [config, setConfig] = useState<Configuration>(() => {
     let storedState: Configuration = {};
 
@@ -127,35 +119,23 @@ const Experiment: React.FunctionComponent<{
   //   }
   // }, [config, saveState]);
 
-  const taskComplete = useCallback(
-    () =>
+  const advance = useCallback(
+    (index?: ExperimentIndex) =>
       setConfig((c: Configuration) => {
         // TODO: need to make the experiment log before and after
-        // TODO: push the ...c into the library? deepfreeze it in all tests
 
-        // logToConfig(c, { type: "END" });
-        const newConfig: Configuration = markTaskComplete(c);
-        // logToConfig(newConfig, { type: "START" });
+        c = logToConfiguration(c, { type: "END" });
+        c = advanceConfiguration(c, index);
 
-        if (saveState) {
-          saveState(newConfig);
+        if (!experimentComplete(c)) {
+          c = logToConfiguration(c, { type: "START" });
         }
 
-        return newConfig;
-      }),
-    [saveState]
-  );
-
-  const setWorkflowIndex = useCallback(
-    (newIndex: ExperimentIndex): void =>
-      setConfig((c: Configuration) => {
-        const newConfig: Configuration = setIndexTo(c, newIndex);
-
         if (saveState) {
-          saveState(newConfig);
+          saveState(c);
         }
 
-        return newConfig;
+        return c;
       }),
     [saveState]
   );
@@ -163,24 +143,7 @@ const Experiment: React.FunctionComponent<{
   const log = useCallback(
     (log: UnfilledLog): void =>
       setConfig((c: Configuration) => {
-        const newConfig: Configuration = logToConfig(c, log);
-
-        if (saveState) {
-          saveState(newConfig);
-        }
-
-        return newConfig;
-      }),
-    [saveState]
-  );
-
-  const modifyConfigAtDepth = useCallback(
-    (
-      modifiedConfig: Record<string, unknown>,
-      depth?: number | undefined
-    ): void =>
-      setConfig((c: Configuration) => {
-        const newConfig = modifyConfigurationAtDepth(c, modifiedConfig, depth);
+        const newConfig: Configuration = logToConfiguration(c, log);
 
         if (saveState) {
           saveState(newConfig);
@@ -192,7 +155,7 @@ const Experiment: React.FunctionComponent<{
   );
 
   const modifyConfig = useCallback(
-    (index: ExperimentIndex, modifiedConfig: Record<string, unknown>): void =>
+    (modifiedConfig: Record<string, unknown>, index?: ExperimentIndex): void =>
       setConfig((c: Configuration) => {
         const newConfig = modifyConfiguration(c, modifiedConfig, index);
 
@@ -209,20 +172,18 @@ const Experiment: React.FunctionComponent<{
 
   const experiment = useMemo(
     () => ({
-      taskComplete,
-      setWorkflowIndex,
+      advance: advance,
       log,
-      modifyConfigAtDepth,
       modifyConfig,
     }),
-    [taskComplete, setWorkflowIndex, log, modifyConfigAtDepth, modifyConfig]
+    [advance, log, modifyConfig]
   );
 
-  // useEffect(() => {
-  //   experiment.log({ type: "START" });
-  //   // This is on purpose, we actually never want to rerun this. But also experiment should never actually change.
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  useEffect(() => {
+    experiment.log({ type: "START" });
+    // This is on purpose, we actually never want to rerun this. But also experiment should never actually change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isEmpty(config)) {
     return null;

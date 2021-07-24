@@ -72,7 +72,7 @@ export const ConsentForm: React.FunctionComponent<{
           <Button
             onClick={() => {
               if (!requiredFieldNotFilled()) {
-                experiment.taskComplete();
+                experiment.advance();
               }
             }}
             variant="contained"

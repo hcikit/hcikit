@@ -1,4 +1,4 @@
-import { mergeWith, pickBy, isEqual, pick } from "lodash";
+import { mergeWith, pickBy, isEqual, pick, sortedIndex } from "lodash";
 
 export type ExperimentIndex = Array<number>;
 
@@ -329,13 +329,20 @@ export function taskNumberToIndex(
  * @param {Configuration} configuration
  * @returns {ExperimentIndex}
  */
-export function markTaskComplete(configuration: Configuration): Configuration {
+export function advanceConfiguration(
+  configuration: Configuration,
+  index?: ExperimentIndex
+): Configuration {
   if (experimentComplete(configuration)) {
     return configuration;
   }
 
-  let index = getCurrentIndex(configuration);
+  if (index !== undefined) {
+    console.log("Uhhhh");
+    return { ...configuration, [__INDEX__]: index };
+  }
 
+  index = getCurrentIndex(configuration);
   index = getLeafIndex(configuration, index);
 
   let newIndexValue;
@@ -367,18 +374,6 @@ export function markTaskComplete(configuration: Configuration): Configuration {
 
   return { ...configuration, [__INDEX__]: getLeafIndex(configuration, index) };
 }
-/**
- * Returns the next leaf index after this task is complete. The function is slightly misnamed because it doesn't actually change any indices.
- *
- * @param {Configuration} configuration
- * @returns {ExperimentIndex}
- */
-export function setIndexTo(
-  configuration: Configuration,
-  newIndex: ExperimentIndex
-): Configuration {
-  return { ...configuration, [__INDEX__]: newIndex };
-}
 
 /**
  * This function actually places a new log object on the config at the current index, or if the index isn't a leaf it finds the leaf index.
@@ -388,7 +383,7 @@ export function setIndexTo(
  * @returns
  */
 // We use omit2 because Omit clobbers all of the stuff in it.
-export function logToConfig(
+export function logToConfiguration(
   configuration: Configuration,
   log: UnfilledLog
 ): Configuration {
@@ -424,7 +419,7 @@ export function logToConfig(
 export function modifyConfiguration(
   configuration: Configuration,
   modifiedConfiguration: Record<string, unknown>,
-  index: ExperimentIndex,
+  index?: ExperimentIndex,
   logResult = true
 ): Configuration {
   // if (index.length === 0) {
@@ -435,13 +430,16 @@ export function modifyConfiguration(
   //   return;
   // }
 
-  // TODO: this should maybe fail on completed experiments because it cannot log properly.
+  if (!index) {
+    index = getCurrentIndex(configuration);
+  }
+
   let originalConfiguration = { ...configuration };
 
   if (logResult) {
     const configToEdit = getConfigurationAtIndex(configuration, index);
 
-    originalConfiguration = logToConfig(originalConfiguration, {
+    originalConfiguration = logToConfiguration(originalConfiguration, {
       from: pick(configToEdit, Object.keys(modifiedConfiguration)),
       to: modifiedConfiguration,
       index,
@@ -476,34 +474,6 @@ export function modifyConfiguration(
   Object.assign(configuration, modifiedConfiguration);
 
   return originalConfiguration;
-}
-
-/**
- *
- * Edits a config by adding all of newConfig values at a certain depth. Depth works like slice (negative values start from the end, positive from the start)
- *
- * @param {Configuration} configuration
- * @param {Object} newConfiguration The key/values to overwrite
- * @param {number} depth the depth where 0 is the root, negative numbers work from the current config upwards (-1 being one up from the current position, and positive numbers move downwards). Not passing a depth results in the current level being edited
- */
-export function modifyConfigurationAtDepth(
-  configuration: Configuration,
-  newConfiguration: Record<string, unknown>,
-  depth?: number
-): Configuration {
-  if (experimentComplete(configuration)) {
-    throw new Error(
-      "Attempting to modify configuration when the experiment is complete."
-    );
-  }
-
-  let index = getCurrentIndex(configuration);
-
-  index = getLeafIndex(configuration, index);
-
-  const indexToEdit: ExperimentIndex = index.slice(0, depth);
-
-  return modifyConfiguration(configuration, newConfiguration, indexToEdit);
 }
 
 // ----- Iterating configs -----

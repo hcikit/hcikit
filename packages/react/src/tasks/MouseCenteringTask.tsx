@@ -38,7 +38,7 @@ const MouseCenteringTask: React.FunctionComponent = () => {
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if (e.key === " " && mouseOver) {
-        experiment.taskComplete();
+        experiment.advance();
       }
     }
     document.addEventListener("keydown", handleKey, false);
@@ -73,7 +73,7 @@ const MouseCenteringTask: React.FunctionComponent = () => {
 };
 
 MouseCenteringTask.propTypes = {
-  taskComplete: PropTypes.func,
+  advance: PropTypes.func,
 };
 
 export default withGridItem(MouseCenteringTask);

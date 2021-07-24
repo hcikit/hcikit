@@ -16,7 +16,6 @@ import {
   getCurrentIndex,
 } from "@hcikit/workflow";
 
-import PropTypes from "prop-types";
 import { useConfig, useExperiment } from "../core/Experiment";
 
 const StyledCard = styled(Card)`
@@ -104,7 +103,7 @@ export const DevTools: React.FunctionComponent = () => {
         <IconButton>
           <FastRewind />
         </IconButton>
-        <IconButton onClick={experiment.taskComplete}>
+        <IconButton onClick={() => experiment.advance()}>
           <FastForward />
         </IconButton>
         <IconButton>
@@ -119,19 +118,11 @@ export const DevTools: React.FunctionComponent = () => {
         min={0}
         max={getTotalTasks(configuration)}
         onChange={(_: React.ChangeEvent<{}>, value: number | Array<number>) => {
-          experiment.setWorkflowIndex(
-            taskNumberToIndex(configuration, value as number)
-          );
+          experiment.advance(taskNumberToIndex(configuration, value as number));
         }}
       />
     </StyledCard>
   );
-};
-
-DevTools.propTypes = {
-  configuration: PropTypes.object,
-  setWorkflowIndex: PropTypes.func,
-  taskComplete: PropTypes.func,
 };
 
 export default DevTools;

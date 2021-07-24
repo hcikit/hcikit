@@ -18,7 +18,7 @@ const DisplayTextTask: React.FunctionComponent<{ content: string }> = ({
         <Button
           variant="contained"
           color="primary"
-          onClick={experiment.taskComplete}
+          onClick={() => experiment.advance()}
         >
           Continue
         </Button>

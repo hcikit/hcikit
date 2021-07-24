@@ -32,7 +32,7 @@ const InformationScreen: React.FunctionComponent<{
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === shortcut && shortcutEnabled && withContinue) {
-        experiment.taskComplete();
+        experiment.advance();
       }
     }
     window.addEventListener("keydown", handleKeyDown);
@@ -44,7 +44,7 @@ const InformationScreen: React.FunctionComponent<{
       <Markdown>{content}</Markdown>
       <br />
       {withContinue && (
-        <Button color="primary" onClick={experiment.taskComplete}>
+        <Button color="primary" onClick={() => experiment.advance()}>
           Continue {shortcutEnabled && `(${shortcut})`}
         </Button>
       )}

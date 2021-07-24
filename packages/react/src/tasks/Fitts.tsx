@@ -50,7 +50,7 @@ const Fitts: React.FunctionComponent<{
             cy={Math.sin(rotation) * radius}
             r={width}
             active={active}
-            onClick={active ? experiment.taskComplete : noop}
+            onClick={active ? experiment.advance : noop}
           />
         );
       })}

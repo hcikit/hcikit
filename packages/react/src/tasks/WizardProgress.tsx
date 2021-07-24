@@ -44,7 +44,7 @@ const NoGridWizardProgress: React.FunctionComponent<{ depth: number }> = ({
             }}
             onClick={() => {
               if (process.env.NODE_ENV === "development") {
-                experiment.setWorkflowIndex([...pathToIndex, index]);
+                experiment.advance([...pathToIndex, index]);
               }
             }}
             key={index}

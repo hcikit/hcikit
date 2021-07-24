@@ -8,7 +8,7 @@ import DevTools from "../tasks/DevTools";
 import DisplayText from "../tasks/DisplayTextTask";
 import { render, screen, cleanup } from "@testing-library/react";
 import { Configuration, Log } from "@hcikit/workflow";
-
+import util from "util";
 import userEvent from "@testing-library/user-event";
 
 const config = {
@@ -36,7 +36,7 @@ const RenderCounter: React.FunctionComponent<{
     renders.current++;
 
     if (renders.current >= numRendersBeforeContinue) {
-      experiment.taskComplete();
+      experiment.advance();
     }
   });
 
@@ -68,13 +68,14 @@ const ButtonTask: React.FunctionComponent<{
   logs: Array<Log>;
   configVal: string;
 }> = ({ text, logs, configVal = "hello" }) => {
-  const { log, modifyConfigAtDepth, taskComplete } = useExperiment();
+  const configuration = useConfig();
+  const { log, modifyConfig, advance } = useExperiment();
   return (
     <>
       <button
         onClick={() => {
           log({ hello: "world", type: "log" });
-          taskComplete();
+          advance();
         }}
       >
         {text}
@@ -82,20 +83,12 @@ const ButtonTask: React.FunctionComponent<{
       <p className="logs" data-testid="logs">
         {logs}
       </p>
-      <p className="modifyConfig">{configVal}</p>
-      <span
-        className="actuallyModifyConfig"
-        onClick={() => modifyConfigAtDepth({ configVal: "world" })}
-      >
+      <p>{configVal}</p>
+      <span onClick={() => modifyConfig({ configVal: "world" })}>
         Modify Config
       </span>
-      <p className="modifyConfig">{configVal}</p>
-      <span onClick={() => modifyConfigAtDepth({ configVal: "world" })}>
-        at depth default
-      </span>
-      <span onClick={() => modifyConfigAtDepth({ configVal: "world" })}>
-        at depth 0
-      </span>
+      <p>{configuration.children?.[1].foo as string}</p>
+      <span onClick={() => modifyConfig({ foo: "bar" }, [1])}>at index</span>
     </>
   );
 };
@@ -109,7 +102,7 @@ const MultiTask: React.FunctionComponent<{ times: number }> = ({ times }) => {
       onClick={() => {
         setTimesClicked(timesClicked + 1);
         if (timesClicked + 1 >= times) {
-          experiment.taskComplete();
+          experiment.advance();
         }
       }}
     >
@@ -146,6 +139,19 @@ describe("Experiment", () => {
 
     screen.getByText("button task 1").click();
     screen.getByText(config.children[1].text);
+  });
+
+  it("advances to an arbitrary task", () => {
+    render(
+      <Experiment
+        loadState={null}
+        saveState={null}
+        tasks={{ ButtonTask, AuxTask }}
+        configuration={{ ...config }}
+      />
+    );
+
+    fail();
   });
 
   it("works with empty tasks array", () => {
@@ -192,7 +198,7 @@ describe("Experiment", () => {
       const experiment = useExperiment();
       expect(tasks).toEqual(["Blank"]);
 
-      return <button onClick={experiment.taskComplete}>Extender</button>;
+      return <button onClick={() => experiment.advance()}>Extender</button>;
     };
 
     const Blank = () => null;
@@ -420,11 +426,11 @@ describe("Experiment", () => {
     });
   });
 
-  it("logs properly", () => {
+  fit("logs properly", () => {
     var endConfiguration: Configuration = {};
 
     let Logger = () => {
-      const { log } = useExperiment();
+      const { log, modifyConfig } = useExperiment();
       const [logValue, setLogValue] = useState("");
       return (
         <div>
@@ -432,10 +438,13 @@ describe("Experiment", () => {
             data-testid="log-value"
             type="text"
             value={logValue}
-            onChange={(e) => setLogValue}
+            onChange={(e) => setLogValue(e.target.value)}
           />
           <button onClick={() => log({ logValue, type: "log" })}>
             log as object
+          </button>
+          <button onClick={() => modifyConfig({ newConfig: "help" })}>
+            modify config
           </button>
         </div>
       );
@@ -456,6 +465,11 @@ describe("Experiment", () => {
       ],
     };
     // do nothing
+    let oldDate = Date.now;
+    let i = 0;
+    Date.now = () => i++;
+
+    // TODO: monkeypatch date.now
 
     render(
       <Experiment
@@ -467,16 +481,23 @@ describe("Experiment", () => {
     userEvent.type(screen.getByTestId("log-value"), "logObject");
 
     screen.getByText("button").click();
+    screen.getByText("modify config").click();
 
     screen.getByText("log as object").click();
-    // button task (logs start and end)
+
     // TODO: I need to add the start and end logs in.
     screen.getByText("button").click();
+
+    console.log(util.inspect(endConfiguration, undefined, null));
+
     if (endConfiguration?.children) {
       for (let child of endConfiguration.children) {
         console.log(child);
       }
     }
+    // TODO: Check that the config modification gets logged too
+
+    Date.now = oldDate;
   });
 
   it("doesn't pass logs to components", () => {
@@ -507,6 +528,9 @@ describe("Experiment", () => {
     screen.getByText("hello");
     screen.getByText("Modify Config").click();
     screen.getByText("world");
+
+    screen.getByText("at index").click();
+    screen.getByText("bar");
   });
   // TODO: modify config at depth works too.
   it("modifies config at depth properly", () => {});
