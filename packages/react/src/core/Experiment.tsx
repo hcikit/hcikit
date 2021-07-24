@@ -6,25 +6,27 @@ import React, {
   useCallback,
   ElementType,
   useMemo,
-  useEffect,
 } from "react";
 
 import TaskRenderer from "./TaskRenderer";
 
 import {
-  __INDEX__,
   markTaskComplete,
   logToConfig,
   modifyConfiguration,
   modifyConfigurationAtDepth,
   Configuration,
   ExperimentIndex,
+  setIndexTo,
+  UnfilledLog,
 } from "@hcikit/workflow";
+
+// Actually the functions for modifying the config are strange. It shouldn't be at depth, it should be at index. And then another one at the current index/.
 
 export interface ControlFunctions {
   taskComplete: () => void;
   setWorkflowIndex: (index: ExperimentIndex) => void;
-  log: (log: unknown) => void;
+  log: (log: UnfilledLog) => void;
   modifyConfigAtDepth: (
     modifiedConfig: Record<string, unknown>,
     depth?: number | undefined
@@ -132,10 +134,7 @@ const Experiment: React.FunctionComponent<{
         // TODO: push the ...c into the library? deepfreeze it in all tests
 
         // logToConfig(c, { type: "END" });
-        const newConfig: Configuration = {
-          ...c,
-          [__INDEX__]: markTaskComplete(c),
-        };
+        const newConfig: Configuration = markTaskComplete(c);
         // logToConfig(newConfig, { type: "START" });
 
         if (saveState) {
@@ -150,7 +149,7 @@ const Experiment: React.FunctionComponent<{
   const setWorkflowIndex = useCallback(
     (newIndex: ExperimentIndex): void =>
       setConfig((c: Configuration) => {
-        const newConfig: Configuration = { ...c, [__INDEX__]: newIndex };
+        const newConfig: Configuration = setIndexTo(c, newIndex);
 
         if (saveState) {
           saveState(newConfig);
@@ -162,10 +161,9 @@ const Experiment: React.FunctionComponent<{
   );
 
   const log = useCallback(
-    (log: unknown): void =>
+    (log: UnfilledLog): void =>
       setConfig((c: Configuration) => {
-        const newConfig: Configuration = { ...c };
-        logToConfig(newConfig, log);
+        const newConfig: Configuration = logToConfig(c, log);
 
         if (saveState) {
           saveState(newConfig);
@@ -182,8 +180,7 @@ const Experiment: React.FunctionComponent<{
       depth?: number | undefined
     ): void =>
       setConfig((c: Configuration) => {
-        const newConfig: Configuration = { ...c };
-        modifyConfigurationAtDepth(newConfig, modifiedConfig, depth);
+        const newConfig = modifyConfigurationAtDepth(c, modifiedConfig, depth);
 
         if (saveState) {
           saveState(newConfig);
@@ -197,8 +194,7 @@ const Experiment: React.FunctionComponent<{
   const modifyConfig = useCallback(
     (index: ExperimentIndex, modifiedConfig: Record<string, unknown>): void =>
       setConfig((c: Configuration) => {
-        const newConfig: Configuration = { ...c };
-        modifyConfiguration(newConfig, modifiedConfig, index);
+        const newConfig = modifyConfiguration(c, modifiedConfig, index);
 
         if (saveState) {
           saveState(newConfig);

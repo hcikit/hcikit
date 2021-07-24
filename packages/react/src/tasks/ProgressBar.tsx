@@ -23,10 +23,10 @@ const ProgressBarNoGrid: React.FunctionComponent<{ depth?: number }> = ({
   const rightHalf = index.slice(depth);
   const leftHalf = index.slice(0, depth);
 
-  configuration = getConfigurationAtIndex(leftHalf, configuration);
+  configuration = getConfigurationAtIndex(configuration, leftHalf);
   const currentTaskNumber = indexToTaskNumber(
     configuration,
-    getLeafIndex(rightHalf, configuration)
+    getLeafIndex(configuration, rightHalf)
   );
   const totalTasks = getTotalTasks(configuration);
   const progress = 100 * (currentTaskNumber / (totalTasks - 1));

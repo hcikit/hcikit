@@ -44,7 +44,7 @@ const Upload: React.FunctionComponent<UploadProps> = ({
           }
         })
         .catch((upload_error) => {
-          experiment.log({ upload_error });
+          experiment.log({ upload_error, type: "UPLOAD_ERROR" });
           console.error(upload_error);
           if (retries > 0) {
             attemptUploadWithRetries(retries - 1);

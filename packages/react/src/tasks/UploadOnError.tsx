@@ -29,6 +29,7 @@ export class UploadOnError extends React.Component<
     this.props.experiment.log({
       javascriptError: JSON.stringify(error, Object.getOwnPropertyNames(error)),
       errorInfo,
+      type: "JAVASCRIPT_ERROR",
     });
   }
 

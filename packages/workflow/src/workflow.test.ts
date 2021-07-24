@@ -19,7 +19,6 @@ import {
 } from "./workflow";
 import deepFreeze from "deep-freeze";
 import { getCurrentIndex } from "../../../dist/workflow";
-import util from "util";
 
 // TODO: Should deep freeze more things
 

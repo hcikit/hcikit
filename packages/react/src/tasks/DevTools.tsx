@@ -81,8 +81,8 @@ export const DevTools: React.FunctionComponent = () => {
 
   if (configuration.children) {
     topLevelTasks = configuration.children.map((_: unknown, i: number) => ({
-      value: indexToTaskNumber(configuration, getLeafIndex([i], configuration)),
-      label: getPropsFor([i], configuration).task,
+      value: indexToTaskNumber(configuration, getLeafIndex(configuration, [i])),
+      label: getPropsFor(configuration, [i]).task,
     }));
   }
 

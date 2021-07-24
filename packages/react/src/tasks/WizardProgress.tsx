@@ -17,13 +17,13 @@ const NoGridWizardProgress: React.FunctionComponent<{ depth: number }> = ({
   const pathToIndex = getCurrentIndex(configuration).slice(0, depth);
 
   let configurationAtIndex = getConfigurationAtIndex(
-    pathToIndex,
-    configuration
+    configuration,
+    pathToIndex
   );
 
   const currentStep = getLeafIndex(
-    getCurrentIndex(configuration),
-    configuration
+    configuration,
+    getCurrentIndex(configuration)
   )[depth];
 
   if (!configurationAtIndex || !configurationAtIndex.children) {

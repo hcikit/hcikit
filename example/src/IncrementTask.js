@@ -35,7 +35,10 @@ const IncrementTask = ({
       <div style={{ textAlign: "center" }}>
         <Typography
           variant="h1"
-          onMouseOver={log.bind(null, "Rolled over with mouse")}
+          onMouseOver={log.bind({
+            type: "rollover",
+            value: "Rolled over with mouse",
+          })}
         >
           {value}
         </Typography>

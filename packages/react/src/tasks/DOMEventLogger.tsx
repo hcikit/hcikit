@@ -77,7 +77,7 @@ const DOMEventLogger: React.FunctionComponent<{
       let keys = (eventMapping as Record<string, Array<string>>)[event.type];
       let neededProps = pick(event, keys);
       // }
-      log(neededProps);
+      log({ ...neededProps, type: "DOMEvent" });
     };
 
     let allEvents = events;

@@ -48,7 +48,7 @@ const LogOnClick: React.FunctionComponent = () => {
   return (
     <button
       onClick={() => {
-        experiment.log("log");
+        experiment.log({ type: "log" });
       }}
     >
       Button
@@ -58,7 +58,7 @@ const LogOnClick: React.FunctionComponent = () => {
 
 const InfiniteRenderer: React.FunctionComponent = () => {
   const experiment = useExperiment();
-  experiment.log("log");
+  experiment.log({ type: "log" });
   return <button>Log</button>;
 };
 
@@ -73,7 +73,7 @@ const ButtonTask: React.FunctionComponent<{
     <>
       <button
         onClick={() => {
-          log({ hello: "world" });
+          log({ hello: "world", type: "log" });
           taskComplete();
         }}
       >
@@ -88,6 +88,13 @@ const ButtonTask: React.FunctionComponent<{
         onClick={() => modifyConfigAtDepth({ configVal: "world" })}
       >
         Modify Config
+      </span>
+      <p className="modifyConfig">{configVal}</p>
+      <span onClick={() => modifyConfigAtDepth({ configVal: "world" })}>
+        at depth default
+      </span>
+      <span onClick={() => modifyConfigAtDepth({ configVal: "world" })}>
+        at depth 0
       </span>
     </>
   );
@@ -220,7 +227,7 @@ describe("Experiment", () => {
     screen.getByText("Extender").click();
   });
 
-  // TODO: this test is broken because log causes a state change in the infiniterenderer and this means they both render at once because of the infinite
+  // this test is broken because log causes a state change in the infiniterenderer and this means they both render at once because of the infinite
 
   xit("logs definitely don't cause a re-render", () => {
     // I added this test because I had a log() statement that occurred on render and it caused an infinite loop.
@@ -413,7 +420,7 @@ describe("Experiment", () => {
     });
   });
 
-  fit("logs properly", () => {
+  it("logs properly", () => {
     var endConfiguration: Configuration = {};
 
     let Logger = () => {
@@ -427,8 +434,9 @@ describe("Experiment", () => {
             value={logValue}
             onChange={(e) => setLogValue}
           />
-          <button onClick={() => log(logValue)}>log</button>
-          <button onClick={() => log({ logValue })}>log as object</button>
+          <button onClick={() => log({ logValue, type: "log" })}>
+            log as object
+          </button>
         </div>
       );
     };
@@ -456,19 +464,13 @@ describe("Experiment", () => {
       />
     );
 
-    // It should have empty logs.
-
-    // It should have entered without object
-    userEvent.type(screen.getByTestId("log-value"), "logString");
-    screen.getByText("log").click();
+    userEvent.type(screen.getByTestId("log-value"), "logObject");
 
     screen.getByText("button").click();
 
-    // With object
-
-    userEvent.type(screen.getByTestId("log-value"), "logObject");
     screen.getByText("log as object").click();
     // button task (logs start and end)
+    // TODO: I need to add the start and end logs in.
     screen.getByText("button").click();
     if (endConfiguration?.children) {
       for (let child of endConfiguration.children) {
@@ -506,4 +508,6 @@ describe("Experiment", () => {
     screen.getByText("Modify Config").click();
     screen.getByText("world");
   });
+  // TODO: modify config at depth works too.
+  it("modifies config at depth properly", () => {});
 });

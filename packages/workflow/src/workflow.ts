@@ -12,6 +12,8 @@ type Omit2<T, Key extends keyof T> = {
   [K in keyof T as K extends Key ? never : K]: T[K];
 };
 
+export type UnfilledLog = Omit2<Log, "timestamp">;
+
 export const __INDEX__ = "__INDEX__";
 
 // TODO: can I make task required? Or at least one of task or tasks required.
@@ -388,7 +390,7 @@ export function setIndexTo(
 // We use omit2 because Omit clobbers all of the stuff in it.
 export function logToConfig(
   configuration: Configuration,
-  log: Omit2<Log, "timestamp">
+  log: UnfilledLog
 ): Configuration {
   if (experimentComplete(configuration)) {
     throw new Error("Attempting to log when the experiment is complete.");

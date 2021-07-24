@@ -24,3 +24,5 @@ yarn-error.log*
 styleguide
 
 coverage/
+
+tsconfig.tsbuildinfo
