@@ -1,5 +1,5 @@
 import React from "react";
-import { useExperiment } from "../../packages/react/dist";
+import { useExperiment } from "@hcikit/react";
 
 const CustomTask = ({ text }) => {
   let experiment = useExperiment();

@@ -3,12 +3,13 @@ import { useEffect } from "react";
 // import PropTypes from "prop-types";
 import { useExperiment } from "../core/Experiment";
 
-// TODO: add more events like touch, page refreshes mousewheel scroll resize
-// TODO: need something better than "target", a unique identifier or something maybe? https://github.com/ericclemmons/unique-selector/
-
-// TODO: maybe the eventMapping can take an object that just logs whatever you want to it?
-
-// TODO: doesn't work if you need to scroll...
+/**
+ * TODO:
+ * add more events like touch, page refreshes mousewheel scroll resize
+ * need something better than "target", a unique identifier or something maybe? https://github.com/ericclemmons/unique-selector/
+ * maybe the eventMapping can take an object that just logs whatever you want to it?
+ * doesn't work if you need to scroll...
+ */
 const defaults = ["type"];
 
 const mouseEvents = [
@@ -56,7 +57,7 @@ const defaultEventMapping = {
 //     screenHeight: window.screen.height,
 //   };
 // }
-// TODO: this is fine for pulling some stuff out of the event but maybe not fine if you ened to aughment it
+// TODO: this is fine for pulling some stuff out of the event but maybe not fine if you ened to augment it
 const DOMEventLogger: React.FunctionComponent<{
   delay?: number;
   events?: Array<keyof WindowEventMap>;
@@ -89,9 +90,11 @@ const DOMEventLogger: React.FunctionComponent<{
     const listeners = allEvents.reduce<
       Record<keyof WindowEventMap, EventListener>
     >((listeners, event) => {
-      // TODO: log original size.
-      // TODO: this really needs a flush call I think. It is unlikely to cause problems but it could. I could just flush in a useEffect return value
-      // TODO: what happens if this gets called after the task is over? Maybe we need to be able to sign up for events before changing to the next task?
+      /**
+       * log original size.
+       * this really needs a flush call I think. It is unlikely to cause problems but it could. I could just flush in a useEffect return value
+       * what happens if this gets called after the task is over? Maybe we need to be able to sign up for events before changing to the next task?
+       */
       const func = throttle(logEvent, delay, {
         trailing: true,
       });

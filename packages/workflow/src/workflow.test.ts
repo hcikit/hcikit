@@ -18,8 +18,6 @@ import {
 import deepFreeze from "deep-freeze";
 import { getCurrentIndex } from "../../../dist/workflow";
 
-// TODO: Should deep freeze more things
-
 const configuration: Configuration = {
   configprop: "section",
   StimulusResponse: {
@@ -480,20 +478,6 @@ describe("getLeafIndex", () => {
   it("works on single level config", () => {
     expect(getLeafIndex({}, [])).toEqual([]);
   });
-
-  // TODO: do we really expect it to work with empty children...? That doesn't really make sense...
-  // it("works with empty children", () => {
-  //   expect(
-  //     getLeafIndex([], {
-  //       children: [
-  //         {
-  //           children: [],
-  //         },
-  //         { task: "SendLogToServer" },
-  //       ],
-  //     })
-  //   );
-  // });
 });
 
 describe("getTotalTasks", () => {
@@ -701,7 +685,7 @@ describe("modifyConfiguration", () => {
     );
 
     expect(config.children?.[0].logs?.[0]).toEqual({
-      type: "CONFIG_MODIFICATION",
+      type: "MODIFY_CONFIGURATION",
       to: { hello: "world", stimulus: "hi" },
       from: { hello: undefined, stimulus: "overwritten" },
       index: [1, 0],

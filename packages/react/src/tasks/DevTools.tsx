@@ -30,9 +30,12 @@ const StyledSlider = styled(Slider)`
   margin-right: 10px;
 `;
 
-// TODO: move to the bottom right or somewhere instead.
-// TODO: find a better way to represent labels, maybe a way to expand it?
-// TODO: add other things like a reset session or soemthing
+/**
+ * TODO:
+ * move to the bottom right or somewhere instead.
+ * find a better way to represent labels, maybe a way to expand it?
+ * add other things like a reset session or soemthing
+ */
 
 export const DevTools: React.FunctionComponent = () => {
   const configuration = useConfig();

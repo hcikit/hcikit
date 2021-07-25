@@ -8,7 +8,6 @@ import DevTools from "../tasks/DevTools";
 import DisplayText from "../tasks/DisplayTextTask";
 import { render, screen, cleanup } from "@testing-library/react";
 import { Configuration, Log } from "@hcikit/workflow";
-import util from "util";
 import userEvent from "@testing-library/user-event";
 
 const config = {
@@ -60,6 +59,11 @@ const InfiniteRenderer: React.FunctionComponent = () => {
   const experiment = useExperiment();
   experiment.log({ type: "log" });
   return <button>Log</button>;
+};
+
+const AdvanceTask: React.FunctionComponent<{ text: string }> = ({ text }) => {
+  let experiment = useExperiment();
+  return <button onClick={() => experiment.advance()}>{text}</button>;
 };
 
 /* eslint-disable react/prop-types */
@@ -146,12 +150,27 @@ describe("Experiment", () => {
       <Experiment
         loadState={null}
         saveState={null}
-        tasks={{ ButtonTask, AuxTask }}
-        configuration={{ ...config }}
+        tasks={{
+          FarIndexTask: () => {
+            let { advance } = useExperiment();
+            return <button onClick={() => advance([1, 2])}>advance</button>;
+          },
+          Displayer: ({ index }) => <div>{index.toString()}</div>,
+        }}
+        configuration={{
+          tasks: ["FarIndexTask", "Displayer"],
+          children: [
+            { index: "0" },
+            {
+              children: [{ index: "1,0" }, { index: "1,1" }, { index: "1,2" }],
+            },
+          ],
+        }}
       />
     );
 
-    fail();
+    screen.getByText("advance").click();
+    screen.getByText("1,2");
   });
 
   it("works with empty tasks array", () => {
@@ -335,7 +354,7 @@ describe("Experiment", () => {
       screen.getByText(config.children[1].text);
     });
 
-    it("doesn't load when no task is given", () => {
+    it("doesn't load when no loadstate is given", () => {
       render(
         <Experiment
           tasks={{ ButtonTask, AuxTask }}
@@ -357,6 +376,21 @@ describe("Experiment", () => {
         />
       );
       screen.getByText("button task 1");
+    });
+
+    it("doesn't save when no savestate is given", () => {
+      render(
+        <Experiment
+          saveState={null}
+          loadState={null}
+          tasks={{ ButtonTask, AuxTask }}
+          configuration={{ ...config }}
+        />
+      );
+
+      screen.getByText("button task 1").click();
+
+      expect(window.sessionStorage.length).toBe(0);
     });
 
     afterEach(() => {
@@ -426,9 +460,44 @@ describe("Experiment", () => {
     });
   });
 
-  fit("logs properly", () => {
-    var endConfiguration: Configuration = {};
+  it("two tasks with button don't go to the end", () => {
+    render(
+      <Experiment
+        loadState={null}
+        saveState={null}
+        tasks={{ ButtonTask }}
+        configuration={{
+          children: [
+            { task: "ButtonTask", text: "button" },
+            { task: "ButtonTask", text: "button" },
+          ],
+        }}
+      />
+    );
+    screen.getByText("button").click();
+    screen.getByText("button").click();
+    screen.getByText("You've completed the experiment!");
+  });
 
+  it("two tasks with button don't go to the end", () => {
+    render(
+      <Experiment
+        tasks={{ AdvanceTask }}
+        configuration={{
+          children: [
+            { task: "AdvanceTask", text: "button" },
+            { task: "AdvanceTask", text: "button" },
+          ],
+        }}
+      />
+    );
+
+    screen.getByText("button").click();
+    screen.getByText("button").click();
+    screen.getByText("You've completed the experiment!");
+  });
+
+  it("logs properly", () => {
     let Logger = () => {
       const { log, modifyConfig } = useExperiment();
       const [logValue, setLogValue] = useState("");
@@ -450,54 +519,62 @@ describe("Experiment", () => {
       );
     };
 
-    let LogOutput = () => {
-      const config = useConfig();
-      endConfiguration = config;
-
-      return null;
-    };
-
     let configuration: Configuration = {
-      tasks: ["Logger", "LogOutput"],
+      tasks: ["Logger"],
       children: [
-        { task: "ButtonTask", text: "button" },
-        { task: "ButtonTask", text: "button" },
+        { task: "AdvanceTask", text: "button1" },
+        { task: "AdvanceTask", text: "button2" },
       ],
     };
-    // do nothing
-    let oldDate = Date.now;
-    let i = 0;
-    Date.now = () => i++;
 
-    // TODO: monkeypatch date.now
+    let i = 0;
+    jest.spyOn(Date, "now").mockImplementation(() => i++);
 
     render(
       <Experiment
-        tasks={{ Logger, LogOutput, ButtonTask }}
+        loadState={null}
+        saveState={null}
+        tasks={{ Logger, AdvanceTask }}
         configuration={configuration}
       />
     );
 
     userEvent.type(screen.getByTestId("log-value"), "logObject");
-
-    screen.getByText("button").click();
-    screen.getByText("modify config").click();
-
     screen.getByText("log as object").click();
 
-    // TODO: I need to add the start and end logs in.
-    screen.getByText("button").click();
+    screen.getByText("button1").click();
+    screen.getByText("modify config").click();
 
-    console.log(util.inspect(endConfiguration, undefined, null));
+    screen.getByText("button2").click();
 
-    if (endConfiguration?.children) {
-      for (let child of endConfiguration.children) {
-        console.log(child);
-      }
-    }
-    // TODO: Check that the config modification gets logged too
+    let json = decodeURIComponent(
+      screen
+        .getByText("Download experiment log")
+        .closest("a")
+        ?.href.replace("data:text/json;charset=utf-8,", "") || ""
+    );
 
-    Date.now = oldDate;
+    let filledConfig: Configuration = JSON.parse(json) as Configuration;
+
+    expect(filledConfig.children?.[0].logs).toEqual([
+      { type: "START", timestamp: 0 },
+      { type: "log", logValue: "logObject", timestamp: 1 },
+      { type: "END", timestamp: 2 },
+    ]);
+
+    expect(filledConfig.children?.[1].logs).toEqual([
+      { type: "START", timestamp: 3 },
+      {
+        type: "MODIFY_CONFIGURATION",
+        timestamp: 4,
+        from: {},
+        to: { newConfig: "help" },
+        index: [1],
+      },
+      { type: "END", timestamp: 5 },
+    ]);
+
+    jest.restoreAllMocks();
   });
 
   it("doesn't pass logs to components", () => {
@@ -532,6 +609,4 @@ describe("Experiment", () => {
     screen.getByText("at index").click();
     screen.getByText("bar");
   });
-  // TODO: modify config at depth works too.
-  it("modifies config at depth properly", () => {});
 });

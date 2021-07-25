@@ -95,23 +95,16 @@ const Experiment: React.FunctionComponent<{
   forceRemountEveryTask,
   configuration,
 }) => {
-  // TODO: not sure how to create different sessions for the same task.
+  // TODO: not sure how to create different sessions for the same task. The issue is that they'll be overwritten by the other thing. Maybe we can add a config version or session key or something to it?
   const [config, setConfig] = useState<Configuration>(() => {
-    let storedState: Configuration = {};
-
     if (process.env.NODE_ENV !== "development" && loadState) {
-      const attemptedStoredState: Configuration | undefined = loadState();
-
-      if (attemptedStoredState) {
-        storedState = attemptedStoredState;
-      }
+      return loadState() || configuration || {};
     }
 
-    // TODO: do we really wanna merge the two objects?
-    return { ...(configuration || {}), ...storedState };
+    return configuration || {};
   });
 
-  // TODO: it might be better to do this as we save state rather than waiting a render, I chose this way because it is easier to implement than adding it to each of the modifying functions below.
+  // it might be better to do this as we save state rather than waiting a render, I chose this way because it is easier to implement than adding it to each of the modifying functions below.
   // useEffect(() => {
   //   if (saveState) {
   //     saveState(config);
@@ -122,8 +115,6 @@ const Experiment: React.FunctionComponent<{
   const advance = useCallback(
     (index?: ExperimentIndex) =>
       setConfig((c: Configuration) => {
-        // TODO: need to make the experiment log before and after
-
         c = logToConfiguration(c, { type: "END" });
         c = advanceConfiguration(c, index);
 
@@ -131,9 +122,7 @@ const Experiment: React.FunctionComponent<{
           c = logToConfiguration(c, { type: "START" });
         }
 
-        if (saveState) {
-          saveState(c);
-        }
+        saveState?.(c);
 
         return c;
       }),
@@ -145,23 +134,20 @@ const Experiment: React.FunctionComponent<{
       setConfig((c: Configuration) => {
         const newConfig: Configuration = logToConfiguration(c, log);
 
-        if (saveState) {
-          saveState(newConfig);
-        }
+        saveState?.(c);
 
         return newConfig;
       }),
     [saveState]
   );
 
+  // TODO: rename to just modify?
   const modifyConfig = useCallback(
     (modifiedConfig: Record<string, unknown>, index?: ExperimentIndex): void =>
       setConfig((c: Configuration) => {
         const newConfig = modifyConfiguration(c, modifiedConfig, index);
 
-        if (saveState) {
-          saveState(newConfig);
-        }
+        saveState?.(c);
 
         return newConfig;
       }),

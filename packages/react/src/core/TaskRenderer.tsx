@@ -13,7 +13,7 @@ import {
 import GridLayout from "../GridLayout";
 import { useConfig, useExperiment } from "./Experiment";
 
-// TODO: does logs get passed to the components? I feel like it shouldn't... but it's hard in case they actually need it.
+// If there's ever a usecase for logs to get passed then we can add another provider they can subscribe to.
 
 const TaskRenderer: React.FunctionComponent<{
   tasks: Record<string, ElementType>;
@@ -106,7 +106,7 @@ let SingleTaskRenderer: React.FunctionComponent<
 };
 
 // Deep equals is needed here or the tests fail, I think I make some objects above like the tasks that get recreated every time.
-// TODO: could think about memoising those or something.
+// could think about memoising those or something.
 SingleTaskRenderer = React.memo(SingleTaskRenderer, isEqual);
 //   (prevProps, nextProps) => {
 //     console.log("outside", diff(prevProps, nextProps), nextProps);

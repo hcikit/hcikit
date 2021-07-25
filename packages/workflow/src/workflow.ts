@@ -1,4 +1,4 @@
-import { mergeWith, pickBy, isEqual, pick, sortedIndex } from "lodash";
+import { mergeWith, pickBy, isEqual, pick } from "lodash";
 
 export type ExperimentIndex = Array<number>;
 
@@ -36,13 +36,6 @@ export type Configuration<
   Partial<Record<keyof T, unknown>> &
   Record<string, unknown>;
 
-// TODO: should this work with a config with no children? Does it work with no children?
-// TODO: some of these functions I can maybe use generators to reduce computation and make things faster?
-// TODO: some of these should definitely be immutable but aren't... I'd rather everything here is immutable
-// TODO: would be nice if the order was consistent. Lodash always puts the object in question first. Following that pattern seems reasonable.
-
-// TODO: everything should be configuration or config. pick one.
-
 // ----- Whole configuration ------
 
 /**
@@ -51,7 +44,6 @@ export type Configuration<
  * @param {Configuration} configuration
  * @returns {boolean} indicates whether an experiment is complete or not.
  */
-// TODO: change boolean to something like
 export function experimentComplete(configuration: Configuration): boolean {
   return configuration[__INDEX__]?.length === 0;
 }
@@ -338,7 +330,6 @@ export function advanceConfiguration(
   }
 
   if (index !== undefined) {
-    console.log("Uhhhh");
     return { ...configuration, [__INDEX__]: index };
   }
 
@@ -399,7 +390,7 @@ export function logToConfiguration(
       logs: [
         ...(getConfigurationAtIndex(configuration, index).logs || []),
         // eslint-disable-next-line @typescript-eslint/ban-types
-        { ...(log as object), timestamp: Date.now() },
+        { ...log, timestamp: Date.now() },
       ],
     },
     index,
@@ -443,7 +434,7 @@ export function modifyConfiguration(
       from: pick(configToEdit, Object.keys(modifiedConfiguration)),
       to: modifiedConfiguration,
       index,
-      type: "CONFIG_MODIFICATION",
+      type: "MODIFY_CONFIGURATION",
     });
   }
 
@@ -514,7 +505,6 @@ export function flattenConfigurationWithProps(
   );
 }
 
-// TODO: mergeWith is very slow which slows everything down with lots of onlogs.
 export function mergeArraysSpecial(
   object: Record<string, unknown>,
   source: Record<string, unknown>
