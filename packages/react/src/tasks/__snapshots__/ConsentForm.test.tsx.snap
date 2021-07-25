@@ -1,0 +1,195 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConsentForm renders properly 1`] = `
+<DocumentFragment>
+  <div
+    style="grid-area: task;"
+  >
+    <div
+      class="sc-gtsrHT hMXYKS"
+    >
+      <div>
+        <div
+          class="MuiPaper-root sc-bdnxRM hDhcyW MuiPaper-elevation1 MuiPaper-rounded"
+        >
+          <div>
+            <h1
+              id="title"
+            >
+              Title
+            </h1>
+            <p>
+                this is 
+              <strong>
+                bold
+              </strong>
+              .
+   - and
+   - a
+   - list
+            </p>
+          </div>
+          <div
+            class="MuiFormControl-root"
+          >
+            <div
+              class="MuiFormGroup-root"
+            >
+              <div
+                class="MuiFormGroup-root"
+              >
+                <label
+                  class="MuiFormControlLabel-root"
+                >
+                  <span
+                    aria-disabled="false"
+                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-21 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+                  >
+                    <span
+                      class="MuiIconButton-label"
+                    >
+                      <input
+                        class="PrivateSwitchBase-input-24"
+                        data-indeterminate="false"
+                        required=""
+                        type="checkbox"
+                        value=""
+                      />
+                      <svg
+                        aria-hidden="true"
+                        class="MuiSvgIcon-root"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                        />
+                      </svg>
+                    </span>
+                    <span
+                      class="MuiTouchRipple-root"
+                    />
+                  </span>
+                  <span
+                    class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+                  >
+                    * I consent
+                  </span>
+                </label>
+              </div>
+              <div
+                class="MuiFormGroup-root"
+              >
+                <label
+                  class="MuiFormControlLabel-root"
+                >
+                  <span
+                    aria-disabled="false"
+                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-21 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+                  >
+                    <span
+                      class="MuiIconButton-label"
+                    >
+                      <input
+                        class="PrivateSwitchBase-input-24"
+                        data-indeterminate="false"
+                        type="checkbox"
+                        value=""
+                      />
+                      <svg
+                        aria-hidden="true"
+                        class="MuiSvgIcon-root"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                        />
+                      </svg>
+                    </span>
+                    <span
+                      class="MuiTouchRipple-root"
+                    />
+                  </span>
+                  <span
+                    class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+                  >
+                    I consent optional
+                  </span>
+                </label>
+              </div>
+              <p
+                class="MuiFormHelperText-root Mui-error Mui-required"
+              >
+                Required consent not given.
+              </p>
+              <button
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+                tabindex="0"
+                type="button"
+              >
+                <span
+                  class="MuiButton-label"
+                >
+                  Submit
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`InformationScreen renders markdown properly 1`] = `
+<DocumentFragment>
+  <div
+    class="sc-gtsrHT hMXYKS"
+  >
+    <div>
+      <div
+        class="MuiPaper-root sc-bdnxRM hDhcyW MuiPaper-elevation1 MuiPaper-rounded"
+      >
+        <div>
+          <h1
+            id="hello-world"
+          >
+            Hello World
+          </h1>
+          <ul>
+            <li>
+              This is some markdown
+            </li>
+            <li>
+              that should render 
+              <em>
+                properly
+              </em>
+            </li>
+          </ul>
+        </div>
+        <br />
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Continue 
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

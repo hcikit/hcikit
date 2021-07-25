@@ -9,6 +9,8 @@
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["dom", "esnext"],
+    "downlevelIteration": true,
+
     // "module": "ES2015",
     "moduleResolution": "node",
     "paths": {

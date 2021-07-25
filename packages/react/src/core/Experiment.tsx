@@ -141,7 +141,6 @@ const Experiment: React.FunctionComponent<{
     [saveState]
   );
 
-  // TODO: rename to just modify?
   const modify = useCallback(
     (modifiedConfig: Record<string, unknown>, index?: ExperimentIndex): void =>
       setConfig((c: Configuration) => {

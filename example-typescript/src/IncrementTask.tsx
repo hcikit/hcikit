@@ -26,8 +26,6 @@ const IncrementTask: React.FunctionComponent<{
     modify({ value: 0 });
   }
 
-  // console.log(log("Rolled over with mouse"));
-
   return (
     <CenteredNicePaper>
       <div style={{ textAlign: "center" }}>

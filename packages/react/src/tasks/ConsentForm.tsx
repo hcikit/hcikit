@@ -15,12 +15,10 @@ import { withGridItem } from "../GridLayout";
 import { useState } from "react";
 import { useExperiment } from "../core/Experiment";
 
-// TODO: needs stars beside required consents.
-// TODO: needs testing too, not convinced it works properly
 export const ConsentForm: React.FunctionComponent<{
-  letter: string;
+  content: string;
   questions: Array<{ label: string; required: boolean }>;
-}> = ({ letter, questions }) => {
+}> = ({ content, questions }) => {
   const [answers, setAnswers] = useState(
     questions.reduce<Record<string, boolean>>((prev, { label }) => {
       prev[label] = false;
@@ -28,31 +26,31 @@ export const ConsentForm: React.FunctionComponent<{
     }, {})
   );
 
-  const requiredFieldNotFilled = () => {
+  const isFormComplete = () => {
+    // Every value determines whether or not it is in the needed position. If it is optional, that is always true. Otherwise, it is the value of the current thing.
     const requiredNotFilled = questions.map((question) =>
-      question.required ? !answers[question.label] : true
+      question.required ? answers[question.label] : true
     );
 
-    return !requiredNotFilled.some((val) => !val);
+    // If any of these are false,
+    return requiredNotFilled.every(Boolean);
   };
-
-  const error = requiredFieldNotFilled();
 
   const experiment = useExperiment();
 
   return (
     <CenteredNicePaper>
-      <Markdown>{letter}</Markdown>
-      <FormControl required error={error}>
+      <Markdown>{content}</Markdown>
+      <FormControl required error={!isFormComplete()}>
         <FormGroup>
           {questions.map((question) => {
             return (
               <FormGroup key={question.label}>
                 <FormControlLabel
                   key={question.label}
-                  // required={question.required}
                   control={
                     <Checkbox
+                      required={Boolean(question.required)}
                       onChange={(event) =>
                         setAnswers({
                           ...answers,
@@ -62,7 +60,7 @@ export const ConsentForm: React.FunctionComponent<{
                       color="primary"
                     />
                   }
-                  label={question.label}
+                  label={`${question.required ? "* " : ""}${question.label}`}
                 />
               </FormGroup>
             );
@@ -71,7 +69,7 @@ export const ConsentForm: React.FunctionComponent<{
 
           <Button
             onClick={() => {
-              if (!requiredFieldNotFilled()) {
+              if (isFormComplete()) {
                 experiment.advance();
               }
             }}

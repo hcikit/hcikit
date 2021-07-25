@@ -24,7 +24,7 @@ this is *markdown*`,
       label: "Consent",
 
       task: "ConsentForm",
-      letter: `# Consent Form
+      content: `# Consent Form
 
 The consent form uses markdown to create a letter, and it automatically generates as many checkboxes as needed to consent.`,
       questions: [

@@ -14,9 +14,9 @@ import {
   Configuration,
   flattenConfigurationWithProps,
   advanceConfiguration,
-} from "./workflow";
+  getCurrentIndex,
+} from "./index";
 import deepFreeze from "deep-freeze";
-import { getCurrentIndex } from "../../../dist/workflow";
 
 const configuration: Configuration = {
   configprop: "section",
