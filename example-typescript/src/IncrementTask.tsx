@@ -7,7 +7,7 @@ const IncrementTask: React.FunctionComponent<{
   desiredValue: number;
   value: number;
 }> = ({ desiredValue, value = 0 }) => {
-  const { modifyConfig, advance, log } = useExperiment();
+  const { modify, advance, log } = useExperiment();
   function checkAnswer() {
     if (value === desiredValue) {
       advance();
@@ -15,15 +15,15 @@ const IncrementTask: React.FunctionComponent<{
   }
 
   function decrement() {
-    modifyConfig({ value: value - 1 });
+    modify({ value: value - 1 });
   }
 
   function increment() {
-    modifyConfig({ value: value + 1 });
+    modify({ value: value + 1 });
   }
 
   function reset() {
-    modifyConfig({ value: 0 });
+    modify({ value: 0 });
   }
 
   // console.log(log("Rolled over with mouse"));

@@ -18,7 +18,7 @@ const identities: ControlFunctions = {
   log: (_log: unknown) => {
     // do nothing.
   },
-  modifyConfig: (
+  modify: (
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _modifiedConfig: Record<string, unknown>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

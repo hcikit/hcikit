@@ -4,7 +4,7 @@ import { Typography } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 
 const IncrementTask = ({ desiredValue, value = 0, log }) => {
-  let { advance, modifyConfig } = useExperiment();
+  let { advance, modify } = useExperiment();
   function checkAnswer() {
     if (value === desiredValue) {
       advance();
@@ -12,15 +12,15 @@ const IncrementTask = ({ desiredValue, value = 0, log }) => {
   }
 
   function decrement() {
-    modifyConfig({ value: value - 1 });
+    modify({ value: value - 1 });
   }
 
   function increment() {
-    modifyConfig({ value: value + 1 });
+    modify({ value: value + 1 });
   }
 
   function reset() {
-    modifyConfig({ value: 0 });
+    modify({ value: 0 });
   }
 
   // console.log(log("Rolled over with mouse"));

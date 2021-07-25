@@ -73,7 +73,7 @@ const ButtonTask: React.FunctionComponent<{
   configVal: string;
 }> = ({ text, logs, configVal = "hello" }) => {
   const configuration = useConfig();
-  const { log, modifyConfig, advance } = useExperiment();
+  const { log, modify, advance } = useExperiment();
   return (
     <>
       <button
@@ -88,11 +88,9 @@ const ButtonTask: React.FunctionComponent<{
         {logs}
       </p>
       <p>{configVal}</p>
-      <span onClick={() => modifyConfig({ configVal: "world" })}>
-        Modify Config
-      </span>
+      <span onClick={() => modify({ configVal: "world" })}>Modify Config</span>
       <p>{configuration.children?.[1].foo as string}</p>
-      <span onClick={() => modifyConfig({ foo: "bar" }, [1])}>at index</span>
+      <span onClick={() => modify({ foo: "bar" }, [1])}>at index</span>
     </>
   );
 };
@@ -499,7 +497,7 @@ describe("Experiment", () => {
 
   it("logs properly", () => {
     let Logger = () => {
-      const { log, modifyConfig } = useExperiment();
+      const { log, modify } = useExperiment();
       const [logValue, setLogValue] = useState("");
       return (
         <div>
@@ -512,7 +510,7 @@ describe("Experiment", () => {
           <button onClick={() => log({ logValue, type: "log" })}>
             log as object
           </button>
-          <button onClick={() => modifyConfig({ newConfig: "help" })}>
+          <button onClick={() => modify({ newConfig: "help" })}>
             modify config
           </button>
         </div>

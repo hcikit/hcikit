@@ -29,7 +29,7 @@ const TaskRenderer: React.FunctionComponent<{
   const configuration = useConfig();
   const currentProps = getCurrentProps(configuration);
 
-  const { log, advance, modifyConfig } = useExperiment();
+  const { log, advance, modify } = useExperiment();
 
   const tasksToRender = currentProps.tasks ? [...currentProps.tasks] : [];
 
@@ -67,7 +67,7 @@ const TaskRenderer: React.FunctionComponent<{
           key={key}
           log={log}
           advance={advance}
-          modifyConfig={modifyConfig}
+          modify={modify}
           {...props}
         />
       );

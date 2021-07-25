@@ -24,7 +24,7 @@ import {
 export interface ControlFunctions {
   advance: (index?: ExperimentIndex) => void;
   log: (log: UnfilledLog) => void;
-  modifyConfig: (
+  modify: (
     modifiedConfig: Record<string, unknown>,
     index?: ExperimentIndex
   ) => void;
@@ -142,7 +142,7 @@ const Experiment: React.FunctionComponent<{
   );
 
   // TODO: rename to just modify?
-  const modifyConfig = useCallback(
+  const modify = useCallback(
     (modifiedConfig: Record<string, unknown>, index?: ExperimentIndex): void =>
       setConfig((c: Configuration) => {
         const newConfig = modifyConfiguration(c, modifiedConfig, index);
@@ -160,9 +160,9 @@ const Experiment: React.FunctionComponent<{
     () => ({
       advance: advance,
       log,
-      modifyConfig,
+      modify,
     }),
-    [advance, log, modifyConfig]
+    [advance, log, modify]
   );
 
   useEffect(() => {
