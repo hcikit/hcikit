@@ -8,6 +8,7 @@
     "example-typescript"
   ],
   "scripts": {
+    "es-check": "es-check es5 'packages/react/dist/**/*.js' 'packages/workflow/dist/**/*.js'",
     "lint": "eslint example/src packages/react/src packages/workflow/src",
     "test": "yarn jest --verbose --colors",
     "test:watch": "jest --watch --verbose --colors",
@@ -29,6 +30,7 @@
     "babel-jest": "^27.0.6",
     "cross-env": "^7.0.2",
     "deep-freeze": "0.0.1",
+    "es-check": "^5.2.4",
     "eslint": "^7.31.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",
