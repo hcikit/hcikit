@@ -8,6 +8,7 @@ import {
   getCurrentIndex,
   scopePropsForTask,
   experimentComplete,
+  __INDEX__,
 } from "@hcikit/workflow";
 
 import GridLayout from "../GridLayout";
@@ -55,6 +56,7 @@ const TaskRenderer: React.FunctionComponent<{
 
       let key = `${task}-${i.toString()}`;
       const props = scopePropsForTask(currentProps, task);
+      props[__INDEX__] = getCurrentIndex(configuration);
 
       // By adding the index this forces the component to remount and lose the state it had before.
       if (forceRemountEveryTask) {

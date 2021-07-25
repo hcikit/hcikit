@@ -607,4 +607,67 @@ describe("Experiment", () => {
     screen.getByText("at index").click();
     screen.getByText("bar");
   });
+  it("modify can add children", () => {
+    const AddChildren = () => {
+      const { modify } = useExperiment();
+      return (
+        <button
+          onClick={() =>
+            modify(
+              {
+                children: [
+                  { text: "advance[1][0]" },
+                  { text: "advance[1][1]" },
+                  { text: "advance[1][2]" },
+                ],
+              },
+              [1]
+            )
+          }
+        >
+          Add Children
+        </button>
+      );
+    };
+
+    render(
+      <Experiment
+        loadState={null}
+        saveState={null}
+        tasks={{ AdvanceTask, AddChildren }}
+        configuration={{
+          tasks: ["AddChildren", "AdvanceTask"],
+          children: [{ text: "advance[0]" }, {}, { text: "advance[2]" }],
+        }}
+      />
+    );
+    screen.getByText("Add Children").click();
+    screen.getByText("advance[0]").click();
+    screen.getByText("advance[1][0]").click();
+    screen.getByText("advance[1][1]").click();
+    screen.getByText("advance[1][2]").click();
+    screen.getByText("advance[2]").click();
+    screen.getByText("You've completed the experiment!");
+  });
+
+  it("should pass index as a prop", () => {
+    let Index = (props: any) => {
+      return props.__INDEX__?.toString();
+    };
+
+    render(
+      <Experiment
+        loadState={null}
+        saveState={null}
+        tasks={{ Index, AdvanceTask }}
+        configuration={{
+          tasks: ["Index", "AdvanceTask"],
+          children: [{ text: "advance" }, { children: [{}] }],
+        }}
+      />
+    );
+    screen.getByText("0");
+    screen.getByText("advance").click();
+    screen.getByText("1,0");
+  });
 });

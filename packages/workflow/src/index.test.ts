@@ -663,6 +663,18 @@ describe("modifyConfiguration", () => {
     config = modifyConfiguration(config, { hello: "world" }, []);
     expect(config.hello).toEqual("world");
   });
+
+  it("can add children", () => {
+    config = modifyConfiguration(
+      config,
+      { children: [{ task: "Test" }] },
+      [1, 0, 0]
+    );
+    expect(
+      config.children?.[1].children?.[0].children?.[0].children?.[0].task
+    ).toEqual("Test");
+  });
+
   it("modifies leaf", () => {
     config = modifyConfiguration(config, { hello: "world" }, [1, 0, 0]);
     expect(config.children?.[1].children?.[0].children?.[0].hello).toEqual(

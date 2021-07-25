@@ -10,13 +10,15 @@
     "forceConsistentCasingInFileNames": true,
     "lib": ["dom", "esnext"],
     "downlevelIteration": true,
+    "baseUrl": "./",
 
     // "module": "ES2015",
     "moduleResolution": "node",
     "paths": {
-      "@hciikit/workflow/*": ["packages/workflow/src/*"],
-      "@hciikit/react/*": ["packages/react/src/*"]
+      "@hciikit/workflow/*": ["./packages/workflow/src/*"],
+      "@hciikit/react/*": ["./packages/react/src/*"]
     }
   },
+  "include": [],
   "exclude": ["./coverage"]
 }
