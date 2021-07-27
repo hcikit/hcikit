@@ -1,7 +1,7 @@
 import React from "react";
 import ConsentForm from "./ConsentForm";
 import { screen } from "@testing-library/react";
-import { renderWithProvider } from "./InformationScreen.test";
+import { renderWithProvider } from "../test-utils";
 
 describe("ConsentForm", () => {
   it("renders without crashing", () => {

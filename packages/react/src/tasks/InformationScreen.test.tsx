@@ -1,43 +1,9 @@
 import React from "react";
 import InformationScreen from "./InformationScreen";
-import {
-  fireEvent,
-  render,
-  RenderResult,
-  screen,
-} from "@testing-library/react";
-import { ConfigMutatorContext, ControlFunctions } from "../core/Experiment";
-import { ExperimentIndex } from "@hcikit/workflow";
+import { fireEvent, screen } from "@testing-library/react";
 
-const identities: ControlFunctions = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  advance: (_index?: ExperimentIndex) => {
-    // do nothing.
-  },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  log: (_log: unknown) => {
-    // do nothing.
-  },
-  modify: (
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _modifiedConfig: Record<string, unknown>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _index?: ExperimentIndex
-  ) => {
-    // do nothing.
-  },
-};
+import { renderWithProvider } from "../test-utils";
 
-export const renderWithProvider = (
-  Component: React.ReactElement,
-  funcs: Partial<ControlFunctions> = identities
-): RenderResult => {
-  return render(
-    <ConfigMutatorContext.Provider value={{ ...identities, ...funcs }}>
-      {Component}
-    </ConfigMutatorContext.Provider>
-  );
-};
 describe("InformationScreen", () => {
   it("renders without crashing", () => {
     renderWithProvider(<InformationScreen content="hello" />);
