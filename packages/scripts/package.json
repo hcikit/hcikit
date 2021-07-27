@@ -3,7 +3,7 @@
   "version": "1.0.10",
   "description": "A set of useful scripts for building HCI Kit experiments",
   "main": "index.js",
-  "repository": "github.com/hcikit/scripts",
+  "repository": "github.com/hcikit/hcikit",
   "author": "Blaine Lewis",
   "license": "MIT",
   "bin": {
@@ -26,7 +26,7 @@
     "postbuild": "cp ./src/CreateBucket.yml ./dist/. cp \"./package.json\" ./dist/",
     "build": "tsc --build",
     "dev": "ts-node src/index.ts",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "devDependencies": {
     "ts-node": "^10.0.0",

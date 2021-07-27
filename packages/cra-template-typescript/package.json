@@ -1,0 +1,12 @@
+{
+  "name": "@hcikit/cra-template-typescript",
+  "version": "1.0.0-alpha.2",
+  "description": "A package containing files to bootstrap an HCI Kit with Typescript project using Create React App.",
+  "repository": "github.com/hcikit/hcikit",
+  "author": "Blaine Lewis",
+  "license": "MIT",
+  "main": "template.json",
+  "scripts": {
+    "prepare": "rm -rf template/src && cp -r ../../example-typescript/src template/."
+  }
+}

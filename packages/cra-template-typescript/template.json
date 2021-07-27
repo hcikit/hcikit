@@ -1,0 +1,10 @@
+{
+  "package": {
+    "dependencies": {
+      "@hcikit/react": "latest",
+      "@hcikit/scripts": "latest",
+      "@material-ui/core": "^4.9.11",
+      "@material-ui/icons": "^4.9.1"
+    }
+  }
+}
