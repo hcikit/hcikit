@@ -9,15 +9,7 @@
       "disableOptimisticBPs": true,
       "cwd": "${workspaceFolder}",
       "runtimeExecutable": "yarn",
-      "args": [
-        "workspace",
-        "@hcikit/react",
-        "run",
-        "test",
-        "--runInBand",
-        "--watchAll=false"
-      ]
+      "args": ["test", "--runInBand", "--watchAll=false"]
     }
   ]
-  
 }

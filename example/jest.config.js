@@ -1,11 +1,11 @@
 /** @type {import('@ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
   testEnvironment: "jsdom",
-  modulePathIgnorePatterns: ["/dist/", "/node_modules/"],
-  testPathIgnorePatterns: ["/dist/", "/node_modules/"],
+  modulePathIgnorePatterns: ["./dist/", "./node_modules/"],
+  testPathIgnorePatterns: ["./dist/", "./node_modules/"],
   transformIgnorePatterns: [
-    "/dist/",
-    "/node_modules/",
+    "./dist/",
+    "./node_modules/",
     "<rootDir>/src/setupTests.js",
   ],
   setupFilesAfterEnv: ["<rootDir>/src/setupTests.js"],

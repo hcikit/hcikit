@@ -5,9 +5,10 @@ module.exports = {
   moduleNameMapper: {
     "@hcikit/workflow(.*)$": "<rootDir>/../workflow/src$1",
   },
-  modulePathIgnorePatterns: ["/dist/", "/node_modules/"],
-  testPathIgnorePatterns: ["/dist/", "/node_modules/"],
-  transformIgnorePatterns: ["/dist/", "/node_modules/"],
+  testMatch: ["./src/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[t]s?(x)"],
+  modulePathIgnorePatterns: ["./dist/", "./node_modules/"],
+  testPathIgnorePatterns: ["./dist/", "./node_modules/"],
+  transformIgnorePatterns: ["./dist/", "/node_modules/"],
   setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
   collectCoverageFrom: [
     "src/**/*.{ts,tsx}",
