@@ -1,0 +1,136 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+  
+  # Uploads
+
+  UploadsBucket:
+    Type: AWS::S3::Bucket
+    # DeletionPolicy: Retain
+    Properties:
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins: 
+              - '*'
+            AllowedMethods: 
+              - PUT
+              - POST
+            AllowedHeaders: 
+              - '*'
+            ExposedHeaders: 
+              - ETag
+
+  UploadsIdentityPool:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+        AllowUnauthenticatedIdentities: True
+
+  UploadsIAMRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Federated: cognito-identity.amazonaws.com
+            Action: "sts:AssumeRoleWithWebIdentity"
+            Condition: { "ForAnyValue:StringLike": {"cognito-identity.amazonaws.com:amr": "unauthenticated" },  "StringEquals": {"cognito-identity.amazonaws.com:aud": !Ref UploadsIdentityPool}}
+
+  UploadsPoolRoleAttachment:
+    Type: "AWS::Cognito::IdentityPoolRoleAttachment"
+    Properties:
+      IdentityPoolId: !Ref UploadsIdentityPool
+      Roles: {"unauthenticated": !GetAtt UploadsIAMRole.Arn}
+
+  UploadsPoolRolePolicy:
+    Type: AWS::IAM::Policy
+    Properties: 
+      PolicyName: UploadsPoolRolePolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: "Allow"
+          Action:
+            - "s3:PutObject"
+            - "s3:PutObjectAcl"
+          Resource: !Join 
+            - ''
+            - - !GetAtt UploadsBucket.Arn
+              - "/*"
+      Roles:
+        - !Ref UploadsIAMRole
+
+
+  # Hosting
+
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+      
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      PolicyDocument:
+        Id: MyPolicy
+        Version: 2012-10-17
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Join
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref WebsiteBucket
+                - /*
+      Bucket: !Ref WebsiteBucket
+
+
+Outputs:
+  UploadsArn:
+    Value: !GetAtt UploadsBucket.Arn
+    Description: Arn of the uploads bucket to get access to it. 
+  
+  UploadsId:
+    Value: !Ref UploadsBucket
+    Description: Arn of the uploads bucket to get access to it. 
+  
+  CognitoId:
+    Value: !Ref UploadsIdentityPool
+    Description: Cognito identity pool ID for auth
+  
+  WebsiteURL:
+    Value: !GetAtt 
+      - WebsiteBucket
+      - WebsiteURL
+    Description: URL for website hosted on S3
+
+  WebsiteBucketSecureURL:
+    Value: !Join 
+      - ''
+      - - 'https://'
+        - !GetAtt 
+          - WebsiteBucket
+          - DomainName
+    Description: Domain of S3 bucket to hold website content
+    
+  WebsiteBucket:
+    Value: !Ref WebsiteBucket
+    Description: Name of S3 bucket to hold website content
+
+  Region:
+    Value: !Ref "AWS::Region"
+    Description: Region all of the resources ended up in. 
