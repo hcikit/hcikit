@@ -2,7 +2,8 @@
   "packages": [
     "packages/*",
     "example",
-    "example-typescript"
+    "example-typescript",
+    "docs"
   ],
   "version": "independent",
   "npmClient": "yarn",

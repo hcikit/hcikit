@@ -2,10 +2,13 @@
   "name": "root",
   "private": true,
   "workspaces": [
-    "packages/workflow",
-    "packages/react",
+    "packages/*",
     "example",
-    "example-typescript"
+    "example-typescript",
+    "docs"
+  ],
+  "nohoist": [
+    "**/html-minifier-terser"
   ],
   "scripts": {
     "es-check": "es-check es5 'packages/react/dist/**/*.js' 'packages/workflow/dist/**/*.js'",
@@ -13,7 +16,7 @@
     "test": "yarn jest --verbose --colors",
     "test:watch": "jest --watch --verbose --colors",
     "build": "yarn workspaces run build",
-    "clean": "rm -rf node_modules packages/workflow/node_modules packages/react/node_modules packages/react/tsconfig.tsbuildinfo packages/workflow/tsconfig.tsbuildinfo packages/workflow/dist packages/react/dist example/build example/node_modules example-typescript/build example-typescript/node_modules"
+    "clean": "rm -rf node_modules packages/*/node_modules packages/*/tsconfig.tsbuildinfo packages/*/dist example*/build example*/node_modules"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.14.8",
@@ -27,6 +30,10 @@
     "@types/styled-components": "^5.1.11",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.28.4",
+    "@types/cross-spawn": "^6.0.2",
+    "@types/fs-extra": "^9.0.11",
+    "@types/mime-types": "^2.1.0",
+    "@types/yargs": "^17.0.0",
     "babel-jest": "^27.0.6",
     "cross-env": "^7.0.2",
     "deep-freeze": "0.0.1",
