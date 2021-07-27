@@ -6,14 +6,14 @@ import {
   getConfigurationAtIndex,
   getLeafIndex,
 } from "@hcikit/workflow";
-import { useConfig, useExperiment } from "../core/Experiment";
+import { useConfiguration, useExperiment } from "../core/Experiment";
 import { startCase } from "lodash";
 
 const NoGridWizardProgress: React.FunctionComponent<{ depth: number }> = ({
   depth = 0,
 }) => {
   const experiment = useExperiment();
-  const configuration = useConfig();
+  const configuration = useConfiguration();
   const pathToIndex = getCurrentIndex(configuration).slice(0, depth);
 
   let configurationAtIndex = getConfigurationAtIndex(

@@ -2,7 +2,11 @@
 import React from "react";
 import { CenteredNicePaper } from "../components";
 import PropTypes from "prop-types";
-import { ControlFunctions, useConfig, useExperiment } from "../core/Experiment";
+import {
+  ControlFunctions,
+  useConfiguration,
+  useExperiment,
+} from "../core/Experiment";
 import { Configuration } from "@hcikit/workflow";
 
 interface UploadOnErrorProps {
@@ -79,7 +83,7 @@ UploadOnError.propTypes = {
 
 const uploadOnErrorCreator = (UploadComponent: React.ComponentType) => {
   const UploadOnErrorWrapper: React.FunctionComponent = function (props) {
-    const configuration = useConfig();
+    const configuration = useConfiguration();
     const experiment = useExperiment();
     return (
       <UploadOnError

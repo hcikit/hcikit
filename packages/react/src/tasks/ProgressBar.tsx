@@ -10,14 +10,14 @@ import {
 
 import { withGridItem } from "../GridLayout";
 import PropTypes from "prop-types";
-import { useConfig } from "../core/Experiment";
+import { useConfiguration } from "../core/Experiment";
 
 // BUG: I think there might be an off by one error, check the example
 
 const ProgressBarNoGrid: React.FunctionComponent<{ depth?: number }> = ({
   depth = 0,
 }) => {
-  let configuration = useConfig();
+  let configuration = useConfiguration();
 
   const index = getCurrentIndex(configuration);
   const rightHalf = index.slice(depth);

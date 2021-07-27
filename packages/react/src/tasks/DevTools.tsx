@@ -16,7 +16,7 @@ import {
   getCurrentIndex,
 } from "@hcikit/workflow";
 
-import { useConfig, useExperiment } from "../core/Experiment";
+import { useConfiguration, useExperiment } from "../core/Experiment";
 
 const StyledCard = styled(Card)`
   display: inline-block;
@@ -38,7 +38,7 @@ const StyledSlider = styled(Slider)`
  */
 
 export const DevTools: React.FunctionComponent = () => {
-  const configuration = useConfig();
+  const configuration = useConfiguration();
   const experiment = useExperiment();
 
   const [isDragging, setIsDragging] = useState(false);

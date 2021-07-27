@@ -15,10 +15,8 @@
     // "module": "ES2015",
     "moduleResolution": "node",
     "paths": {
-      "@hciikit/workflow/*": ["./packages/workflow/src/*"],
+      "@hcikit/workflow/*": ["./packages/workflow/src/*"],
       "@hciikit/react/*": ["./packages/react/src/*"]
     }
-  },
-  "include": [],
-  "exclude": ["./coverage"]
+  }
 }

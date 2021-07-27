@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Experiment, {
   saveStateToSessionStorage,
-  useConfig,
+  useConfiguration,
   useExperiment,
 } from "./Experiment";
 import DevTools from "../tasks/DevTools";
@@ -72,7 +72,7 @@ const ButtonTask: React.FunctionComponent<{
   logs: Array<Log>;
   configVal: string;
 }> = ({ text, logs, configVal = "hello" }) => {
-  const configuration = useConfig();
+  const configuration = useConfiguration();
   const { log, modify, advance } = useExperiment();
   return (
     <>

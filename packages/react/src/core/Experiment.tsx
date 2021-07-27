@@ -19,6 +19,7 @@ import {
   ExperimentIndex,
   UnfilledLog,
   experimentComplete,
+  getCurrentIndex,
 } from "@hcikit/workflow";
 
 export interface ControlFunctions {
@@ -35,7 +36,7 @@ export const ConfigMutatorContext = createContext<ControlFunctions | undefined>(
   undefined
 );
 
-function useConfig(): Configuration {
+function useConfiguration(): Configuration {
   const context = useContext(ConfigContext);
   if (context === undefined) {
     throw new Error("useConfig must be used within a ConfigProvider");
@@ -53,7 +54,7 @@ function useExperiment(): ControlFunctions {
   return context;
 }
 
-export { useConfig, useExperiment };
+export { useConfiguration, useExperiment };
 
 const STATE_KEY = "HCIKIT_LOGS";
 
@@ -97,11 +98,17 @@ const Experiment: React.FunctionComponent<{
 }) => {
   // TODO: not sure how to create different sessions for the same task. The issue is that they'll be overwritten by the other thing. Maybe we can add a config version or session key or something to it?
   const [config, setConfig] = useState<Configuration>(() => {
+    let initialConfig = configuration || {};
     if (process.env.NODE_ENV !== "development" && loadState) {
-      return loadState() || configuration || {};
+      initialConfig = loadState() || configuration;
     }
 
-    return configuration || {};
+    initialConfig = advanceConfiguration(
+      initialConfig,
+      getCurrentIndex(initialConfig)
+    );
+
+    return initialConfig;
   });
 
   // it might be better to do this as we save state rather than waiting a render, I chose this way because it is easier to implement than adding it to each of the modifying functions below.

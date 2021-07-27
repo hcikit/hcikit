@@ -12,7 +12,7 @@ import {
 } from "@hcikit/workflow";
 
 import GridLayout from "../GridLayout";
-import { useConfig, useExperiment } from "./Experiment";
+import { useConfiguration, useExperiment } from "./Experiment";
 
 // If there's ever a usecase for logs to get passed then we can add another provider they can subscribe to.
 
@@ -27,7 +27,7 @@ const TaskRenderer: React.FunctionComponent<{
   ErrorHandler = null,
   forceRemountEveryTask = true,
 }) => {
-  const configuration = useConfig();
+  const configuration = useConfiguration();
   const currentProps = getCurrentProps(configuration);
 
   const { log, advance, modify } = useExperiment();

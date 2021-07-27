@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Button, Typography, CircularProgress } from "@material-ui/core";
 
 import { CenteredNicePaper, CenteredText } from "../components";
-import { useConfig, useExperiment } from "../core/Experiment";
+import { useConfiguration, useExperiment } from "../core/Experiment";
 import { Configuration } from "@hcikit/workflow";
 
 // TODO: Remove or standardise the experimenter property?
@@ -30,7 +30,7 @@ const Upload: React.FunctionComponent<UploadProps> = ({
   const [done, setDone] = useState(false);
   const [error, setError] = useState(false);
   const experiment = useExperiment();
-  const configuration = useConfig();
+  const configuration = useConfiguration();
 
   useLayoutEffect(() => {
     function attemptUploadWithRetries(retries: number) {
