@@ -1,0 +1,17 @@
+{
+  "name": "@hcikit/s3-uploader",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prepublish": "tsc"
+  },
+  "dependencies": {
+    "@aws-sdk/client-cognito-identity": "^3.19.0",
+    "@aws-sdk/client-s3": "^3.19.0",
+    "@aws-sdk/credential-provider-cognito-identity": "^3.19.0"
+  }
+}

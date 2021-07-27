@@ -232,7 +232,44 @@
     tslib "^2.3.0"
     uuid "^8.3.2"
 
-"@aws-sdk/client-s3@^3.20.0", "@aws-sdk/client-s3@^3.21.0":
+"@aws-sdk/client-cognito-identity@3.23.0", "@aws-sdk/client-cognito-identity@^3.19.0":
+  version "3.23.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-cognito-identity/-/client-cognito-identity-3.23.0.tgz#a4f876bc62e2aee6326b418081ff7abe6bd447bd"
+  integrity sha512-DksnV2vcndGCgl8f2QuF2+5BEhWv0sjiLNXbZMJU/xY6GA8X29SXDVPkGADAX+zNPth8QUUWpjN7ATAxec3a2Q==
+  dependencies:
+    "@aws-crypto/sha256-browser" "^1.0.0"
+    "@aws-crypto/sha256-js" "^1.0.0"
+    "@aws-sdk/client-sts" "3.23.0"
+    "@aws-sdk/config-resolver" "3.23.0"
+    "@aws-sdk/credential-provider-node" "3.23.0"
+    "@aws-sdk/fetch-http-handler" "3.23.0"
+    "@aws-sdk/hash-node" "3.23.0"
+    "@aws-sdk/invalid-dependency" "3.23.0"
+    "@aws-sdk/middleware-content-length" "3.23.0"
+    "@aws-sdk/middleware-host-header" "3.23.0"
+    "@aws-sdk/middleware-logger" "3.23.0"
+    "@aws-sdk/middleware-retry" "3.23.0"
+    "@aws-sdk/middleware-serde" "3.23.0"
+    "@aws-sdk/middleware-signing" "3.23.0"
+    "@aws-sdk/middleware-stack" "3.23.0"
+    "@aws-sdk/middleware-user-agent" "3.23.0"
+    "@aws-sdk/node-config-provider" "3.23.0"
+    "@aws-sdk/node-http-handler" "3.23.0"
+    "@aws-sdk/protocol-http" "3.23.0"
+    "@aws-sdk/smithy-client" "3.23.0"
+    "@aws-sdk/types" "3.22.0"
+    "@aws-sdk/url-parser" "3.23.0"
+    "@aws-sdk/util-base64-browser" "3.23.0"
+    "@aws-sdk/util-base64-node" "3.23.0"
+    "@aws-sdk/util-body-length-browser" "3.23.0"
+    "@aws-sdk/util-body-length-node" "3.23.0"
+    "@aws-sdk/util-user-agent-browser" "3.23.0"
+    "@aws-sdk/util-user-agent-node" "3.23.0"
+    "@aws-sdk/util-utf8-browser" "3.23.0"
+    "@aws-sdk/util-utf8-node" "3.23.0"
+    tslib "^2.3.0"
+
+"@aws-sdk/client-s3@^3.19.0", "@aws-sdk/client-s3@^3.20.0", "@aws-sdk/client-s3@^3.21.0":
   version "3.23.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.23.0.tgz#e74d53c9d065b3aecb11d4d9ebf0a98178614788"
   integrity sha512-F6nP81HQ4pfZUCmeIHOoiIMm1i9L1lvbSioFZDgN6qFPzSUnbNRMxcgX+Dwwt/WHcf+lx1bVaA6h3U1CTCS93Q==
@@ -364,6 +401,16 @@
   integrity sha512-acCxrAymwx81XELBO/d1VBWaHOldxqbmxDAMfvOfUYN+CYXWIFYpY1VCWuAeWig7Dy18QEJQ2pHwQlFxmilA7w==
   dependencies:
     "@aws-sdk/signature-v4" "3.23.0"
+    "@aws-sdk/types" "3.22.0"
+    tslib "^2.3.0"
+
+"@aws-sdk/credential-provider-cognito-identity@^3.19.0":
+  version "3.23.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-cognito-identity/-/credential-provider-cognito-identity-3.23.0.tgz#3d666836140a51cf8cd4a89331f4213bfcd9e943"
+  integrity sha512-EwJVZsSI9RdsICKdmQ9UDa1ewsQLYsQXiIcV+9qFSpdHivdmZU+H6mytjrJlF7rEFJBrFN6T0CnkpvpR86lu5Q==
+  dependencies:
+    "@aws-sdk/client-cognito-identity" "3.23.0"
+    "@aws-sdk/property-provider" "3.23.0"
     "@aws-sdk/types" "3.22.0"
     tslib "^2.3.0"
 
