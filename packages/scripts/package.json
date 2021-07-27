@@ -21,15 +21,20 @@
     "s3-sync-client": "https://github.com/blainelewis1/s3-sync-client.git",
     "yargs": "^15.3.1"
   },
+  "devDependencies": {
+    "@types/cross-spawn": "^6.0.2",
+    "@types/fs-extra": "^9.0.11",
+    "@types/mime-types": "^2.1.0",
+    "@types/node": "^16.4.3",
+    "@types/yargs": "^17.0.0",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.5"
+  },
   "scripts": {
     "start": "tsc",
     "postbuild": "cp ./src/CreateBucket.yml ./dist/. cp \"./package.json\" ./dist/",
     "build": "tsc --build",
     "dev": "ts-node src/index.ts",
     "prepare": "npm run build"
-  },
-  "devDependencies": {
-    "ts-node": "^10.0.0",
-    "typescript": "^4.3.4"
   }
 }

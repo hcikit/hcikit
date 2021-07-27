@@ -13,5 +13,8 @@
     "@aws-sdk/client-cognito-identity": "^3.19.0",
     "@aws-sdk/client-s3": "^3.19.0",
     "@aws-sdk/credential-provider-cognito-identity": "^3.19.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.5"
   }
 }
