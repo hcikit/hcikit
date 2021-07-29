@@ -107,6 +107,9 @@ exports[`WizardProgress renders correctly 1`] = `
         </div>
       </div>
     </div>
+    <button>
+      advance
+    </button>
   </div>
 </DocumentFragment>
 `;

@@ -1,5 +1,5 @@
 import React from "react";
-import WizardProgress from "./WizardProgress";
+import ProgressText from "./ProgressText";
 import { render, screen } from "@testing-library/react";
 import Experiment, { useExperiment } from "../core/Experiment";
 import { Configuration } from "@hcikit/workflow";
@@ -8,7 +8,7 @@ let BlankTask: React.FunctionComponent = () => null;
 
 let basicConfig: Configuration = {
   __INDEX__: [0],
-  tasks: ["WizardProgress"],
+  tasks: ["ProgressText", "ClickToAdvance"],
   children: [
     { label: "hello world", task: "BlankTask" },
     { task: "BlankTask" },
@@ -17,7 +17,7 @@ let basicConfig: Configuration = {
 };
 
 let advancedConfig: Configuration = {
-  tasks: ["WizardProgress", "ClickToAdvance"],
+  tasks: ["ProgressText", "ClickToAdvance"],
   depth: 1,
 
   children: [
@@ -26,6 +26,7 @@ let advancedConfig: Configuration = {
       children: [
         { label: "0,0", task: "BlankTask" },
         { label: "0,1", task: "BlankTask" },
+        { label: "0,2", task: "BlankTask" },
       ],
     },
     {
@@ -44,13 +45,13 @@ let ClickToAdvance: React.FunctionComponent = () => {
   return <button onClick={() => experiment.advance()}>advance</button>;
 };
 
-describe("WizardProgress", () => {
+describe("ProgressText", () => {
   it("renders without crashing", () => {
     render(
       <Experiment
         tasks={{
           ClickToAdvance,
-          WizardProgress,
+          ProgressText,
           BlankTask,
         }}
         configuration={{ ...basicConfig }}
@@ -59,11 +60,7 @@ describe("WizardProgress", () => {
       />
     );
 
-    expect(screen.getByText("hello world")).toHaveClass("MuiStepLabel-active");
-    expect(screen.getByText("Blank Task")).not.toHaveClass(
-      "MuiStepLabel-active"
-    );
-    expect(screen.getByText("labels")).not.toHaveClass("MuiStepLabel-active");
+    screen.getByText("1 / 3");
   });
 
   it("renders correctly selected task", () => {
@@ -71,20 +68,20 @@ describe("WizardProgress", () => {
       <Experiment
         tasks={{
           ClickToAdvance,
-          WizardProgress,
+          ProgressText,
           BlankTask,
         }}
-        configuration={{ ...basicConfig, __INDEX__: [1] }}
+        configuration={{ ...basicConfig }}
         saveState={null}
         loadState={null}
       />
     );
 
-    expect(screen.getByText("hello world")).not.toHaveClass(
-      "MuiStepLabel-active"
-    );
-    expect(screen.getByText("Blank Task")).toHaveClass("MuiStepLabel-active");
-    expect(screen.getByText("labels")).not.toHaveClass("MuiStepLabel-active");
+    screen.getByText("1 / 3");
+    screen.getByText("advance").click();
+    screen.getByText("2 / 3");
+    screen.getByText("advance").click();
+    screen.getByText("3 / 3");
   });
 
   it("renders correct depth parameter", () => {
@@ -92,7 +89,7 @@ describe("WizardProgress", () => {
       <Experiment
         tasks={{
           ClickToAdvance,
-          WizardProgress,
+          ProgressText,
           BlankTask,
         }}
         configuration={{ ...advancedConfig }}
@@ -100,48 +97,15 @@ describe("WizardProgress", () => {
         loadState={null}
       />
     );
-    expect(screen.getByText("0,0")).toHaveClass("MuiStepLabel-active");
-    expect(screen.getByText("0,1")).not.toHaveClass("MuiStepLabel-active");
-  });
-  it("renders correct depth parameter with second one", () => {
-    render(
-      <Experiment
-        tasks={{
-          ClickToAdvance,
-          WizardProgress,
-          BlankTask,
-        }}
-        configuration={{ ...advancedConfig, __INDEX__: [1, 0] }}
-        saveState={null}
-        loadState={null}
-      />
-    );
-
-    expect(screen.getByText("1,0")).toHaveClass("MuiStepLabel-active");
-    screen.getByText("1,1");
-  });
-
-  it("updates properly", () => {
-    render(
-      <Experiment
-        tasks={{
-          ClickToAdvance,
-          WizardProgress,
-          BlankTask,
-        }}
-        configuration={{ ...advancedConfig }}
-        saveState={null}
-        loadState={null}
-      />
-    );
-
-    expect(screen.getByText("0,0")).toHaveClass("MuiStepLabel-active");
+    screen.getByText("1 / 3");
     screen.getByText("advance").click();
-    expect(screen.getByText("0,1")).toHaveClass("MuiStepLabel-active");
+    screen.getByText("2 / 3");
     screen.getByText("advance").click();
-    expect(screen.getByText("1,0")).toHaveClass("MuiStepLabel-active");
+    screen.getByText("3 / 3");
     screen.getByText("advance").click();
-    expect(screen.getByText("1,1")).toHaveClass("MuiStepLabel-active");
+    screen.getByText("1 / 2");
+    screen.getByText("advance").click();
+    screen.getByText("2 / 2");
   });
 
   it("renders correctly", () => {
@@ -150,7 +114,7 @@ describe("WizardProgress", () => {
         <Experiment
           tasks={{
             ClickToAdvance,
-            WizardProgress,
+            ProgressText,
             BlankTask,
           }}
           configuration={{ ...advancedConfig }}

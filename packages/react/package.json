@@ -1,6 +1,6 @@
 {
   "name": "@hcikit/react",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "An experiment runner with a set of pre-built experiment components for running hci experiments",
   "author": "blainelewis1",
   "license": "MIT",
@@ -23,7 +23,7 @@
     "test": "jest --env=jsdom",
     "test:watch": "jest --watch --env=jsdom --colors --verbose",
     "start": "tsc",
-    "build": "tsc --build  && cp \"./package.json\" ./dist/",
+    "build": "tsc --build --verbose && cp \"./package.json\" ./dist/",
     "prepack": "yarn run build",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
