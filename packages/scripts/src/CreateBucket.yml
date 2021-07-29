@@ -22,6 +22,8 @@ Resources:
               - '*'
             ExposedHeaders: 
               - ETag
+      VersioningConfiguration:
+        Status: Enabled
 
   UploadsIdentityPool:
     Type: AWS::Cognito::IdentityPool

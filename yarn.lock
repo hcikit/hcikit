@@ -3633,7 +3633,7 @@ __metadata:
     fs-extra: ^9.0.0
     lodash: ^4.17.15
     mime-types: ^2.1.31
-    s3-sync-client: "https://github.com/blainelewis1/s3-sync-client.git"
+    s3-sync-client: ^1.5.0
     ts-node: ^10.0.0
     typescript: ^4.3.5
     yargs: ^15.3.1
@@ -21792,13 +21792,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"s3-sync-client@https://github.com/blainelewis1/s3-sync-client.git":
-  version: 1.4.0
-  resolution: "s3-sync-client@https://github.com/blainelewis1/s3-sync-client.git#commit=ec189d742ed9657b6d7fae065fa46bfdb58c71a0"
+"s3-sync-client@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "s3-sync-client@npm:1.5.0"
   dependencies:
     "@aws-sdk/abort-controller": ^3.20.0
     "@aws-sdk/client-s3": ^3.20.0
-  checksum: c760b12d93d92a0341ab1b4070b25676475318fe51daf4c55186768f2579cbeaac51771825f8b89325dcda2911cd430179128bf85535b770d033fea6c569a09a
+  checksum: b496c38bd46969045a567c5fd4b107a806192ee187e053a4c025112a88b58d352a4d70347d521fc598704021ab61488b73c9b0e5551274989073a814145e9e0e
   languageName: node
   linkType: hard
 
