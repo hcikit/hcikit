@@ -16,7 +16,7 @@
     "test": "yarn jest --verbose --colors",
     "test:watch": "jest --watch --verbose --colors",
     "build": "yarn workspaces foreach run build",
-    "clean": "rm -rf node_modules packages/*/node_modules packages/*/tsconfig.tsbuildinfo packages/*/dist example*/build example*/node_modules"
+    "clean": "rm -rf node_modules packages/*/node_modules packages/*/tsconfig.tsbuildinfo packages/*/dist"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.14.8",

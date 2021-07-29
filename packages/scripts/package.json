@@ -1,6 +1,6 @@
 {
   "name": "@hcikit/scripts",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "A set of useful scripts for building HCI Kit experiments",
   "main": "index.js",
   "repository": "github.com/hcikit/hcikit",

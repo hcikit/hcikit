@@ -18,6 +18,6 @@ exports.handler = async () => {
     fs.mkdirSync(dir);
   }
 
-  await sync.bucketWithLocal(process.env.REACT_APP_AWS_UPLOADS_BUCKET, dir);
+  await sync.localWithBucket(process.env.REACT_APP_AWS_UPLOADS_BUCKET, dir);
   // aws s3 sync /path/to/local/dir s3://mybucket2
 };
