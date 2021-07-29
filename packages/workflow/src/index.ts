@@ -1,5 +1,7 @@
 import { mergeWith, pickBy, isEqual, pick } from "lodash";
 
+export * from "./utils";
+
 // TODO: rename to core or configuration
 
 export type ExperimentIndex = Array<number>;

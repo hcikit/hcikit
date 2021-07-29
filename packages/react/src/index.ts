@@ -6,7 +6,6 @@ export * from "./components";
 export { allTasks };
 
 export { withGridItem } from "./GridLayout";
-export * from "./utils";
 
 export { default as GridLayout } from "./GridLayout";
 export { default } from "./core/Experiment";

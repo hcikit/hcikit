@@ -57,3 +57,67 @@ export function uuidv4(): string {
 export function randomString(): string {
   return Math.random().toString(36).substring(2);
 }
+
+type OS = "Windows" | "MacOS" | "UNIX" | "Linux" | "Unknown";
+/**
+ * Gets the OS of the user.
+ */
+export function getOS(): OS {
+  const oss: Record<string, OS> = {
+    Win: "Windows",
+    Mac: "MacOS",
+    X11: "UNIX",
+    Linux: "Linux",
+  };
+
+  for (const os of Object.keys(oss)) {
+    if (navigator.appVersion.indexOf(os) >= 0) {
+      return oss[os];
+    }
+  }
+
+  return "Unknown";
+}
+
+/**
+ * Grabs a bunch of info from the browser for logging. Tries not to include too much information but there is more such as the location API etc.
+ */
+export function getBrowserInfo() {
+  // https://stackoverflow.com/a/37093316/1036813
+  return {
+    browserName: navigator.appName,
+    browserEngine: navigator.product,
+    browserVersion1a: navigator.appVersion,
+    browserVersion1b: navigator.userAgent,
+    browserLanguage: navigator.language,
+    browserOnline: navigator.onLine,
+    browserPlatform: navigator.platform,
+    sizeScreenW: window.screen.width,
+    sizeScreenH: window.screen.height,
+    sizeInW: window.innerWidth,
+    sizeInH: window.innerHeight,
+    sizeAvailW: window.screen.availWidth,
+    sizeAvailH: window.screen.availHeight,
+    scrColorDepth: window.screen.colorDepth,
+    scrPixelDepth: window.screen.pixelDepth,
+  };
+}
+
+export function getMturkParameters(
+  defaults = {
+    participant: "worker",
+    worker_id: "",
+    assignment_id: "",
+    hit_id: "",
+  }
+) {
+  const params = new URL(window.location.href).searchParams;
+
+  return {
+    ...defaults,
+    participant: params.get("WORKER_ID"),
+    worker_id: params.get("WORKER_ID"),
+    assignment_id: params.get("ASSIGNMENT_ID"),
+    hit_id: params.get("HIT_ID"),
+  };
+}
