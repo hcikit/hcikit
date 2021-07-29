@@ -21,7 +21,7 @@
   },
   "scripts": {
     "start": "tsc",
-    "build": "tsc --build --verbose && cp \"./package.json\" ./dist/",
+    "build": "tsc --build --verbose",
     "test": "jest",
     "test:watch": "jest --watch --colors --verbose",
     "test:coverage": "jest --coverage --colors",

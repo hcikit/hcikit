@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import Experiment, {
   ConsentForm,
   InformationScreen,
   DisplayText,
   ProgressBar,
   WizardProgress,
-  DevTools
+  DevTools,
 } from "@hcikit/react";
 import IncrementTask from "./IncrementTask";
 import CustomTask from "./CustomTask";
@@ -20,11 +20,11 @@ let tasks = {
   ProgressBar,
   WizardProgress,
   DevTools,
-  IncrementTask
+  IncrementTask,
 };
 
-export default class App extends Component {
-  render() {
-    return <Experiment tasks={tasks} configuration={configuration} />;
-  }
-}
+const App = () => {
+  return <Experiment tasks={tasks} configuration={configuration} />;
+};
+
+export default App;

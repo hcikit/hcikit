@@ -9,10 +9,7 @@ import { Configuration } from "@hcikit/workflow";
 
 // TODO: Remove or standardise the experimenter property?
 
-type UploadFunction = (
-  filename: string,
-  config: Configuration
-) => Promise<void>;
+type UploadFunction = (filename: string, config: Configuration) => Promise<any>;
 
 interface UploadProps {
   filename: string;

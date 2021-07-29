@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start": "tsc",
-    "postbuild": "cp ./src/CreateBucket.yml ./dist/. cp \"./package.json\" ./dist/",
+    "postbuild": "cp ./src/CreateBucket.yml ./dist/.",
     "build": "tsc --build",
     "dev": "ts-node src/index.ts",
     "prepare": "npm run build"

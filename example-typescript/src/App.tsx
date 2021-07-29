@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Experiment, {
   ConsentForm,
   InformationScreen,
@@ -23,8 +23,8 @@ let tasks = {
   IncrementTask,
 };
 
-export default class App extends Component {
-  render() {
-    return <Experiment tasks={tasks} configuration={configuration} />;
-  }
-}
+const App: React.FunctionComponent = () => {
+  return <Experiment tasks={tasks} configuration={configuration} />;
+};
+
+export default App;
