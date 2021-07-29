@@ -17,16 +17,13 @@ exports.handler = async () => {
   console.log("Uploading...");
 
   let dir = path.join(appPath, "build");
-  await sync.bucketWithLocal(
-    dir,
-    process.env.REACT_APP_AWS_WEBSITE_BUCKET,
-    {},
-    {
+  await sync.bucketWithLocal(dir, process.env.REACT_APP_AWS_WEBSITE_BUCKET, {
+    commandInput: {
       ACL: "bucket-owner-full-control",
       ContentType: ({ Key }: Partial<PutObjectCommandInput>) =>
         mime.lookup(Key || "") || "text/html",
-    }
-  );
+    },
+  });
 
   console.log(
     `Upload complete. Visit your website at ${process.env.REACT_APP_AWS_WEBSITE_URL}`

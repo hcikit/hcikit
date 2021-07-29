@@ -1,6 +1,6 @@
 {
   "name": "@hcikit/scripts",
-  "version": "1.0.10",
+  "version": "1.0.14",
   "description": "A set of useful scripts for building HCI Kit experiments",
   "main": "index.js",
   "repository": "github.com/hcikit/hcikit",
@@ -9,6 +9,10 @@
   "bin": {
     "hcikit": "dist/index.js"
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "dependencies": {
     "@aws-sdk/client-cloudformation": "^3.19.0",
     "@aws-sdk/client-s3": "^3.21.0",
@@ -18,7 +22,7 @@
     "fs-extra": "^9.0.0",
     "lodash": "^4.17.15",
     "mime-types": "^2.1.31",
-    "s3-sync-client": "https://github.com/blainelewis1/s3-sync-client.git",
+    "s3-sync-client": "^1.5.0",
     "yargs": "^15.3.1"
   },
   "devDependencies": {

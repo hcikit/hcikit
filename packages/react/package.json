@@ -24,7 +24,7 @@
     "test:watch": "jest --watch --env=jsdom --colors --verbose",
     "start": "tsc",
     "build": "tsc --build  && cp \"./package.json\" ./dist/",
-    "prepare": "npm run build",
+    "prepack": "yarn run build",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },

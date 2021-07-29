@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "prepublish": "tsc"
+    "prepack": "yarn build"
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity": "^3.19.0",
