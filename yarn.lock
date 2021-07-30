@@ -6938,6 +6938,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"analyser@workspace:packages/analyser":
+  version: 0.0.0-use.local
+  resolution: "analyser@workspace:packages/analyser"
+  dependencies:
+    "@testing-library/jest-dom": ^5.11.4
+    "@testing-library/react": ^11.1.0
+    "@testing-library/user-event": ^12.1.10
+    "@types/jest": ^26.0.15
+    "@types/node": ^12.0.0
+    "@types/react": ^17.0.0
+    "@types/react-dom": ^17.0.0
+    react: ^17.0.2
+    react-dom: ^17.0.2
+    react-scripts: 4.0.3
+    typescript: ^4.1.2
+    web-vitals: ^1.0.1
+  languageName: unknown
+  linkType: soft
+
 "ansi-align@npm:^3.0.0":
   version: 3.0.0
   resolution: "ansi-align@npm:3.0.0"
