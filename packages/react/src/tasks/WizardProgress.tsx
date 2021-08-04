@@ -9,6 +9,8 @@ import {
 import { useConfiguration, useExperiment } from "../core/Experiment";
 import { startCase } from "lodash";
 
+// TODO: would be nice if you could skip some of theses steps with a prop,. for example an S3 upload might be skipped. It would be extra useful because people can use scoped props like WizardProgress : { skip:true }
+
 const NoGridWizardProgress: React.FunctionComponent<{ depth: number }> = ({
   depth = 0,
 }) => {

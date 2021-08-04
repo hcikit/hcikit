@@ -114,11 +114,31 @@ export function getMturkParameters(
   // TODO: use a random number instead of defaults.
   const params = new URL(window.location.href).searchParams;
 
+  const participant =
+    params.get("WORKER_ID") ||
+    defaults.participant ||
+    `${randomString()}-default`;
+
+  // eslint-disable-next-line camelcase
+  const worker_id =
+    params.get("WORKER_ID") ||
+    defaults.worker_id ||
+    `${randomString()}-default`;
+
+  // eslint-disable-next-line camelcase
+  const assignment_id =
+    params.get("ASSIGNMENT_ID") ||
+    defaults.assignment_id ||
+    `${randomString()}-default`;
+
+  // eslint-disable-next-line camelcase
+  const hit_id =
+    params.get("HIT_ID") || defaults.hit_id || `${randomString()}-default`;
+
   return {
-    ...defaults,
-    participant: params.get("WORKER_ID"),
-    worker_id: params.get("WORKER_ID"),
-    assignment_id: params.get("ASSIGNMENT_ID"),
-    hit_id: params.get("HIT_ID"),
+    participant,
+    hit_id,
+    worker_id,
+    assignment_id,
   };
 }

@@ -4,6 +4,7 @@
       "@hcikit/react": "latest",
       "@hcikit/scripts": "latest",
       "@material-ui/core": "^4.9.11",
+<<<<<<< HEAD
       "@material-ui/icons": "^4.9.1",
       "@testing-library/jest-dom": "^5.11.4",
       "@testing-library/react": "^11.1.0",
@@ -14,10 +15,14 @@
       "@types/jest": "^26.0.15",
       "typescript": "^4.1.2",
       "web-vitals": "^1.0.1"
+=======
+      "@material-ui/icons": "^4.9.1"
+>>>>>>> a6f38a07acaa045da78d6188b922e5b17281f50b
     },
     "devDependencies": {
       "cross-env": "^5.2.0"
     },
+<<<<<<< HEAD
     "eslintConfig": {
       "extends": [
         "react-app",
@@ -28,6 +33,12 @@
       "env": "cross-env REACT_APP_GIT_HASH=$(git rev-parse HEAD) REACT_APP_PACKAGE_VERSION=$npm_package_version REACT_APP_BUILD_TIME=$(date +%s)",
       "start": "npm run env react-scripts start",
       "build": "npm run env react-scripts build"
+=======
+    "scripts": {
+      "env": "cross-env REACT_APP_GIT_HASH=$(git rev-parse HEAD) REACT_APP_PACKAGE_VERSION=$npm_package_version REACT_APP_BUILD_TIME=$(date +%s)",
+      "start": "npm run env react-scripts start",
+      "build": "npm run env -- react-scripts build"
+>>>>>>> a6f38a07acaa045da78d6188b922e5b17281f50b
     }
   }
 }

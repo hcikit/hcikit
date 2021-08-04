@@ -1,6 +1,10 @@
 {
   "name": "@hcikit/cra-template",
+<<<<<<< HEAD
   "version": "1.0.0-alpha.6",
+=======
+  "version": "1.0.0-alpha.5",
+>>>>>>> a6f38a07acaa045da78d6188b922e5b17281f50b
   "description": "A package containing files to bootstrap an HCI Kit project using Create React App.",
   "repository": {
     "type": "git",
