@@ -111,6 +111,7 @@ export function getMturkParameters(
     hit_id: "",
   }
 ) {
+  // TODO: use a random number instead of defaults.
   const params = new URL(window.location.href).searchParams;
 
   return {
