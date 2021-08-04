@@ -1,10 +1,12 @@
-# HCI Kit CRA Template
+# HCI Kit Typescript CRA Template
 
 This is a package containing files to create a new HCI Kit project. The best way to use this template is by running:
 
 ```{bash}
 npx create-react-app my-app --template @hcikit
 ```
+
+NOTE: this package is almost a duplicate, it's important that template.json is updated to use the same scripts etc from the `@hcikit/cra-template` package.
 
 ## Developing / Contributing
 
