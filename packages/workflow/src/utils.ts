@@ -103,42 +103,26 @@ export function getBrowserInfo() {
   };
 }
 
-export function getMturkParameters(
+export function getUrlParams(
   defaults = {
-    participant: "worker",
-    worker_id: "",
-    assignment_id: "",
-    hit_id: "",
+    participant: `${randomString()}-default`,
+    worker_id: `${randomString()}-default`,
+    assignment_id: `${randomString()}-default`,
+    hit_id: `${randomString()}-default`,
   }
 ) {
-  // TODO: use a random number instead of defaults.
-  const params = new URL(window.location.href).searchParams;
+  const params = Object.fromEntries(
+    new URLSearchParams(window.location.search)
+  );
 
-  const participant =
-    params.get("WORKER_ID") ||
-    defaults.participant ||
-    `${randomString()}-default`;
+  return { ...defaults, ...params };
+}
 
-  // eslint-disable-next-line camelcase
-  const worker_id =
-    params.get("WORKER_ID") ||
-    defaults.worker_id ||
-    `${randomString()}-default`;
-
-  // eslint-disable-next-line camelcase
-  const assignment_id =
-    params.get("ASSIGNMENT_ID") ||
-    defaults.assignment_id ||
-    `${randomString()}-default`;
-
-  // eslint-disable-next-line camelcase
-  const hit_id =
-    params.get("HIT_ID") || defaults.hit_id || `${randomString()}-default`;
-
+export function getAllMetadata() {
   return {
-    participant,
-    hit_id,
-    worker_id,
-    assignment_id,
+    ...getUrlParams(),
+    ...process.env,
+    ...getBrowserInfo(),
+    os: getOS(),
   };
 }
