@@ -39,6 +39,19 @@ let advancedConfig: Configuration = {
   ],
 };
 
+let skipConfig: Configuration = {
+  tasks: ["WizardProgress", "ClickToAdvance"],
+  children: [
+    { label: "[0]", task: "BlankTask" },
+    { label: "[1]", task: "BlankTask" },
+    { label: "[2]", task: "BlankTask", skip: true },
+    { label: "[3]", task: "BlankTask", skip: true },
+    { label: "[4]", task: "BlankTask" },
+    { label: "[5]", task: "BlankTask", skip: true },
+    { label: "[6]", task: "BlankTask" },
+  ],
+};
+
 let ClickToAdvance: React.FunctionComponent = () => {
   const experiment = useExperiment();
   return <button onClick={() => experiment.advance()}>advance</button>;
@@ -64,6 +77,57 @@ describe("WizardProgress", () => {
       "MuiStepLabel-active"
     );
     expect(screen.getByText("labels")).not.toHaveClass("MuiStepLabel-active");
+  });
+
+  it("Skips skipped tasks and doesn't break", () => {
+    render(
+      <Experiment
+        tasks={{
+          ClickToAdvance,
+          WizardProgress,
+          BlankTask,
+        }}
+        configuration={{ ...skipConfig }}
+        saveState={null}
+        loadState={null}
+      />
+    );
+
+    let task2 = screen.queryByText("[2]");
+    let task3 = screen.queryByText("[3]");
+    let task5 = screen.queryByText("[5]");
+
+    expect(task2).not.toBeInTheDocument();
+    expect(task3).not.toBeInTheDocument();
+    expect(task5).not.toBeInTheDocument();
+
+    expect(screen.getByText("[0]")).toHaveClass("MuiStepLabel-active");
+    screen.getByText("advance").click();
+    screen.getByText("advance").click();
+
+    task2 = screen.queryByText("[2]");
+    task3 = screen.queryByText("[3]");
+    task5 = screen.queryByText("[5]");
+    expect(task2).not.toBeInTheDocument();
+    expect(task3).not.toBeInTheDocument();
+    expect(task5).not.toBeInTheDocument();
+
+    expect(screen.getByText("[1]")).toHaveClass("MuiStepLabel-active");
+    screen.getByText("advance").click();
+    expect(screen.getByText("[1]")).toHaveClass("MuiStepLabel-active");
+    screen.getByText("advance").click();
+    expect(screen.getByText("[4]")).toHaveClass("MuiStepLabel-active");
+    screen.getByText("advance").click();
+    expect(screen.getByText("[4]")).toHaveClass("MuiStepLabel-active");
+    screen.getByText("advance").click();
+    expect(screen.getByText("[6]")).toHaveClass("MuiStepLabel-active");
+
+    task2 = screen.queryByText("[2]");
+    task3 = screen.queryByText("[3]");
+    task5 = screen.queryByText("[5]");
+    expect(task2).not.toBeInTheDocument();
+    expect(task3).not.toBeInTheDocument();
+    expect(task5).not.toBeInTheDocument();
   });
 
   it("renders correctly selected task", () => {
