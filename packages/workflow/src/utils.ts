@@ -106,9 +106,9 @@ export function getBrowserInfo() {
 export function getUrlParams(
   defaults = {
     participant: `${randomString()}-default`,
-    worker_id: `${randomString()}-default`,
-    assignment_id: `${randomString()}-default`,
-    hit_id: `${randomString()}-default`,
+    WORKER_ID: `${randomString()}-default`,
+    ASSIGNMENT_ID: `${randomString()}-default`,
+    HIT_ID: `${randomString()}-default`,
   }
 ) {
   const params = Object.fromEntries(

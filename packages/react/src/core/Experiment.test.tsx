@@ -57,7 +57,11 @@ const LogOnClick: React.FunctionComponent = () => {
 
 const InfiniteRenderer: React.FunctionComponent = () => {
   const experiment = useExperiment();
-  experiment.log({ type: "log" });
+
+  useEffect(() => {
+    experiment.log({ type: "log" });
+  });
+
   return <button>Log</button>;
 };
 
@@ -252,7 +256,7 @@ describe("Experiment", () => {
 
   // this test is broken because log causes a state change in the infiniterenderer and this means they both render at once because of the infinite
 
-  xit("logs definitely don't cause a re-render", () => {
+  it("logs definitely don't cause a re-render", () => {
     // I added this test because I had a log() statement that occurred on render and it caused an infinite loop.
     const config = {
       tasks: ["DisplayText"],

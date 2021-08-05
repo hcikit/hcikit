@@ -1,6 +1,7 @@
 export { default as ConsentForm } from "./ConsentForm";
 export { default as DevTools } from "./DevTools";
 export { default as DisplayText } from "./DisplayTextTask";
+export { default as ProgressText } from "./ProgressText";
 export { default as ProgressBar } from "./ProgressBar";
 export { default as WizardProgress } from "./WizardProgress";
 export { default as Fitts } from "./Fitts";
@@ -10,3 +11,5 @@ export { default as MouseCenteringTask } from "./MouseCenteringTask";
 export { default as MousePositioner } from "./MousePositioner";
 export { default as createUpload } from "./Upload";
 export { default as DOMEventLogger } from "./DOMEventLogger";
+export { default as ResolutionChecker } from "./ResolutionChecker";
+export { default as FocusChecker } from "./FocusChecker";

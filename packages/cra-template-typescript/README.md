@@ -32,6 +32,3 @@ The template does two important things
 We typically just copy and paste the files from CRA. The default template is at https://github.com/facebook/create-react-app/tree/master/packages/cra-template
 
 And then we do the same with the `src` files from the example in HCI Kit. This means that the files are likely to be tested and working.
-
-- [ ] TODO: Need to document what each file does.
-- [ ] TODO: Need to add a favicon.

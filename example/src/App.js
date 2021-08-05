@@ -6,6 +6,8 @@ import Experiment, {
   ProgressBar,
   WizardProgress,
   DevTools,
+  ResolutionChecker,
+  FocusChecker,
 } from "@hcikit/react";
 import IncrementTask from "./IncrementTask";
 import CustomTask from "./CustomTask";
@@ -21,6 +23,8 @@ let tasks = {
   WizardProgress,
   DevTools,
   IncrementTask,
+  ResolutionChecker,
+  FocusChecker,
 };
 
 const App = () => {

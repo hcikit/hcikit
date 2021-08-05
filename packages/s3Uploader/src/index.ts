@@ -18,8 +18,8 @@ export function createS3Uploader(
   });
 
   // https://blog.mturk.com/tutorial-how-to-create-hits-that-ask-workers-to-upload-files-using-amazon-cognito-and-amazon-s3-38acb1108633
-  return function (filename: string, data: any) {
-    let command = new PutObjectCommand({
+  return function (filename: string, data: unknown) {
+    const command = new PutObjectCommand({
       Bucket: AWS_S3_BUCKET,
       Key: filename,
       Body: JSON.stringify(data),

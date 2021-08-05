@@ -1,7 +1,11 @@
 import { render, RenderResult } from "@testing-library/react";
 
-import { ConfigMutatorContext, ControlFunctions } from "./core/Experiment";
-import { ExperimentIndex } from "@hcikit/workflow";
+import {
+  ConfigContext,
+  ConfigMutatorContext,
+  ControlFunctions,
+} from "./core/Experiment";
+import { Configuration, ExperimentIndex } from "@hcikit/workflow";
 import React from "react";
 
 const identities: ControlFunctions = {
@@ -25,11 +29,14 @@ const identities: ControlFunctions = {
 
 export const renderWithProvider = (
   Component: React.ReactElement,
-  funcs: Partial<ControlFunctions> = identities
+  funcs: Partial<ControlFunctions> = identities,
+  configuration: Configuration = {}
 ): RenderResult => {
   return render(
-    <ConfigMutatorContext.Provider value={{ ...identities, ...funcs }}>
-      {Component}
-    </ConfigMutatorContext.Provider>
+    <ConfigContext.Provider value={configuration}>
+      <ConfigMutatorContext.Provider value={{ ...identities, ...funcs }}>
+        {Component}
+      </ConfigMutatorContext.Provider>
+    </ConfigContext.Provider>
   );
 };

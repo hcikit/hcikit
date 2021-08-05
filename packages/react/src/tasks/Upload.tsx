@@ -7,6 +7,10 @@ import { CenteredNicePaper, CenteredText } from "../components";
 import { useConfiguration, useExperiment } from "../core/Experiment";
 import { Configuration } from "@hcikit/workflow";
 
+async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 // TODO: Remove or standardise the experimenter property?
 
 type UploadFunction = (filename: string, config: Configuration) => Promise<any>;
@@ -16,13 +20,17 @@ interface UploadProps {
   fireAndForget?: boolean;
   upload: UploadFunction;
   experimenter: string;
+  retries?: number;
+  delay?: number;
 }
 
-const Upload: React.FunctionComponent<UploadProps> = ({
+export const Upload: React.FunctionComponent<UploadProps> = ({
   fireAndForget,
   upload,
   filename,
   experimenter,
+  retries = 3,
+  delay = 1000,
 }) => {
   const [done, setDone] = useState(false);
   const [error, setError] = useState(false);
@@ -30,33 +38,38 @@ const Upload: React.FunctionComponent<UploadProps> = ({
   const configuration = useConfiguration();
 
   useLayoutEffect(() => {
-    function attemptUploadWithRetries(retries: number) {
+    function attemptUploadWithRetries(retriesLeft: number) {
       const logs = { ...configuration };
-
       upload(filename, logs)
         .then(() => {
+          experiment.log({ type: "UPLOAD_COMPLETE" });
           if (!fireAndForget) {
             experiment.advance();
             setDone(true);
           }
         })
-        .catch((upload_error) => {
+        .catch(async (upload_error) => {
           experiment.log({ upload_error, type: "UPLOAD_ERROR" });
           console.error(upload_error);
-          if (retries > 0) {
-            attemptUploadWithRetries(retries - 1);
-          } else {
+          if (retriesLeft > 0) {
+            console.log("Retrying upload in", delay, "ms", retriesLeft);
+            await sleep(delay);
+            console.log("Retried upload", retriesLeft);
+
+            attemptUploadWithRetries(retriesLeft - 1);
+          } else if (!fireAndForget) {
+            console.log("error");
             setError(true);
           }
         });
     }
 
+    attemptUploadWithRetries(retries);
+
     if (fireAndForget) {
-      attemptUploadWithRetries(1);
       experiment.advance();
-    } else {
-      attemptUploadWithRetries(3);
     }
+
     // This is empty on purpose, we don't want to reupload the results if the things don't change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

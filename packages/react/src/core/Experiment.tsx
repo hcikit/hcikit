@@ -31,7 +31,10 @@ export interface ControlFunctions {
   ) => void;
 }
 
-const ConfigContext = createContext<Configuration | undefined>(undefined);
+export const ConfigContext = createContext<Configuration | undefined>(
+  undefined
+);
+
 export const ConfigMutatorContext = createContext<ControlFunctions | undefined>(
   undefined
 );
