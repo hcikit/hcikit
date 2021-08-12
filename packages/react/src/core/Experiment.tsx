@@ -9,6 +9,7 @@ import React, {
   useEffect,
 } from "react";
 
+import { serializeError } from "serialize-error";
 import TaskRenderer from "./TaskRenderer";
 
 import {
@@ -21,6 +22,11 @@ import {
   experimentComplete,
   getCurrentIndex,
 } from "@hcikit/workflow";
+
+import GridLayout from "../GridLayout";
+
+import { ErrorBoundary, FallbackProps } from "react-error-boundary";
+import { CenteredNicePaper } from "../components";
 
 export interface ControlFunctions {
   advance: (index?: ExperimentIndex) => void;
@@ -88,18 +94,19 @@ const Experiment: React.FunctionComponent<{
   configuration: Configuration;
   tasks: Record<string, ElementType>;
   Layout?: ElementType;
-  ErrorHandler?: ElementType;
+  ErrorHandler?: React.ComponentType<FallbackProps>;
   forceRemountEveryTask?: boolean;
 }> = ({
   saveState = saveStateToSessionStorage,
   loadState = loadStateFromSessionStorage,
   tasks,
-  Layout,
-  ErrorHandler,
+  Layout = GridLayout,
+  ErrorHandler = DefaultErrorHandler,
   forceRemountEveryTask,
   configuration,
 }) => {
   // TODO: not sure how to create different sessions for the same task. The issue is that they'll be overwritten by the other thing. Maybe we can add a config version or session key or something to it?
+  // TODO: using config and configuration is so confusing...
   const [config, setConfig] = useState<Configuration>(() => {
     let initialConfig = configuration || {};
     if (process.env.NODE_ENV !== "development" && loadState) {
@@ -187,14 +194,67 @@ const Experiment: React.FunctionComponent<{
   return (
     <ConfigMutatorContext.Provider value={experiment}>
       <ConfigContext.Provider value={config}>
-        <TaskRenderer
-          tasks={tasks}
-          forceRemountEveryTask={forceRemountEveryTask}
-          Layout={Layout}
-          ErrorHandler={ErrorHandler}
-        />
+        <ErrorBoundary
+          onError={(error, info) =>
+            log({
+              type: "ERROR",
+              ...serializeError(info),
+              ...serializeError(error),
+            })
+          }
+          FallbackComponent={ErrorHandler}
+        >
+          <Layout>
+            {!experimentComplete(config) ? (
+              <TaskRenderer
+                tasks={tasks}
+                forceRemountEveryTask={forceRemountEveryTask}
+              />
+            ) : (
+              <div style={{ gridArea: "task" }}>
+                <CenteredNicePaper>
+                  <h2>You&apos;ve completed the experiment!</h2>
+                  <a
+                    download={`${config.participant || "log"}.json`}
+                    href={`data:text/json;charset=utf-8,${encodeURIComponent(
+                      JSON.stringify(config)
+                    )}`}
+                  >
+                    Download experiment log
+                  </a>
+                </CenteredNicePaper>
+              </div>
+            )}
+          </Layout>
+        </ErrorBoundary>
       </ConfigContext.Provider>
     </ConfigMutatorContext.Provider>
+  );
+};
+
+const DefaultErrorHandler: React.FunctionComponent<FallbackProps> = ({
+  error,
+}) => {
+  const configuration = useConfiguration();
+  return (
+    <CenteredNicePaper>
+      <div style={{ gridArea: "task" }}>
+        <h2>An error occurred in the experiment.</h2>
+        <p style={{ fontStyle: "italic" }}>
+          ({error.name}: {error.message})
+        </p>
+        <br />
+
+        <a
+          download={`${configuration.participant || "log"}.json`}
+          href={`data:text/json;charset=utf-8,${encodeURIComponent(
+            JSON.stringify(configuration)
+          )}`}
+        >
+          Download experiment log
+        </a>
+      </div>
+    </CenteredNicePaper>
   );
 };
 

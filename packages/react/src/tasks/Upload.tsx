@@ -52,13 +52,11 @@ export const Upload: React.FunctionComponent<UploadProps> = ({
           experiment.log({ upload_error, type: "UPLOAD_ERROR" });
           console.error(upload_error);
           if (retriesLeft > 0) {
-            console.log("Retrying upload in", delay, "ms", retriesLeft);
             await sleep(delay);
-            console.log("Retried upload", retriesLeft);
 
             attemptUploadWithRetries(retriesLeft - 1);
           } else if (!fireAndForget) {
-            console.log("error");
+            console.error("Done retrying: ", upload_error);
             setError(true);
           }
         });

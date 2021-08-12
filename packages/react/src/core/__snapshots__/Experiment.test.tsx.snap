@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorHandler handles errors properly 1`] = `
+<DocumentFragment>
+  <div
+    id="grid-layout"
+    style="display: grid; width: 100%; height: 100%; grid-template-columns: 1fr; grid-template-rows: min-content 1fr min-content; grid-template-areas: \\"header\\"
+      \\"task\\"
+      \\"footer\\";"
+  >
+    <button>
+      button
+    </button>
+    <p
+      class="logs"
+      data-testid="logs"
+    />
+    <p>
+      hello
+    </p>
+    <span>
+      Modify Config
+    </span>
+    <p />
+    <span>
+      at index
+    </span>
+  </div>
+</DocumentFragment>
+`;
