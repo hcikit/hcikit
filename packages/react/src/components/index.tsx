@@ -56,3 +56,4 @@ export const CenteredText = styled.div`
 
 export { LinearTimer } from "./LinearTimer";
 export { ScreenFlash } from "./ScreenFlash";
+export { default as ErrorOverlay } from "./ErrorOverlay";

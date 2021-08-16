@@ -1,6 +1,6 @@
 {
   "name": "@hcikit/react",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "description": "An experiment runner with a set of pre-built experiment components for running hci experiments",
   "author": "blainelewis1",
   "license": "MIT",
@@ -54,7 +54,9 @@
     "lodash": "^4.17.21",
     "markdown-to-jsx": "^7.1.3",
     "prop-types": "^15.7.2",
+    "react-error-boundary": "^3.1.3",
     "react-is": "^17.0.2",
+    "serialize-error": "^8.1.0",
     "styled-components": "^5.1.0"
   },
   "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86",

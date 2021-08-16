@@ -1,9 +1,13 @@
 import React from "react";
 import App from "./App";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 it("renders without crashing", () => {
+  // We need this because otherwise FocusChecker will be on.
+  jest.spyOn(document, "hasFocus").mockImplementation(() => true);
+
   render(<App />);
+  fireEvent(window, new Event("focus"));
   screen.getByText(/continue/i).click();
   screen.getByText(/continue/i).click();
   screen.getByRole("checkbox").click();

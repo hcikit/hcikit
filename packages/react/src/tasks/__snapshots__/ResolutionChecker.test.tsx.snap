@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ResolutionChecker renders multiple errors 1`] = `
+<DocumentFragment>
+  <div
+    class="sc-bdnxRM kCbjDY"
+  >
+    <div
+      class="MuiPaper-root sc-gtsrHT hponZY MuiPaper-elevation1 MuiPaper-rounded"
+    >
+      <p
+        class="MuiTypography-root MuiTypography-body1"
+      >
+        Your window is too big. The width must be smaller than 1000px.
+      </p>
+      <p
+        class="MuiTypography-root MuiTypography-body1"
+      >
+        Your window is too big. The height must be smaller than 1000px.
+      </p>
+    </div>
+  </div>
+</DocumentFragment>
+`;

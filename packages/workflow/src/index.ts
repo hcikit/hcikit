@@ -2,7 +2,7 @@ import { mergeWith, pickBy, isEqual, pick } from "lodash";
 
 export * from "./utils";
 
-// TODO: rename to core or configuration
+// TODO: rename to core or configuration rather than workflow?
 
 export type ExperimentIndex = Array<number>;
 
@@ -20,7 +20,7 @@ export type UnfilledLog = Omit2<Log, "timestamp">;
 
 export const __INDEX__ = "__INDEX__";
 
-// TODO: can I make task required? Or at least one of task or tasks required.
+// Task cannot be required because props can propagate
 interface ConfigurationRequired<
   T extends Record<string, unknown> = Record<string, unknown>
 > {

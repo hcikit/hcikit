@@ -33,26 +33,35 @@ const NoGridWizardProgress: React.FunctionComponent<{ depth: number }> = ({
     return null;
   }
 
+  let nonSkippedChildren = configurationAtIndex.children.filter(
+    ({ skip }) => !skip
+  );
+
+  // [0,1,2,skip,3,4,skip,5]
+  // [0,1,2,3,4,5,6,7]
+
+  let skippedTillNow = configurationAtIndex.children
+    .slice(0, currentStep + 1)
+    .filter(({ skip }) => skip).length;
+
   return (
-    <Stepper activeStep={currentStep}>
-      {configurationAtIndex.children.map(({ task, label }, index) => {
-        return (
-          <Step
-            style={{
-              cursor:
-                process.env.NODE_ENV === "development" ? "pointer" : "default",
-            }}
-            onClick={() => {
-              if (process.env.NODE_ENV === "development") {
-                experiment.advance([...pathToIndex, index]);
-              }
-            }}
-            key={index}
-          >
-            <StepLabel>{(label as string) || startCase(task)}</StepLabel>
-          </Step>
-        );
-      })}
+    <Stepper activeStep={currentStep - skippedTillNow}>
+      {nonSkippedChildren.map(({ task, label }, index) => (
+        <Step
+          style={{
+            cursor:
+              process.env.NODE_ENV === "development" ? "pointer" : "default",
+          }}
+          onClick={() => {
+            if (process.env.NODE_ENV === "development") {
+              experiment.advance([...pathToIndex, index]);
+            }
+          }}
+          key={index}
+        >
+          <StepLabel>{(label as string) || startCase(task)}</StepLabel>
+        </Step>
+      ))}
     </Stepper>
   );
 };

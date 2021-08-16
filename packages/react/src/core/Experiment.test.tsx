@@ -9,6 +9,7 @@ import DisplayText from "../tasks/DisplayTextTask";
 import { render, screen, cleanup } from "@testing-library/react";
 import { Configuration, Log } from "@hcikit/workflow";
 import userEvent from "@testing-library/user-event";
+import { FallbackProps } from "react-error-boundary";
 
 const config = {
   tasks: ["AuxTask"],
@@ -57,7 +58,11 @@ const LogOnClick: React.FunctionComponent = () => {
 
 const InfiniteRenderer: React.FunctionComponent = () => {
   const experiment = useExperiment();
-  experiment.log({ type: "log" });
+
+  useEffect(() => {
+    experiment.log({ type: "log" });
+  });
+
   return <button>Log</button>;
 };
 
@@ -252,7 +257,7 @@ describe("Experiment", () => {
 
   // this test is broken because log causes a state change in the infiniterenderer and this means they both render at once because of the infinite
 
-  xit("logs definitely don't cause a re-render", () => {
+  it("logs definitely don't cause a re-render", () => {
     // I added this test because I had a log() statement that occurred on render and it caused an infinite loop.
     const config = {
       tasks: ["DisplayText"],
@@ -302,10 +307,9 @@ describe("Experiment", () => {
   });
 
   it("throws errors for unregistered tasks", () => {
-    const consoleError = jest.spyOn(console, "error").mockImplementation(() => {
+    jest.spyOn(console, "error").mockImplementation(() => {
       //do nothing
     });
-
     const config = {
       children: [
         {
@@ -315,18 +319,21 @@ describe("Experiment", () => {
       ],
     };
 
-    expect(() => {
-      render(
-        <Experiment
-          loadState={null}
-          saveState={null}
-          configuration={{ ...config }}
-          tasks={{}}
-        />
-      );
-    }).toThrow(Error);
+    render(
+      <Experiment
+        loadState={null}
+        saveState={null}
+        configuration={{ ...config }}
+        tasks={{}}
+      />
+    );
 
-    expect(consoleError).toHaveBeenCalled();
+    screen.getByText(
+      "The task MultiTask was not found. Make sure you are passing it in to the <Experiment> component in the tasks prop.",
+      { exact: false }
+    );
+
+    jest.restoreAllMocks();
   });
 
   describe("uses sessionStorage properly", () => {
@@ -669,5 +676,66 @@ describe("Experiment", () => {
     screen.getByText("0");
     screen.getByText("advance").click();
     screen.getByText("1,0");
+  });
+});
+
+describe("ErrorHandler", () => {
+  it("handles errors properly", () => {
+    jest.spyOn(console, "error").mockImplementation(() => {
+      //do nothing
+    });
+
+    const ErrorTask = () => {
+      throw new Error("test error");
+    };
+
+    const ErrorHandler: React.FunctionComponent<FallbackProps> = ({
+      error,
+      resetErrorBoundary,
+    }) => {
+      const config = useConfiguration();
+      const { advance } = useExperiment();
+
+      return (
+        <>
+          <div>{error.message}</div>
+          <div>{error.name}</div>
+          <pre>{JSON.stringify(config, null, 2)}</pre>
+          <button
+            onClick={() => {
+              advance();
+              resetErrorBoundary();
+            }}
+          >
+            reset
+          </button>
+        </>
+      );
+    };
+
+    let elem = render(
+      <Experiment
+        ErrorHandler={ErrorHandler}
+        loadState={null}
+        saveState={null}
+        tasks={{ ErrorTask, ButtonTask }}
+        configuration={{
+          children: [
+            { task: "ErrorTask" },
+            {
+              text: "button",
+              task: "ButtonTask",
+            },
+          ],
+        }}
+      />
+    );
+
+    screen.getByText("test error");
+    expect(elem.asFragment()).toMatchSnapshot();
+
+    screen.getByText("reset").click();
+    screen.getByText("button");
+    jest.restoreAllMocks();
   });
 });

@@ -103,21 +103,26 @@ export function getBrowserInfo() {
   };
 }
 
-export function getMturkParameters(
+export function getUrlParams(
   defaults = {
-    participant: "worker",
-    worker_id: "",
-    assignment_id: "",
-    hit_id: "",
+    participant: `${randomString()}-default`,
+    WORKER_ID: `${randomString()}-default`,
+    ASSIGNMENT_ID: `${randomString()}-default`,
+    HIT_ID: `${randomString()}-default`,
   }
 ) {
-  const params = new URL(window.location.href).searchParams;
+  const params = Object.fromEntries(
+    new URLSearchParams(window.location.search)
+  );
 
+  return { ...defaults, ...params };
+}
+
+export function getAllMetadata() {
   return {
-    ...defaults,
-    participant: params.get("WORKER_ID"),
-    worker_id: params.get("WORKER_ID"),
-    assignment_id: params.get("ASSIGNMENT_ID"),
-    hit_id: params.get("HIT_ID"),
+    ...getUrlParams(),
+    ...process.env,
+    ...getBrowserInfo(),
+    os: getOS(),
   };
 }

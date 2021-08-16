@@ -7,26 +7,17 @@ import {
   getCurrentProps,
   getCurrentIndex,
   scopePropsForTask,
-  experimentComplete,
   __INDEX__,
 } from "@hcikit/workflow";
 
-import GridLayout from "../GridLayout";
 import { useConfiguration, useExperiment } from "./Experiment";
 
 // If there's ever a usecase for logs to get passed then we can add another provider they can subscribe to.
 
 const TaskRenderer: React.FunctionComponent<{
   tasks: Record<string, ElementType>;
-  Layout?: ElementType;
-  ErrorHandler?: ElementType;
   forceRemountEveryTask?: boolean;
-}> = ({
-  tasks,
-  Layout = GridLayout,
-  ErrorHandler = null,
-  forceRemountEveryTask = true,
-}) => {
+}> = ({ tasks, forceRemountEveryTask = true }) => {
   const configuration = useConfiguration();
   const currentProps = getCurrentProps(configuration);
 
@@ -38,67 +29,43 @@ const TaskRenderer: React.FunctionComponent<{
     tasksToRender.push(currentProps.task);
   }
 
-  let tasksFilled;
+  if (!tasksToRender.length) {
+    throw new Error(`No task selected at ${getCurrentIndex(configuration)}`);
+  }
 
-  if (!experimentComplete(configuration)) {
-    if (!tasksToRender.length) {
-      throw new Error(`No task selected at ${getCurrentIndex(configuration)}`);
-    }
+  return (
+    <>
+      {tasksToRender.map((task, i) => {
+        const Task = tasks[task];
 
-    tasksFilled = tasksToRender.map((task, i) => {
-      const Task = tasks[task];
+        if (!Task) {
+          throw new Error(
+            `The task ${task} was not found. Make sure you are passing it in to the <Experiment> component in the tasks prop.`
+          );
+        }
 
-      if (!Task) {
-        throw new Error(
-          `The task ${task} was not found. Make sure you are passing it in to the <Experiment> component in the tasks prop.`
+        let key = `${task}-${i.toString()}`;
+        const props = scopePropsForTask(currentProps, task);
+        props[__INDEX__] = getCurrentIndex(configuration);
+
+        // By adding the index this forces the component to remount and lose the state it had before.
+        if (forceRemountEveryTask) {
+          key += "-" + getCurrentIndex(configuration).join(":");
+        }
+
+        return (
+          <SingleTaskRenderer
+            Task={Task}
+            key={key}
+            log={log}
+            advance={advance}
+            modify={modify}
+            {...props}
+          />
         );
-      }
-
-      let key = `${task}-${i.toString()}`;
-      const props = scopePropsForTask(currentProps, task);
-      props[__INDEX__] = getCurrentIndex(configuration);
-
-      // By adding the index this forces the component to remount and lose the state it had before.
-      if (forceRemountEveryTask) {
-        key += "-" + getCurrentIndex(configuration).join(":");
-      }
-
-      return (
-        <SingleTaskRenderer
-          Task={Task}
-          key={key}
-          log={log}
-          advance={advance}
-          modify={modify}
-          {...props}
-        />
-      );
-    });
-  } else {
-    tasksFilled = (
-      <div style={{ gridArea: "task" }}>
-        <h1>You&apos;ve completed the experiment!</h1>
-        <a
-          download={`${configuration.participant || "log"}.json`}
-          href={`data:text/json;charset=utf-8,${encodeURIComponent(
-            JSON.stringify(configuration)
-          )}`}
-        >
-          Download experiment log
-        </a>
-      </div>
-    );
-  }
-
-  if (ErrorHandler) {
-    return (
-      <ErrorHandler log={log} configuration={configuration}>
-        <Layout>{tasksFilled}</Layout>
-      </ErrorHandler>
-    );
-  }
-
-  return <Layout>{tasksFilled}</Layout>;
+      })}
+    </>
+  );
 };
 
 let SingleTaskRenderer: React.FunctionComponent<
@@ -128,8 +95,6 @@ SingleTaskRenderer = React.memo(SingleTaskRenderer, isEqual);
 // };
 // TaskRenderer.propTypes = {
 //   tasks: PropTypes.objectOf(PropTypes.elementType),
-//   Layout: PropTypes.node,
-//   ErrorHandler: PropTypes.node,
 //   forceRemountEveryTask: PropTypes.bool,
 // };
 

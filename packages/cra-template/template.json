@@ -5,6 +5,14 @@
       "@hcikit/scripts": "latest",
       "@material-ui/core": "^4.9.11",
       "@material-ui/icons": "^4.9.1"
+    },
+    "devDependencies": {
+      "cross-env": "^5.2.0"
+    },
+    "scripts": {
+      "env": "cross-env REACT_APP_GIT_HASH=$(git rev-parse HEAD) REACT_APP_PACKAGE_VERSION=$npm_package_version REACT_APP_BUILD_TIME=$(date +%s)",
+      "start": "npm run env react-scripts start",
+      "build": "npm run env -- react-scripts build"
     }
   }
 }

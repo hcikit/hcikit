@@ -1,7 +1,10 @@
 const configuration = {
-  tasks: ["DevTools", "WizardProgress"],
-  CustomTask: {
-    text: "Click to continue",
+  tasks: ["DevTools", "WizardProgress", "ResolutionChecker", "FocusChecker"],
+  ResolutionChecker: {
+    minXResolution: 800,
+    minYResolution: 400,
+    maxYResolution: 2000,
+    maxXResolution: 2000,
   },
   participant: "yo",
   children: [
@@ -38,6 +41,7 @@ The consent form uses markdown to create a letter, and it automatically generate
     {
       label: "Custom",
       task: "CustomTask",
+      text: "Click to continue",
     },
     {
       label: "Task",

@@ -15,6 +15,8 @@ interface UploadOnErrorProps {
   Uploader: React.ComponentType<Record<string, unknown>>;
 }
 
+// TODO: rewrite all of this to use the upload component because I changed how error handlers work.
+
 export class UploadOnError extends React.Component<
   UploadOnErrorProps,
   unknown

@@ -7,4 +7,8 @@ import { appPath } from "./paths";
 
 dotenv.config({ path: path.join(appPath, ".env") });
 
-yargs.commandDir("commands/s3").demandCommand().help().argv;
+yargs
+  .commandDir("commands/analyse")
+  .commandDir("commands/s3")
+  .demandCommand()
+  .help().argv;
