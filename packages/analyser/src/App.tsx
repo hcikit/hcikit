@@ -1,37 +1,31 @@
 import React from "react";
-import { ConfigurationsProvider, useConfigurations } from "./Configuration";
-import { first } from "lodash";
-import {
-  getCurrentIndex,
-  getTotalTasks,
-  indexToTaskNumber,
-} from "@hcikit/workflow";
+import { ConfigurationsProvider } from "./Configuration";
+
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
+import Dashboard from "./Dashboard";
+import RawLogs from "./RawLogs";
+
+// TODO: how to deal with the fact that most configurations aren't actually "complete" because of the uploads?
+
+// Idea: I could potentially just add a prop called "Last task"? Or search for the last upload task...
+
 function App() {
   return (
     <ConfigurationsProvider>
-      <PercentCompleted />
+      <div className="mx-auto px-10 py-5">
+        <Router>
+          <Switch>
+            <Route path="/raw/:participant">
+              <RawLogs />
+            </Route>
+            <Route path="/">
+              <Dashboard />
+            </Route>
+          </Switch>
+        </Router>
+      </div>
     </ConfigurationsProvider>
   );
 }
-
-const PercentCompleted: React.FunctionComponent<{}> = () => {
-  let configurations = useConfigurations();
-
-  let totalTasks = getTotalTasks(configurations[0]);
-
-  let completedness = configurations.map(
-    (configuration) =>
-      indexToTaskNumber(configuration, getCurrentIndex(configuration)) /
-      totalTasks
-  );
-
-  return (
-    <>
-      {configurations.map((configuration) => (
-        <pre>{JSON.stringify(configuration, null, 2)}</pre>
-      ))}
-    </>
-  );
-};
 
 export default App;
