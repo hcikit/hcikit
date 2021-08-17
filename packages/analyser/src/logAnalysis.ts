@@ -9,7 +9,7 @@ import { find, omit } from "lodash";
 
 // TODO: this whole file could be in somewhere else, because scripts uses a similar function to the end function here.
 
-// TODO: should this really return 0 when it errors.
+// TODO: These "get times" should really be done better, they should use just one I think. I think the way to do that is to use indices.
 function getStartTime(configuration: Configuration): number {
   let indices = Array.from(iterateConfiguration(configuration));
   let firstTask = getPropsFor(configuration, indices[0], false).logs || [];
@@ -17,7 +17,7 @@ function getStartTime(configuration: Configuration): number {
   return (
     find(firstTask, {
       type: "START",
-    })?.timestamp || 0
+    })?.timestamp || NaN
   );
 }
 
@@ -37,7 +37,7 @@ function getEndTime(configuration: Configuration): number {
       break;
     }
   }
-  return endTime || 0;
+  return endTime || NaN;
 }
 
 // TODO: I probably don't need two different things for logs and the config. Maybe rather than passign entire configurations we shou;ld actually just pass all of the logs in.,
@@ -45,7 +45,7 @@ function getStartTimeForLogs(logs: Array<Log>): number {
   return (
     find(logs, {
       type: "START",
-    })?.timestamp || 0
+    })?.timestamp || NaN
   );
 }
 
@@ -54,7 +54,7 @@ function getEndTimeForLogs(logs: Array<Log>): number {
   return (
     find(logs, {
       type: "END",
-    })?.timestamp || 0
+    })?.timestamp || NaN
   );
 }
 
