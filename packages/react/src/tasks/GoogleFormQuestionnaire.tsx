@@ -3,6 +3,8 @@ import { withGridItem } from "../GridLayout";
 import PropTypes from "prop-types";
 import { useExperiment } from "../core/Experiment";
 
+// TODO: THere are two ways to use the prefilled fields, either you want one from props, or you want to supply one directly... Or maybe just always from props? Either way the array is the wrong way to do it, it should be an object.
+
 // TODO: multi page forms?
 const GoogleFormQuestionnaire: React.FunctionComponent<{
   prefilledFields?: Array<string>;

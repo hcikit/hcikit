@@ -9,6 +9,7 @@ import {
 import { useConfiguration, useExperiment } from "../core/Experiment";
 import { startCase } from "lodash";
 
+// TODO: is labela  good name?
 const NoGridWizardProgress: React.FunctionComponent<{ depth: number }> = ({
   depth = 0,
 }) => {
