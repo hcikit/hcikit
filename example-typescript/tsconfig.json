@@ -1,7 +1,12 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["./src/**/*"],
-  "exclude": ["**/*.test.ts", "**/setupTests.ts"],
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "**/*.test.ts",
+    "**/setupTests.ts"
+  ],
   "compilerOptions": {
     "baseUrl": "./",
     "composite": true,

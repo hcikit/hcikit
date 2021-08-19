@@ -4,6 +4,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import ErrorOverlay from "../components/ErrorOverlay";
 import { ControlFunctions } from "../core/Experiment";
 
+// TODO: there is a bug where if you fix one of the resoltuion problems, the view doesn't update. It's because the state doesn';t change. Need to write a repro test.
+
 const ResolutionChecker: React.FunctionComponent<{
   minXResolution?: number;
   maxXResolution?: number;

@@ -7,9 +7,10 @@ import { useExperiment } from "../core/Experiment";
 
 // TODO: multi page forms?
 const GoogleFormQuestionnaire: React.FunctionComponent<{
-  prefilledFields?: Array<string>;
+  prefilledFields?: Record<string, string>;
+  prefilledFieldsFromProps?: Record<string, string>;
   formId: string;
-}> = ({ prefilledFields, formId, ...props }) => {
+}> = ({ prefilledFields, prefilledFieldsFromProps, formId, ...props }) => {
   const experiment = useExperiment();
   let src = `https://docs.google.com/forms/d/e/${formId}/viewform?embedded=true`;
 
@@ -17,10 +18,22 @@ const GoogleFormQuestionnaire: React.FunctionComponent<{
 
   const extraProps = props as Record<string, string>;
 
+  let urlString = "";
+
   if (prefilledFields) {
-    src = `${src}&${prefilledFields
-      .map((key) => `${key}=${extraProps[key]}`)
-      .join("&")}`;
+    urlString += Object.entries(prefilledFields)
+      .map(([key, value]) => `${key}=${value}`)
+      .join("&");
+  }
+
+  if (prefilledFieldsFromProps) {
+    urlString += Object.entries(prefilledFieldsFromProps)
+      .map(([key, prop]) => `${key}=${extraProps[prop]}`)
+      .join("&");
+  }
+
+  if (urlString) {
+    src = `${src}&${urlString}`;
   }
 
   function handleLoad() {
@@ -51,7 +64,8 @@ const GoogleFormQuestionnaire: React.FunctionComponent<{
 
 GoogleFormQuestionnaire.propTypes = {
   formId: PropTypes.string.isRequired,
-  prefilledFields: PropTypes.arrayOf(PropTypes.string.isRequired),
+  prefilledFields: PropTypes.objectOf(PropTypes.string.isRequired),
+  prefilledFieldsFromProps: PropTypes.objectOf(PropTypes.string.isRequired),
 };
 
 export default withGridItem(GoogleFormQuestionnaire);

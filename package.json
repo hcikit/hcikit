@@ -15,7 +15,7 @@
     "lint": "eslint example/src packages/react/src packages/workflow/src",
     "test": "yarn jest --verbose --colors",
     "test:watch": "jest --watch --verbose --colors",
-    "build": "yarn workspaces foreach run build",
+    "build": "yarn workspaces foreach --no-private -v run build",
     "clean": "rm -rf node_modules packages/*/node_modules packages/*/tsconfig.tsbuildinfo packages/*/dist"
   },
   "devDependencies": {
