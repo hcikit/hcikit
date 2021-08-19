@@ -1,8 +1,10 @@
 import { Configuration, Log } from "@hcikit/workflow";
 import { groupBy } from "lodash";
 import { Link } from "react-router-dom";
+import Graph from "./components/Graph";
 import { Metrics, TileMetrics } from "./components/Tile";
 import {
+  getAllTimes,
   getLogs,
   getTimeTaken,
   getTimeTakenForLogs,
@@ -24,8 +26,11 @@ const participantMetrics: Metrics<Configuration> = {
 const ParticipantDetail: React.FunctionComponent<{
   configuration: Configuration;
 }> = ({ configuration }) => {
-  let logs = getLogs(configuration);
-  let logsByTask = groupBy(logs, "task");
+  let times = getAllTimes(configuration);
+  let tasks = getAllTasks(configuration);
+  let tasksGrouped = groupBy(tasks, "task");
+
+  console.log(times);
 
   return (
     <div className="mb-10">
@@ -38,6 +43,19 @@ const ParticipantDetail: React.FunctionComponent<{
         </span>
       </h2>
       <TileMetrics metrics={participantMetrics} value={configuration} />
+      <Graph
+        spec={{
+          data: {
+            values: times,
+          },
+          mark: "bar",
+          encoding: {
+            y: { field: "participant" },
+            x: { aggregate: "sum", field: "timeTaken" },
+            color: { field: "task" },
+          },
+        }}
+      />
       <div className="mb-2">
         {Object.entries(logsByTask).map(([task, logs]) => (
           <ParticipantTask logs={logs} task={task} />

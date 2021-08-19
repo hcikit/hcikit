@@ -3,6 +3,8 @@ import { Configuration } from "@hcikit/workflow";
 import { useEffect } from "react";
 import { get, set } from "idb-keyval";
 
+// TODO: load directly from S3 would be nice too.
+
 type NonEmptyArray<T> = T[] & { 0: T };
 
 let CONFIGURATIONS_PATH = "CONFIGURATIONS_PATH";
@@ -72,15 +74,20 @@ const ConfigurationsProvider: React.FunctionComponent = ({ children }) => {
     return <div>Loading</div>;
   } else if (status === "awaiting user" || status === "no permission") {
     return (
-      <button
-        onClick={async () => {
-          const directoryHandle = await window.showDirectoryPicker();
-          set(CONFIGURATIONS_PATH, directoryHandle);
-          loadConfigurations();
-        }}
-      >
-        Open folder of configurations
-      </button>
+      <div className="flex h-screen">
+        <div className="m-auto">
+          <button
+            className="bg-transparent hover:bg-gray-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded"
+            onClick={async () => {
+              const directoryHandle = await window.showDirectoryPicker();
+              set(CONFIGURATIONS_PATH, directoryHandle);
+              loadConfigurations();
+            }}
+          >
+            Open folder of configurations
+          </button>
+        </div>
+      </div>
     );
   }
 

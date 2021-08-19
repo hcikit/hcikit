@@ -17,7 +17,7 @@ function getStartTime(configuration: Configuration): number {
   return (
     find(firstTask, {
       type: "START",
-    })?.timestamp || 0
+    })?.timestamp || NaN
   );
 }
 
@@ -37,7 +37,7 @@ function getEndTime(configuration: Configuration): number {
       break;
     }
   }
-  return endTime || 0;
+  return endTime || NaN;
 }
 
 // TODO: I probably don't need two different things for logs and the config. Maybe rather than passign entire configurations we shou;ld actually just pass all of the logs in.,
@@ -45,7 +45,7 @@ function getStartTimeForLogs(logs: Array<Log>): number {
   return (
     find(logs, {
       type: "START",
-    })?.timestamp || 0
+    })?.timestamp || NaN
   );
 }
 
@@ -54,7 +54,7 @@ function getEndTimeForLogs(logs: Array<Log>): number {
   return (
     find(logs, {
       type: "END",
-    })?.timestamp || 0
+    })?.timestamp || NaN
   );
 }
 
@@ -91,6 +91,19 @@ export function getLogs(configuration: Configuration): Array<Log> {
   }
 
   return logs;
+}
+
+export function getAllTasks(
+  configuration: Configuration
+): Array<Configuration> {
+  let allTasks: Array<Configuration> = [];
+
+  for (let index of iterateConfiguration(configuration)) {
+    let props = getPropsFor(configuration, index, false);
+    allTasks.push(props);
+  }
+
+  return allTasks;
 }
 
 export function getAllTimes(

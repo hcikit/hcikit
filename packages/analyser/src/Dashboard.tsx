@@ -28,12 +28,10 @@ const Dashboard: React.FunctionComponent = () => {
         spec={{
           data: {
             values: configurations.flatMap((configuration) =>
-              getAllTimes(configuration)
-                .map((times) => ({
-                  participant: configuration.participant || randomString(),
-                  ...times,
-                }))
-                .filter(({ task }) => task !== "S3Upload")
+              getAllTimes(configuration).map((times) => ({
+                participant: configuration.participant || randomString(),
+                ...times,
+              }))
             ),
           },
           mark: "bar",
