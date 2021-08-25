@@ -1,5 +1,16 @@
 import { Configuration, Log } from "@hcikit/workflow";
-import { filter, find, groupBy, sortBy } from "lodash";
+import {
+  filter,
+  find,
+  groupBy,
+  invert,
+  mapValues,
+  max,
+  maxBy,
+  min,
+  minBy,
+  sortBy,
+} from "lodash";
 import { Link } from "react-router-dom";
 import Graph from "./components/Graph";
 import { Metrics, TileMetrics } from "./components/Tile";
@@ -24,6 +35,100 @@ const participantMetrics: Metrics<Configuration> = {
   },
 };
 
+let configs = {
+  filled: {
+    mark: {
+      stroke: "#000000",
+      strokeWidth: 2,
+      fill: "#3976B1",
+    },
+    axisX: { grid: false },
+    axisY: { grid: false },
+  },
+  thickFilled: {
+    mark: {
+      stroke: "#000000",
+      strokeWidth: 5,
+      fill: "#E3E3E3",
+    },
+    axisX: { grid: false },
+    axisY: { grid: false },
+  },
+  normalStroke: {
+    mark: {
+      stroke: "#000000",
+      fill: "#ffffff",
+      strokeWidth: 2,
+    },
+    axisX: { grid: false },
+    axisY: { grid: false },
+  },
+  noOutline: {
+    mark: {
+      stroke: "#000000",
+      strokeWidth: 0,
+      fill: "#E3E3E3",
+    },
+    axisX: { grid: false },
+    axisY: { grid: false },
+  },
+};
+
+export function configToName(config: string): string {
+  let stringifyed = invert(
+    mapValues(configs, (value, key) => JSON.stringify(value))
+  );
+  console.log(stringifyed);
+  console.log(config);
+
+  return stringifyed[config];
+}
+
+export function configToParsedLikelihoods(configuration: Configuration): any {
+  let tasks = getAllTasks(configuration);
+  let tasksGrouped = groupBy(tasks, "task");
+
+  let notAttentionChecks = tasksGrouped["AskQuestionsGraph"].filter(
+    ({ type }) => type !== "attention_check"
+  );
+
+  let likelihoods = notAttentionChecks.map((check) => ({
+    ...check,
+    ...find(check.logs, { type: "question_completed" }),
+  }));
+
+  let groupedByConfig = groupBy(likelihoods, ({ config }) =>
+    JSON.stringify(config)
+  );
+
+  let parsedLikelihoods = [];
+  for (let [config, logs] of Object.entries(groupedByConfig)) {
+    let groupByDiff = groupBy(logs, ({ diff }) => Math.abs(diff as number));
+    delete groupByDiff[0];
+
+    for (let [absDiff, logs] of Object.entries(groupByDiff)) {
+      let underBar = minBy(logs, "diff");
+      let overBar = maxBy(logs, "diff");
+      if (underBar && overBar) {
+        // We want a positive number if they are more likely to choose something within that bar than outside of the bar.
+
+        let likelihoodDiff =
+          (underBar.diff as number) - (overBar.diff as number);
+
+        parsedLikelihoods.push({
+          absDiff,
+          likelihoodDiff,
+          ...overBar,
+          configStr: configToName(config),
+        });
+      }
+      // TODO: think out the above and what it actually means.
+    }
+  }
+
+  return parsedLikelihoods;
+}
+
 const ParticipantDetail: React.FunctionComponent<{
   configuration: Configuration;
 }> = ({ configuration }) => {
@@ -33,13 +138,47 @@ const ParticipantDetail: React.FunctionComponent<{
 
   // TODO: find the attention check tasks
   let attentionChecks = filter(tasks, { type: "attention_check" });
-  let likelihoods = sortBy(
+  let attentionCheckLikelihoods = sortBy(
     attentionChecks.map((check) => ({
       ...check,
       ...find(check.logs, { type: "question_completed" }),
     })),
     "direction"
   );
+
+  // TODO group by the graph and the amount of distance, then subtract the likelihoods.
+
+  // arqueuro would be choice for this but idk how to integrate it into all of this so tooooo bad.
+
+  // I can definitely imagine there's a nice way to work with all of the data,  but this is definitely not it.
+
+  let parsedLikelihoods = configToParsedLikelihoods(configuration);
+  // TODO: make the below chart, but for all participants.
+
+  let likelihoodParsing = (
+    <div>
+      {
+        <Graph
+          spec={{
+            data: {
+              values: parsedLikelihoods,
+            },
+            mark: "bar",
+            encoding: {
+              y: { field: "likelihoodDiff", aggregate: "average" },
+              x: { field: "configStr", type: "nominal" },
+              color: { field: "configStr" },
+            },
+          }}
+        />
+        // For every bar, I want to know what the average difference in likelihood is.
+      }
+    </div>
+  );
+
+  // What is the data I want out of this?
+
+  // [{likelihoodDiff : 5 (or -5)},diff : 3, spec : ]
 
   return (
     <div className="mb-10">
@@ -53,9 +192,7 @@ const ParticipantDetail: React.FunctionComponent<{
       </h2>
       <h2>
         <div>
-          {/* <h3 className="text-lg">Attention Check</h3> */}
-
-          {likelihoods.map(({ direction, likelihood }) => (
+          {attentionCheckLikelihoods.map(({ direction, likelihood }) => (
             <div>
               <span className="text-sm  text-gray-400 italic">
                 {direction as string}
@@ -81,6 +218,21 @@ const ParticipantDetail: React.FunctionComponent<{
       <Graph
         spec={{
           data: {
+            values: parsedLikelihoods,
+          },
+          mark: "bar",
+          encoding: {
+            y: { field: "likelihoodDiff" },
+            x: { field: "absDiff", type: "nominal" },
+            column: { field: "configStr", type: "nominal" },
+            color: { field: "absDiff" },
+          },
+        }}
+      />
+      {likelihoodParsing}
+      {/* <Graph
+        spec={{
+          data: {
             values: times,
           },
           mark: "bar",
@@ -90,7 +242,7 @@ const ParticipantDetail: React.FunctionComponent<{
             color: { field: "task" },
           },
         }}
-      />
+      /> */}
       {/* <div className="mb-2">
         {Object.entries(logsByTask).map(([task, logs]) => (
           <ParticipantTask logs={logs} task={task} />
