@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import { Configuration } from "@hcikit/workflow";
 import { useEffect } from "react";
 import { get, set } from "idb-keyval";
+import { fetchGoogleForm } from "./fetchGoogleForm";
+import Loading from "./components/Loading";
+
+// TODO: load directly from S3 would be nice too.
+// TODO: it currently forces me to give permissions every single time it is refereshed which seems a bit problematic.
 
 type NonEmptyArray<T> = T[] & { 0: T };
 
@@ -56,6 +61,18 @@ const ConfigurationsProvider: React.FunctionComponent = ({ children }) => {
           )
         );
 
+        let googleFormsAnswers = await fetchGoogleForm(
+          "1HD1kF8JakzHHAeJDTuudo-CP4Akk1C4NFxZiMfZy_GE"
+        );
+
+        for (let configuration of configurations) {
+          for (let googleFormsAnswer of googleFormsAnswers) {
+            if (googleFormsAnswer["Worker ID"] === configuration.WORKER_ID) {
+              configuration.googleFormsAnswers = googleFormsAnswer;
+            }
+          }
+        }
+
         setConfigurations(configurations as Array<Configuration>);
         setStatus("loaded");
       } else {
@@ -69,18 +86,23 @@ const ConfigurationsProvider: React.FunctionComponent = ({ children }) => {
   }, []);
 
   if (status === "loading") {
-    return <div>Loading</div>;
+    return <Loading />;
   } else if (status === "awaiting user" || status === "no permission") {
     return (
-      <button
-        onClick={async () => {
-          const directoryHandle = await window.showDirectoryPicker();
-          set(CONFIGURATIONS_PATH, directoryHandle);
-          loadConfigurations();
-        }}
-      >
-        Open folder of configurations
-      </button>
+      <div className="flex h-screen">
+        <div className="m-auto">
+          <button
+            className="bg-transparent hover:bg-gray-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded"
+            onClick={async () => {
+              const directoryHandle = await window.showDirectoryPicker();
+              set(CONFIGURATIONS_PATH, directoryHandle);
+              loadConfigurations();
+            }}
+          >
+            Open folder of configurations
+          </button>
+        </div>
+      </div>
     );
   }
 

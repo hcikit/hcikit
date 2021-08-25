@@ -26,8 +26,12 @@ export const TileGroup: React.FunctionComponent<{ children: React.ReactNode }> =
 
 export type Metrics<T> = Record<
   string,
-  | ((values: T) => number)
-  | { calculator: (values: T) => number; unit?: string; label?: string }
+  | ((values: T) => number | string)
+  | {
+      calculator: (values: T) => number | string;
+      unit?: string;
+      label?: string;
+    }
 >;
 
 type TileMetricsProps<T> = {
@@ -44,7 +48,7 @@ export const TileMetrics = <T extends unknown>({
       return { calculated: metric(value), label: startCase(key), key };
     } else {
       return {
-        label: metric.label || startCase(key),
+        label: metric.label !== undefined ? metric.label : startCase(key),
         unit: metric.unit,
         key,
         calculated: metric.calculator(value),

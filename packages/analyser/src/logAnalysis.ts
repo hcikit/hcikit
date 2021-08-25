@@ -93,6 +93,19 @@ export function getLogs(configuration: Configuration): Array<Log> {
   return logs;
 }
 
+export function getAllTasks(
+  configuration: Configuration
+): Array<Configuration> {
+  let allTasks: Array<Configuration> = [];
+
+  for (let index of iterateConfiguration(configuration)) {
+    let props = getPropsFor(configuration, index, false);
+    allTasks.push(props);
+  }
+
+  return allTasks;
+}
+
 export function getAllTimes(
   configuration: Configuration
 ): Array<{ timeTaken: number; task: string }> {
