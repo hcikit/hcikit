@@ -1,4 +1,5 @@
 import { VegaLite, PlainObject, VisualizationSpec } from "react-vega";
+import { Config } from "vega";
 
 const config = {};
 
@@ -7,8 +8,16 @@ const config = {};
 const Graph: React.FunctionComponent<{
   data?: PlainObject;
   spec: VisualizationSpec;
-}> = ({ spec, data }) => {
-  return <VegaLite actions={false} spec={spec} data={data} config={config} />;
+  configParam?: Config;
+}> = ({ spec, data, configParam }) => {
+  return (
+    <VegaLite
+      actions={false}
+      spec={spec}
+      data={data}
+      config={configParam || config}
+    />
+  );
 };
 
 export const Histogram: React.FunctionComponent<{

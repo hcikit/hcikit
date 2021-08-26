@@ -11,6 +11,7 @@ import { Metrics, TileMetrics } from "./components/Tile";
 import { useConfigurations } from "./Configuration";
 import { getAllTimes, getTimeTaken } from "./logAnalysis";
 import ParticipantDetail, {
+  configs,
   configToParsedLikelihoods,
 } from "./ParticipantDetail";
 
@@ -157,6 +158,38 @@ const Dashboard: React.FunctionComponent = () => {
             ],
           }}
         />
+        <div>
+          {Object.entries(configs).map(([name, config]) => (
+            <Graph
+              configParam={config}
+              spec={{
+                data: { values: [{ label: "", value: 50 }] },
+                title: name,
+                mark: {
+                  type: "bar",
+                  size: 50,
+                },
+                encoding: {
+                  x: {
+                    field: "label",
+                    title: "",
+                    type: "nominal",
+                    axis: { labelAngle: 0, ticks: false },
+                  },
+
+                  y: {
+                    field: "value",
+                    title: "",
+                    type: "quantitative",
+                    scale: { domain: [0, 100] },
+                  },
+                },
+                height: 300,
+                width: 150,
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       {configurations.map((configuration, i) => (

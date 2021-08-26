@@ -7,14 +7,12 @@ import {
   groupBy,
   invert,
   mapValues,
-  max,
   maxBy,
-  min,
   minBy,
   sortBy,
 } from "lodash";
 import { Link } from "react-router-dom";
-import Graph from "./components/Graph";
+import Graph, { Histogram } from "./components/Graph";
 import { Metrics, TileMetrics } from "./components/Tile";
 import {
   getAllTasks,
@@ -37,8 +35,8 @@ const participantMetrics: Metrics<Configuration> = {
   },
 };
 
-let configs = {
-  filled: {
+export let configs = {
+  blue: {
     mark: {
       stroke: "#000000",
       strokeWidth: 2,
@@ -47,16 +45,8 @@ let configs = {
     axisX: { grid: false },
     axisY: { grid: false },
   },
-  thickFilled: {
-    mark: {
-      stroke: "#000000",
-      strokeWidth: 5,
-      fill: "#E3E3E3",
-    },
-    axisX: { grid: false },
-    axisY: { grid: false },
-  },
-  normalStroke: {
+
+  noFill: {
     mark: {
       stroke: "#000000",
       fill: "#ffffff",
@@ -74,14 +64,21 @@ let configs = {
     axisX: { grid: false },
     axisY: { grid: false },
   },
+  thickFilled: {
+    mark: {
+      stroke: "#000000",
+      strokeWidth: 5,
+      fill: "#E3E3E3",
+    },
+    axisX: { grid: false },
+    axisY: { grid: false },
+  },
 };
 
 export function configToName(config: string): string {
   let stringifyed = invert(
     mapValues(configs, (value, key) => JSON.stringify(value))
   );
-  console.log(stringifyed);
-  console.log(config);
 
   return stringifyed[config];
 }
@@ -109,13 +106,17 @@ export function configToParsedLikelihoods(configuration: Configuration): any {
     delete groupByDiff[0];
 
     for (let [absDiff, logs] of Object.entries(groupByDiff)) {
-      let underBar = minBy(logs, "diff");
-      let overBar = maxBy(logs, "diff");
+      let underBar = minBy(logs, "point");
+      let overBar = maxBy(logs, "point");
+
+      // if likelihoood is 100 for under and 50 for over, then it will give positive, but I want it to be negative
+
+      console.log(underBar, overBar);
       if (underBar && overBar) {
         // We want a positive number if they are more likely to choose something within that bar than outside of the bar.
 
         let likelihoodDiff =
-          (underBar.diff as number) - (overBar.diff as number);
+          (overBar.likelihood as number) - (underBar.likelihood as number);
 
         parsedLikelihoods.push({
           absDiff,
@@ -148,6 +149,15 @@ const ParticipantDetail: React.FunctionComponent<{
     "direction"
   );
 
+  let notAttentionChecks = tasksGrouped["AskQuestionsGraph"].filter(
+    ({ type }) => type !== "attention_check"
+  );
+
+  let likelihoods = notAttentionChecks.map((check) => ({
+    ...check,
+    ...find(check.logs, { type: "question_completed" }),
+  }));
+
   // TODO group by the graph and the amount of distance, then subtract the likelihoods.
 
   // arqueuro would be choice for this but idk how to integrate it into all of this so tooooo bad.
@@ -158,7 +168,7 @@ const ParticipantDetail: React.FunctionComponent<{
   // TODO: make the below chart, but for all participants.
 
   let likelihoodParsing = (
-    <div>
+    <>
       {
         <Graph
           spec={{
@@ -167,7 +177,11 @@ const ParticipantDetail: React.FunctionComponent<{
             },
             mark: "bar",
             encoding: {
-              y: { field: "likelihoodDiff", aggregate: "average" },
+              y: {
+                field: "likelihoodDiff",
+                aggregate: "average",
+                scale: { domain: [-60, 30] },
+              },
               x: { field: "configStr", type: "nominal" },
               color: { field: "configStr" },
             },
@@ -175,24 +189,16 @@ const ParticipantDetail: React.FunctionComponent<{
         />
         // For every bar, I want to know what the average difference in likelihood is.
       }
-    </div>
+    </>
   );
 
   // What is the data I want out of this?
 
   // [{likelihoodDiff : 5 (or -5)},diff : 3, spec : ]
 
-  let configs = groupBy(logsByTask["AskQuestionsGraph"], ({ config }) =>
-    JSON.stringify(config)
-  );
-
-  for (let [config, logs] of Object.entries(configs)) {
-    let likelihoods = filter(logs, { type: "question_completed" });
-    likelihoods = filter(logs, { point: 0 });
-
-    // TODO: group by the point and throw away the zero.
-    groupBy(likelihoods, "point");
-  }
+  // let configs = groupBy(logsByTask["AskQuestionsGraph"], ({ config }) =>
+  //   JSON.stringify(config)
+  // );
 
   return (
     <div className="mb-10">
@@ -204,14 +210,14 @@ const ParticipantDetail: React.FunctionComponent<{
           </Link>
         </span>
       </h2>
-      {Object.entries(configs).map(([config, logs]) => (
+      {/* {Object.entries(configs).map(([config, logs]) => (
         <VegaLite
           actions={false}
           config={logs[0].config as Config}
           data={logs[0].data as PlainObject}
           spec={logs[0].spec as VisualizationSpec}
         />
-      ))}
+      ))} */}
       <h2>
         <div>
           {attentionCheckLikelihoods.map(({ direction, likelihood }) => (
@@ -237,7 +243,7 @@ const ParticipantDetail: React.FunctionComponent<{
         </div>
       </h2>
       <TileMetrics metrics={participantMetrics} value={configuration} />
-      <Graph
+      {/* <Graph
         spec={{
           data: {
             values: parsedLikelihoods,
@@ -247,11 +253,50 @@ const ParticipantDetail: React.FunctionComponent<{
             y: { field: "likelihoodDiff" },
             x: { field: "absDiff", type: "nominal" },
             column: { field: "configStr", type: "nominal" },
-            color: { field: "absDiff" },
+          },
+        }}
+      /> */}
+      {likelihoodParsing}
+      <Graph
+        spec={{
+          data: {
+            values: likelihoods.map(({ likelihood }) => likelihood as number),
+          },
+          mark: "bar",
+          encoding: {
+            x: {
+              bin: true,
+              field: "data",
+              type: "quantitative",
+              title: "Likelihood Distribution",
+              scale: { domain: [0, 100] },
+            },
+            y: {
+              aggregate: "count",
+            },
           },
         }}
       />
-      {likelihoodParsing}
+      <Graph
+        spec={{
+          data: {
+            values: likelihoods,
+          },
+          mark: "point",
+          encoding: {
+            x: {
+              field: "diff",
+              type: "quantitative",
+              scale: { domain: [-10, 10] },
+            },
+            y: {
+              field: "likelihood",
+              type: "quantitative",
+              scale: { domain: [0, 100] },
+            },
+          },
+        }}
+      ></Graph>
       {/* <Graph
         spec={{
           data: {
