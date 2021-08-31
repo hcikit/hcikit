@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

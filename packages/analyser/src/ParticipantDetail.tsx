@@ -1,25 +1,25 @@
-import { Configuration, Log } from "@hcikit/workflow";
-import { PlainObject, VegaLite, VisualizationSpec } from "react-vega";
-import { Config } from "vega";
+import { Configuration } from "@hcikit/workflow";
+import { extent, scaleLinear } from "d3";
 import {
   filter,
   find,
   groupBy,
   invert,
+  map,
   mapValues,
   maxBy,
   minBy,
   sortBy,
+  sum,
+  sumBy,
 } from "lodash";
 import { Link } from "react-router-dom";
-import Graph, { Histogram } from "./components/Graph";
+import Graph from "./components/Graph";
 import { Metrics, TileMetrics } from "./components/Tile";
 import {
   getAllTasks,
   getAllTimes,
-  getLogs,
   getTimeTaken,
-  getTimeTakenForLogs,
   millisecondsToMinutes,
   millisecondsToSeconds,
 } from "./logAnalysis";
@@ -32,6 +32,16 @@ const participantMetrics: Metrics<Configuration> = {
     calculator: (configuration) =>
       // TODO: this won't work because there are trials in an array of logs.
       millisecondsToMinutes(getTimeTaken(configuration)),
+  },
+  timePerTask: {
+    unit: "seconds",
+    calculator: (configuration) => {
+      let allTimes = filter(getAllTimes(configuration), {
+        task: "AskQuestionsGraph",
+      });
+
+      return sumBy(allTimes, "timeTaken") / allTimes.length;
+    },
   },
 };
 
@@ -96,6 +106,15 @@ export function configToParsedLikelihoods(configuration: Configuration): any {
     ...find(check.logs, { type: "question_completed" }),
   }));
 
+  let likelihoodExtent = extent(
+    map(likelihoods, "likelihood") as number[]
+  ) as number[];
+  let normaliser = scaleLinear().domain(likelihoodExtent).range([0, 1]);
+
+  for (let log of likelihoods) {
+    log.likelihoodNormalised = normaliser(log.likelihood as number);
+  }
+
   let groupedByConfig = groupBy(likelihoods, ({ config }) =>
     JSON.stringify(config)
   );
@@ -111,16 +130,20 @@ export function configToParsedLikelihoods(configuration: Configuration): any {
 
       // if likelihoood is 100 for under and 50 for over, then it will give positive, but I want it to be negative
 
-      console.log(underBar, overBar);
       if (underBar && overBar) {
         // We want a positive number if they are more likely to choose something within that bar than outside of the bar.
 
         let likelihoodDiff =
           (overBar.likelihood as number) - (underBar.likelihood as number);
 
+        let likelihoodDiffNormalised =
+          (overBar.likelihoodNormalised as number) -
+          (underBar.likelihoodNormalised as number);
+
         parsedLikelihoods.push({
           absDiff,
           likelihoodDiff,
+          likelihoodDiffNormalised,
           ...overBar,
           configStr: configToName(config),
         });
@@ -136,6 +159,8 @@ const ParticipantDetail: React.FunctionComponent<{
   configuration: Configuration;
 }> = ({ configuration }) => {
   let times = getAllTimes(configuration);
+
+  let taskTimes = filter(times, { task: "AskQuestionsGraph" });
   let tasks = getAllTasks(configuration);
   let tasksGrouped = groupBy(tasks, "task");
 
@@ -158,6 +183,15 @@ const ParticipantDetail: React.FunctionComponent<{
     ...find(check.logs, { type: "question_completed" }),
   }));
 
+  let likelihoodExtent = extent(
+    map(likelihoods, "likelihood") as number[]
+  ) as number[];
+  let normaliser = scaleLinear().domain(likelihoodExtent).range([0, 1]);
+
+  for (let log of likelihoods) {
+    log.likelihoodNormalised = normaliser(log.likelihood as number);
+  }
+
   // TODO group by the graph and the amount of distance, then subtract the likelihoods.
 
   // arqueuro would be choice for this but idk how to integrate it into all of this so tooooo bad.
@@ -170,23 +204,53 @@ const ParticipantDetail: React.FunctionComponent<{
   let likelihoodParsing = (
     <>
       {
-        <Graph
-          spec={{
-            data: {
-              values: parsedLikelihoods,
-            },
-            mark: "bar",
-            encoding: {
-              y: {
-                field: "likelihoodDiff",
-                aggregate: "average",
-                scale: { domain: [-60, 30] },
+        <>
+          <Graph
+            spec={{
+              data: {
+                values: parsedLikelihoods,
               },
-              x: { field: "configStr", type: "nominal" },
-              color: { field: "configStr" },
-            },
-          }}
-        />
+              mark: "bar",
+              encoding: {
+                y: {
+                  field: "likelihoodDiff",
+                  aggregate: "average",
+                  scale: { domain: [-60, 30] },
+                },
+                x: { field: "configStr", type: "nominal" },
+                color: { field: "configStr" },
+              },
+            }}
+          />
+
+          <h3 className="text-lg font-bold">Likelihoods by absdiff</h3>
+
+          <Graph
+            spec={{
+              data: {
+                values: parsedLikelihoods,
+              },
+              layer: [
+                {
+                  mark: "line",
+                  encoding: {
+                    y: { field: "likelihoodDiff", aggregate: "average" },
+                    x: { field: "absDiff", type: "quantitative" },
+                  },
+                  view: { stroke: null },
+                },
+                {
+                  mark: { type: "errorbar", extent: "ci" },
+                  encoding: {
+                    y: { field: "likelihoodDiff", aggregate: "average" },
+                    x: { field: "absDiff", type: "quantitative" },
+                  },
+                  view: { stroke: null },
+                },
+              ],
+            }}
+          />
+        </>
         // For every bar, I want to know what the average difference in likelihood is.
       }
     </>
@@ -210,6 +274,7 @@ const ParticipantDetail: React.FunctionComponent<{
           </Link>
         </span>
       </h2>
+
       {/* {Object.entries(configs).map(([config, logs]) => (
         <VegaLite
           actions={false}
@@ -243,6 +308,30 @@ const ParticipantDetail: React.FunctionComponent<{
         </div>
       </h2>
       <TileMetrics metrics={participantMetrics} value={configuration} />
+      <div>
+        {" "}
+        <h2>times</h2>
+        <Graph
+          spec={{
+            data: {
+              values: taskTimes.map(({ timeTaken }) => timeTaken as number),
+            },
+            mark: "bar",
+            encoding: {
+              x: {
+                bin: true,
+                field: "data",
+                type: "quantitative",
+                title: "Time Taken",
+              },
+              y: {
+                aggregate: "count",
+              },
+            },
+          }}
+        />
+      </div>
+
       {/* <Graph
         spec={{
           data: {
@@ -296,7 +385,28 @@ const ParticipantDetail: React.FunctionComponent<{
             },
           },
         }}
-      ></Graph>
+      />
+
+      <Graph
+        spec={{
+          data: {
+            values: likelihoods,
+          },
+          mark: "point",
+          encoding: {
+            x: {
+              field: "diff",
+              type: "quantitative",
+              scale: { domain: [-10, 10] },
+            },
+            y: {
+              field: "likelihoodNormalised",
+              type: "quantitative",
+              scale: { domain: [0, 1] },
+            },
+          },
+        }}
+      />
       {/* <Graph
         spec={{
           data: {
@@ -319,13 +429,13 @@ const ParticipantDetail: React.FunctionComponent<{
   );
 };
 
-const taskMetrics: Metrics<Array<Log>> = {
-  timeTaken: {
-    unit: "seconds",
-    calculator: (logs: Array<Log>) =>
-      millisecondsToSeconds(getTimeTakenForLogs(logs)),
-  },
-};
+// const taskMetrics: Metrics<Array<Log>> = {
+//   timeTaken: {
+//     unit: "seconds",
+//     calculator: (logs: Array<Log>) =>
+//       millisecondsToSeconds(getTimeTakenForLogs(logs)),
+//   },
+// };
 
 function validateAttentionCheck(
   direction: "left" | "right",
@@ -338,16 +448,16 @@ function validateAttentionCheck(
   }
 }
 
-const ParticipantTask: React.FunctionComponent<{
-  logs: Array<Log>;
-  task: string;
-}> = ({ logs, task }) => {
-  return (
-    <div className="mb-2">
-      <h3 className="text-md text-gray-600 italic mb-1">{task}</h3>
-      <TileMetrics metrics={taskMetrics} value={logs} />
-    </div>
-  );
-};
+// const ParticipantTask: React.FunctionComponent<{
+//   logs: Array<Log>;
+//   task: string;
+// }> = ({ logs, task }) => {
+//   return (
+//     <div className="mb-2">
+//       <h3 className="text-md text-gray-600 italic mb-1">{task}</h3>
+//       <TileMetrics metrics={taskMetrics} value={logs} />
+//     </div>
+//   );
+// };
 
 export default ParticipantDetail;

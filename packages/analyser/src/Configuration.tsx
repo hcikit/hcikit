@@ -69,6 +69,10 @@ const ConfigurationsProvider: React.FunctionComponent = ({ children }) => {
           for (let googleFormsAnswer of googleFormsAnswers) {
             if (googleFormsAnswer["Worker ID"] === configuration.WORKER_ID) {
               configuration.googleFormsAnswers = googleFormsAnswer;
+              configuration["education"] =
+                configuration.googleFormsAnswers[
+                  "What is the highest degree or level of education you have completed?"
+                ];
             }
           }
         }

@@ -114,7 +114,7 @@ export function getAllTimes(
     let props = getPropsFor(configuration, index, false);
     if (props.logs) {
       times.push({
-        timeTaken: getTimeTakenForLogs(props.logs),
+        timeTaken: millisecondsToSeconds(getTimeTakenForLogs(props.logs)),
         task: props.task || "NO_TASK",
       });
     }

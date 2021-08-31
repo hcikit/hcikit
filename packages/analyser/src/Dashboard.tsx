@@ -1,19 +1,25 @@
 import {
   Configuration,
-  experimentComplete,
   getCurrentIndex,
   getTotalTasks,
   indexToTaskNumber,
   randomString,
 } from "@hcikit/workflow";
+import { extent, scaleLinear } from "d3";
+import { find, groupBy, map } from "lodash";
 import Graph, { Histogram } from "./components/Graph";
 import { Metrics, TileMetrics } from "./components/Tile";
 import { useConfigurations } from "./Configuration";
-import { getAllTimes, getTimeTaken } from "./logAnalysis";
+import { getAllTasks, getAllTimes, getTimeTaken } from "./logAnalysis";
 import ParticipantDetail, {
   configs,
   configToParsedLikelihoods,
 } from "./ParticipantDetail";
+
+// TODO: the organisation of all of this is actually just absolutely awful. I actually think these should all be MDX files and at the top I do the data munging or something like that, and then create graphs using mdx.
+// It also needs nice default styles...
+
+// I basically just need to separate the data munging from the data visualisation.
 
 const overviewMetrics: Metrics<Array<Configuration>> = {
   totalParticipants: (configurations) => configurations.length,
@@ -34,10 +40,99 @@ const overviewMetrics: Metrics<Array<Configuration>> = {
   },
 };
 
+// TODO: how do I normalise the data?
+
+// Basically I need to look at each participant, and create a normalisedLikelihood field, then normalise it down to be 0-1 or something?
 const Dashboard: React.FunctionComponent = () => {
   const configurations = useConfigurations();
 
+  let likelihoods = configurations.flatMap((configuration) => {
+    let tasks = getAllTasks(configuration);
+    let tasksGrouped = groupBy(tasks, "task");
+
+    let notAttentionChecks = tasksGrouped["AskQuestionsGraph"].filter(
+      ({ type }) => type !== "attention_check"
+    );
+
+    let likelihoods = notAttentionChecks.map((check) => ({
+      ...check,
+      ...find(check.logs, { type: "question_completed" }),
+    }));
+
+    let likelihoodExtent = extent(
+      map(likelihoods, "likelihood") as number[]
+    ) as number[];
+    let normaliser = scaleLinear().domain(likelihoodExtent).range([0, 1]);
+
+    for (let log of likelihoods) {
+      log.likelihoodNormalised = normaliser(log.likelihood as number);
+    }
+
+    return likelihoods;
+  });
+
   let parsedLikelihoods = configurations.flatMap(configToParsedLikelihoods);
+
+  let educationGroupsParsed = groupBy(parsedLikelihoods, "education");
+  let educationGroupsUnparsed = groupBy(likelihoods, "education");
+
+  let eduGroups = Object.entries(educationGroupsUnparsed).map(
+    ([group, data]) => (
+      <div>
+        <h3 className="text-xl text-bold">{group}</h3>
+        <Graph
+          spec={{
+            data: {
+              values: data,
+            },
+            mark: "point",
+            encoding: {
+              x: {
+                field: "diff",
+                type: "quantitative",
+                scale: { domain: [-10, 10] },
+              },
+              y: {
+                field: "likelihoodNormalised",
+                type: "quantitative",
+                scale: { domain: [0, 1] },
+              },
+              column: { field: "participant" },
+            },
+          }}
+        />
+      </div>
+    )
+  );
+
+  let eduGroupsParsed = Object.entries(educationGroupsParsed).map(
+    ([group, data]) => (
+      <div>
+        <h3 className="text-xl text-bold">{group}</h3>
+        <Graph
+          spec={{
+            data: {
+              values: data,
+            },
+            mark: "point",
+            encoding: {
+              x: {
+                field: "absDiff",
+                type: "quantitative",
+                scale: { domain: [0, 10] },
+              },
+              y: {
+                field: "likelihoodDiffNormalised",
+                type: "quantitative",
+                scale: { domain: [-1, 1] },
+              },
+              column: { field: "participant" },
+            },
+          }}
+        />
+      </div>
+    )
+  );
 
   return (
     <>
@@ -117,6 +212,9 @@ const Dashboard: React.FunctionComponent = () => {
 
       <div>
         <h2 className="text-xl font-bold">Likelihoods</h2>
+
+        <h3 className="text-lg font-bold">Likelihoods by graph</h3>
+
         <Graph
           spec={{
             data: {
@@ -132,6 +230,26 @@ const Dashboard: React.FunctionComponent = () => {
             view: { stroke: null },
           }}
         />
+        <br />
+        <Graph
+          spec={{
+            data: {
+              values: parsedLikelihoods,
+            },
+            mark: "bar",
+            encoding: {
+              y: { field: "likelihoodDiff", aggregate: "average" },
+              x: { field: "configStr", type: "nominal" },
+              color: { field: "configStr" },
+
+              column: {
+                field: "education",
+              },
+            },
+            view: { stroke: null },
+          }}
+        />
+        <br />
         <Graph
           spec={{
             data: {
@@ -158,6 +276,187 @@ const Dashboard: React.FunctionComponent = () => {
             ],
           }}
         />
+
+        <h3 className="text-lg font-bold">Likelihoods by normalised</h3>
+
+        <Graph
+          spec={{
+            data: {
+              values: parsedLikelihoods,
+            },
+            mark: "bar",
+            encoding: {
+              y: { field: "likelihoodDiffNormalised", aggregate: "average" },
+              x: { field: "configStr", type: "nominal" },
+              color: { field: "configStr" },
+              column: { field: "participant" },
+            },
+            view: { stroke: null },
+          }}
+        />
+        <br />
+        <Graph
+          spec={{
+            data: {
+              values: parsedLikelihoods,
+            },
+            mark: "bar",
+            encoding: {
+              y: { field: "likelihoodDiffNormalised", aggregate: "average" },
+              x: { field: "configStr", type: "nominal" },
+              color: { field: "configStr" },
+
+              column: {
+                field: "education",
+              },
+            },
+            view: { stroke: null },
+          }}
+        />
+        <br />
+        <Graph
+          spec={{
+            data: {
+              values: parsedLikelihoods,
+            },
+            layer: [
+              {
+                mark: "bar",
+                encoding: {
+                  y: {
+                    field: "likelihoodDiffNormalised",
+                    aggregate: "average",
+                  },
+                  x: { field: "configStr", type: "nominal" },
+                  color: { field: "configStr" },
+                },
+                view: { stroke: null },
+              },
+              {
+                mark: { type: "errorbar", extent: "ci" },
+                encoding: {
+                  y: {
+                    field: "likelihoodDiffNormalised",
+                    aggregate: "average",
+                  },
+                  x: { field: "configStr", type: "nominal" },
+                },
+                view: { stroke: null },
+              },
+            ],
+          }}
+        />
+
+        <h3 className="text-lg font-bold">Likelihoods by absdiff</h3>
+
+        <Graph
+          spec={{
+            data: {
+              values: parsedLikelihoods,
+            },
+            layer: [
+              {
+                mark: "line",
+                encoding: {
+                  y: { field: "likelihoodDiff", aggregate: "average" },
+                  x: { field: "absDiff", type: "quantitative" },
+                },
+                view: { stroke: null },
+              },
+              {
+                mark: { type: "errorbar", extent: "ci" },
+                encoding: {
+                  y: { field: "likelihoodDiff", aggregate: "average" },
+                  x: { field: "absDiff", type: "quantitative" },
+                },
+                view: { stroke: null },
+              },
+            ],
+          }}
+        />
+
+        <Graph
+          spec={{
+            data: {
+              values: parsedLikelihoods,
+            },
+            layer: [
+              {
+                mark: "line",
+                encoding: {
+                  y: { field: "likelihoodDiff", aggregate: "average" },
+                  x: { field: "absDiff", type: "quantitative" },
+                  color: { field: "participant" },
+                },
+                view: { stroke: null },
+              },
+            ],
+          }}
+        />
+
+        <h3 className="text-lg font-bold">Likelihoods by absdiff normalised</h3>
+
+        <Graph
+          spec={{
+            data: {
+              values: parsedLikelihoods,
+            },
+            layer: [
+              {
+                mark: "line",
+                encoding: {
+                  y: {
+                    field: "likelihoodDiffNormalised",
+                    aggregate: "average",
+                  },
+                  x: { field: "absDiff", type: "quantitative" },
+                },
+                view: { stroke: null },
+              },
+              {
+                mark: { type: "errorbar", extent: "ci" },
+                encoding: {
+                  y: {
+                    field: "likelihoodDiffNormalised",
+                    aggregate: "average",
+                  },
+                  x: { field: "absDiff", type: "quantitative" },
+                },
+                view: { stroke: null },
+              },
+            ],
+          }}
+        />
+
+        <Graph
+          spec={{
+            data: {
+              values: parsedLikelihoods,
+            },
+            layer: [
+              {
+                mark: "line",
+                encoding: {
+                  y: {
+                    field: "likelihoodDiffNormalised",
+                    aggregate: "average",
+                  },
+                  x: { field: "absDiff", type: "quantitative" },
+                  color: { field: "participant" },
+                },
+                view: { stroke: null },
+              },
+            ],
+          }}
+        />
+
+        <div>
+          <h2 className="text-2xl">Education likelihoods</h2>
+          {eduGroups}
+          <h2 className="text-2xl">Education likelihood differences</h2>
+          {eduGroupsParsed}
+        </div>
+
         <div>
           {Object.entries(configs).map(([name, config]) => (
             <Graph
@@ -191,6 +490,7 @@ const Dashboard: React.FunctionComponent = () => {
           ))}
         </div>
       </div>
+      <h2 className="text-xl font-bold">Demographics</h2>
 
       {configurations.map((configuration, i) => (
         <ParticipantDetail
