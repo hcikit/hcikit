@@ -4129,10 +4129,8 @@ __metadata:
   dependencies:
     "@docusaurus/core": 2.0.0-beta.3
     "@docusaurus/preset-classic": 2.0.0-beta.3
-    "@hcikit/react": "workspace:*"
-    "@hcikit/workflow": "workspace:*"
-    "@material-ui/core": ^4.12.2
-    "@material-ui/icons": ^4.11.2
+    "@hcikit/react": ^1.0.0-alpha.2
+    "@hcikit/workflow": ^1.0.0-alpha.2
     "@mdx-js/react": ^1.6.21
     "@svgr/webpack": ^5.5.0
     clsx: ^1.1.1
@@ -4141,7 +4139,6 @@ __metadata:
     react: ^17.0.1
     react-dom: ^17.0.1
     url-loader: ^4.1.1
-    webpack: ^5.47.0
   languageName: unknown
   linkType: soft
 
@@ -4186,7 +4183,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hcikit/react@workspace:*, @hcikit/react@workspace:packages/react":
+"@hcikit/react@^1.0.0-alpha.2, @hcikit/react@workspace:*, @hcikit/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@hcikit/react@workspace:packages/react"
   dependencies:
@@ -4260,7 +4257,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hcikit/workflow@workspace:*, @hcikit/workflow@workspace:packages/workflow":
+"@hcikit/workflow@^1.0.0-alpha.2, @hcikit/workflow@workspace:*, @hcikit/workflow@workspace:packages/workflow":
   version: 0.0.0-use.local
   resolution: "@hcikit/workflow@workspace:packages/workflow"
   dependencies:
@@ -5507,7 +5504,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/core@npm:^4.12.2, @material-ui/core@npm:^4.9.11":
+"@material-ui/core@npm:^4.9.11":
   version: 4.12.2
   resolution: "@material-ui/core@npm:4.12.2"
   dependencies:
@@ -5534,7 +5531,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/icons@npm:^4.11.2, @material-ui/icons@npm:^4.9.1":
+"@material-ui/icons@npm:^4.9.1":
   version: 4.11.2
   resolution: "@material-ui/icons@npm:4.11.2"
   dependencies:
@@ -30692,7 +30689,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.40.0, webpack@npm:^5.47.0":
+"webpack@npm:^5.40.0":
   version: 5.47.1
   resolution: "webpack@npm:5.47.1"
   dependencies:

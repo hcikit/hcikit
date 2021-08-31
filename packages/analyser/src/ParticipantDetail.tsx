@@ -392,7 +392,7 @@ const ParticipantDetail: React.FunctionComponent<{
           data: {
             values: likelihoods,
           },
-          mark: "point",
+          layer: [{mark: "point",
           encoding: {
             x: {
               field: "diff",
@@ -404,7 +404,30 @@ const ParticipantDetail: React.FunctionComponent<{
               type: "quantitative",
               scale: { domain: [0, 1] },
             },
+          },},
+          {
+            "mark": {
+              "type": "line",
+              "color": "firebrick"
+            },
+            "transform": [
+              {
+                "regression": "likelihoodNormalised",
+                "on": "diff"
+              }
+            ],
+            "encoding": {
+              "x": {
+                "field": "diff",
+                "type": "quantitative"
+              },
+              "y": {
+                "field": "likelihoodNormalised",
+                "type": "quantitative"
+              }
+            }
           },
+        ],
         }}
       />
       {/* <Graph
