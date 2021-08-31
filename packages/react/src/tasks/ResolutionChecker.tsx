@@ -5,6 +5,7 @@ import ErrorOverlay from "../components/ErrorOverlay";
 import { ControlFunctions } from "../core/Experiment";
 
 // TODO: there is a bug in this where the error overlay does not take up the whole screen if you scroll down, it might need like a position fixed or something like that.
+// TODO: there is a bug where if you fix one of the resoltuion problems, the view doesn't update. It's because the state doesn';t change. Need to write a repro test.
 
 const ResolutionChecker: React.FunctionComponent<{
   minXResolution?: number;
