@@ -16,6 +16,8 @@ import {
   getCurrentIndex,
 } from "@hcikit/workflow";
 
+// TODO: making all of material ui icons a peer dependency instead of a dependency seems silly when they're probably just svgs abnd not dependent on the rest of material ui. 
+
 import { useConfiguration, useExperiment } from "../core/Experiment";
 
 const StyledCard = styled(Card)`

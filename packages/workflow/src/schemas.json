@@ -1,0 +1,65 @@
+{
+  "$ref": "#/definitions/ConfigurationNoGenerics",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Configuration<alias-847624724-70404-70537-847624724-0-212357<string,unknown>>": {
+      "properties": {
+        "__INDEX__": {
+          "$ref": "#/definitions/ExperimentIndex"
+        },
+        "children": {
+          "items": {
+            "$ref": "#/definitions/Configuration%3Calias-847624724-70404-70537-847624724-0-212357%3Cstring%2Cunknown%3E%3E"
+          },
+          "type": "array"
+        },
+        "logs": {
+          "items": {
+            "$ref": "#/definitions/Log"
+          },
+          "type": "array"
+        },
+        "task": {
+          "type": [
+            "string"
+          ]
+        },
+        "tasks": {
+          "items": {
+            "type": [
+              "string"
+            ]
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "ConfigurationNoGenerics": {
+      "$ref": "#/definitions/Configuration%3Calias-847624724-70404-70537-847624724-0-212357%3Cstring%2Cunknown%3E%3E"
+    },
+    "ExperimentIndex": {
+      "items": {
+        "type": "number"
+      },
+      "type": "array"
+    },
+    "Log": {
+      "additionalProperties": {
+      },
+      "properties": {
+        "timestamp": {
+          "type": "number"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "timestamp",
+        "type"
+      ],
+      "type": "object"
+    }
+  }
+}

@@ -21,11 +21,12 @@
   },
   "scripts": {
     "start": "tsc",
-    "build": "tsc --build --verbose",
+    "build": "yarn run generate-schema && tsc --build --verbose",
     "test": "jest",
     "test:watch": "jest --watch --colors --verbose",
     "test:coverage": "jest --coverage --colors",
-    "prepack": "yarn run build"
+    "prepack": "yarn run build",
+    "generate-schema": "ts-json-schema-generator --tsconfig tsconfig.json -p src/types.ts -t ConfigurationNoGenerics > src/schemas.json"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -47,9 +48,11 @@
     "@types/deep-freeze": "^0.1.2",
     "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.171",
+    "@types/node": "^16.9.1",
     "deep-freeze": "^0.0.1",
     "jest": "^27.0.6",
     "ts-jest": "^27.0.4",
+    "ts-json-schema-generator": "^0.95.0",
     "typescript": "^4.3.5"
   },
   "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86"
