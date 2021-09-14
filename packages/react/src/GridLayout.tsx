@@ -44,8 +44,14 @@ const GridLayout: React.FunctionComponent = ({ children }) => {
       "header"
       "task"
       "footer"`,
+        // gridArea: "task",
       }}
     >
+      {/* <style>
+        {`#gridArea > * { 
+          grid-area: inherit;
+        }`}
+      </style> */}
       {children}
     </div>
   );

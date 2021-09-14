@@ -10,6 +10,7 @@
     "lib": ["dom", "esnext", "DOM.Iterable"],
     "downlevelIteration": true,
     "baseUrl": "./",
+    "resolveJsonModule": true,
 
     // "module": "ES2015",
     "moduleResolution": "node",

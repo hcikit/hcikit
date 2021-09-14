@@ -54,4 +54,4 @@ const IncrementTask: React.FunctionComponent<{
   );
 };
 
-export default withGridItem(IncrementTask);
+export default IncrementTask;
