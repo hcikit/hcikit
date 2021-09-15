@@ -1,13 +1,21 @@
 {
   "name": "@hcikit/workflow",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "A workflow manager for running experiments.",
   "author": "blainelewis1",
   "license": "MIT",
   "repository": "hcikit/hcikit",
-  "main": "./dist/index.js",
-  "module": "dist/index.es.js",
-  "jsnext:main": "dist/index.es.js",
+  "module": "dist/index.js",
+  "type": "module",
+  "keywords": [
+    "hci",
+    "experiment"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "import": "./dist/index.js",
+    "default": "./dist/index.js"
+  },
   "publishConfig": {
     "access": "public"
   },
