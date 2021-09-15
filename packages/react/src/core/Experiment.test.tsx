@@ -681,6 +681,10 @@ describe("Experiment", () => {
 
 describe("ErrorHandler", () => {
   it("handles errors properly", () => {
+    jest
+      .useFakeTimers("modern")
+      .setSystemTime(new Date("2020-01-01").getTime());
+
     jest.spyOn(console, "error").mockImplementation(() => {
       //do nothing
     });
@@ -737,5 +741,6 @@ describe("ErrorHandler", () => {
     screen.getByText("reset").click();
     screen.getByText("button");
     jest.restoreAllMocks();
+    jest.useRealTimers();
   });
 });

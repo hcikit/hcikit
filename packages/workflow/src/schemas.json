@@ -2,14 +2,14 @@
   "$ref": "#/definitions/ConfigurationNoGenerics",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "Configuration<alias-847624724-70404-70537-847624724-0-212357<string,unknown>>": {
+    "Configuration<alias-756138366-70404-70537-756138366-0-212357<string,unknown>>": {
       "properties": {
         "__INDEX__": {
           "$ref": "#/definitions/ExperimentIndex"
         },
         "children": {
           "items": {
-            "$ref": "#/definitions/Configuration%3Calias-847624724-70404-70537-847624724-0-212357%3Cstring%2Cunknown%3E%3E"
+            "$ref": "#/definitions/Configuration%3Calias-756138366-70404-70537-756138366-0-212357%3Cstring%2Cunknown%3E%3E"
           },
           "type": "array"
         },
@@ -36,7 +36,7 @@
       "type": "object"
     },
     "ConfigurationNoGenerics": {
-      "$ref": "#/definitions/Configuration%3Calias-847624724-70404-70537-847624724-0-212357%3Cstring%2Cunknown%3E%3E"
+      "$ref": "#/definitions/Configuration%3Calias-756138366-70404-70537-756138366-0-212357%3Cstring%2Cunknown%3E%3E"
     },
     "ExperimentIndex": {
       "items": {

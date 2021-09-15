@@ -3,11 +3,11 @@
 exports[`InformationScreen renders markdown properly 1`] = `
 <DocumentFragment>
   <div
-    class="sc-gtsrHT hMXYKS"
+    class="sc-gsTEea ikYvKs"
   >
     <div>
       <div
-        class="MuiPaper-root sc-bdnxRM hDhcyW MuiPaper-elevation1 MuiPaper-rounded"
+        class="MuiPaper-root sc-bdfBQB kHlcZZ MuiPaper-elevation1 MuiPaper-rounded"
       >
         <div>
           <h1
