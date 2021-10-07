@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { IconButton, Slider, Card } from "@material-ui/core";
-import {
-  FastForward,
-  SkipNext,
-  SkipPrevious,
-  FastRewind,
-} from "@material-ui/icons";
+import FastForward from "@material-ui/icons/FastForward";
+import SkipNext from "@material-ui/icons/SkipNext";
+import SkipPrevious from "@material-ui/icons/SkipPrevious";
+import FastRewind from "@material-ui/icons/FastRewind";
+
 import styled from "styled-components";
 import {
   taskNumberToIndex,
@@ -16,7 +15,7 @@ import {
   getCurrentIndex,
 } from "@hcikit/workflow";
 
-// TODO: making all of material ui icons a peer dependency instead of a dependency seems silly when they're probably just svgs abnd not dependent on the rest of material ui. 
+// TODO: making all of material ui icons a peer dependency instead of a dependency seems silly when they're probably just svgs abnd not dependent on the rest of material ui.
 
 import { useConfiguration, useExperiment } from "../core/Experiment";
 
