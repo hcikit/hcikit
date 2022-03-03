@@ -24,10 +24,18 @@ exports[`ConsentForm renders properly 1`] = `
                 bold
               </strong>
               .
-   - and
-   - a
-   - list
             </p>
+            <ul>
+              <li>
+                and
+              </li>
+              <li>
+                a
+              </li>
+              <li>
+                list
+              </li>
+            </ul>
           </div>
           <div
             class="MuiFormControl-root"
