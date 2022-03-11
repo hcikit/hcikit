@@ -18,12 +18,6 @@
     "devDependencies": {
       "cross-env": "^5.2.0"
     },
-    "eslintConfig": {
-      "extends": [
-        "react-app",
-        "react-app/jest"
-      ]
-    },
     "scripts": {
       "env": "cross-env REACT_APP_GIT_HASH=$(git rev-parse HEAD) REACT_APP_PACKAGE_VERSION=$npm_package_version REACT_APP_BUILD_TIME=$(date +%s)",
       "start": "npm run env react-scripts start",

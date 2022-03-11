@@ -9,7 +9,10 @@ module.exports = {
     "standard",
     "prettier",
     "plugin:@typescript-eslint/recommended",
+    "plugin:import/typescript",
   ],
+
+  rules: { "import/extensions": ["error", "always"] },
   plugins: ["@typescript-eslint"],
   ignorePatterns: ["dist", "node_modules", "scripts"],
 };

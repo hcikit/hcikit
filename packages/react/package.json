@@ -48,29 +48,26 @@
     "@hcikit/workflow": "workspace:*",
     "core-js": "^3.21.1",
     "lodash": "^4.17.21",
-    "markdown-to-jsx": "^7.1.6",
+    "markdown-to-jsx": "^7.1.7",
     "prop-types": "^15.8.1",
     "react-error-boundary": "^3.1.4",
     "react-is": "^17.0.2",
     "serialize-error": "^8.1.0",
-    "styled-components": "^5.3.1"
+    "styled-components": "^5.3.3"
   },
   "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86",
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.2",
-    "@testing-library/react": "^12.1.3",
+    "@testing-library/react": "^12.1.4",
     "@types/jest": "^27.4.1",
-    "@types/react": "^17.0.39",
+    "@types/react": "^17.0.40",
     "@types/styled-components": "^5.1.24",
     "jest": "^27.5.1",
     "jest-diff": "^27.5.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "^4.0.3",
+    "react-scripts": "^5.0.0",
     "ts-jest": "^27.1.3",
     "typescript": "^4.6.2"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   }
 }
