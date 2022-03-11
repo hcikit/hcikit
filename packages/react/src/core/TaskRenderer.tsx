@@ -1,7 +1,7 @@
 // import { diff } from "jest-diff";
 
 import React, { ElementType } from "react";
-import { isEqual } from "lodash";
+import { isEqual } from "lodash-es";
 
 import {
   getCurrentProps,
@@ -10,7 +10,7 @@ import {
   __INDEX__,
 } from "@hcikit/workflow";
 
-import { useConfiguration, useExperiment } from "./Experiment";
+import { useConfiguration, useExperiment } from "./Experiment.js";
 
 // If there's ever a usecase for logs to get passed then we can add another provider they can subscribe to.
 

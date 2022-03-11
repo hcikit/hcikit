@@ -1,8 +1,8 @@
 import React from "react";
-import FocusChecker from "./FocusChecker";
+import FocusChecker from "./FocusChecker.js";
 import { fireEvent, screen } from "@testing-library/react";
 
-import { renderWithProvider } from "../test-utils";
+import { renderWithProvider } from "../test-utils.js";
 
 describe("FocusChecker", () => {
   it("renders nothing when correct", () => {

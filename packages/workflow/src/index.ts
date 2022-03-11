@@ -1,17 +1,17 @@
-import { mergeWith, pickBy, isEqual, pick } from "lodash";
+import { mergeWith, pickBy, isEqual, pick } from "lodash-es";
 
 import {
   Configuration,
   UnfilledLog,
   ExperimentIndex,
   __INDEX__,
-} from "./types";
+} from "./types.js";
 
 export { default as schema } from "./schemas.json";
 
-export * from "./utils";
+export * from "./utils.js";
 
-export * from "./types";
+export * from "./types.js";
 
 // TODO: rename to core or configuration rather than workflow?
 

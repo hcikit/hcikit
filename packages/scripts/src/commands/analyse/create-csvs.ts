@@ -8,7 +8,7 @@ import {
   iterateConfiguration,
 } from "@hcikit/workflow";
 import glob from "glob-promise";
-import { groupBy, omit, partition } from "lodash";
+import { groupBy, omit, partition } from "lodash-es";
 import { parse } from "json2csv";
 import path from "path";
 

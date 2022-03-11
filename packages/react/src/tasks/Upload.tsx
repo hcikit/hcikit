@@ -1,10 +1,10 @@
 import React, { useLayoutEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-import { Button, Typography, CircularProgress } from "@material-ui/core";
+import { Button, Typography, CircularProgress } from "@mui/material";
 
-import { CenteredNicePaper, CenteredText } from "../components";
-import { useConfiguration, useExperiment } from "../core/Experiment";
+import { CenteredNicePaper, CenteredText } from "../components/index.js";
+import { useConfiguration, useExperiment } from "../core/Experiment.js";
 import { Configuration } from "@hcikit/workflow";
 
 async function sleep(ms: number) {

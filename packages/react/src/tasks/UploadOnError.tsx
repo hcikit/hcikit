@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from "react";
-import { CenteredNicePaper } from "../components";
+import { CenteredNicePaper } from "../components/index.js";
 import PropTypes from "prop-types";
 import {
   ControlFunctions,
   useConfiguration,
   useExperiment,
-} from "../core/Experiment";
+} from "../core/Experiment.js";
 import { Configuration } from "@hcikit/workflow";
 
 interface UploadOnErrorProps {

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { IconButton, Slider, Card } from "@material-ui/core";
-import FastForward from "@material-ui/icons/FastForward";
-import SkipNext from "@material-ui/icons/SkipNext";
-import SkipPrevious from "@material-ui/icons/SkipPrevious";
-import FastRewind from "@material-ui/icons/FastRewind";
+import { IconButton, Slider, Card } from "@mui/material";
+import FastForward from "@mui/icons-material/FastForward.js";
+import SkipNext from "@mui/icons-material/SkipNext.js";
+import SkipPreviousIcon from "@mui/icons-material/SkipPrevious.js";
+import SkipPrevious from "@mui/icons-material/SkipPrevious.js";
+import FastRewind from "@mui/icons-material/FastRewind.js";
 
 import styled from "styled-components";
 import {
@@ -17,7 +18,7 @@ import {
 
 // TODO: making all of material ui icons a peer dependency instead of a dependency seems silly when they're probably just svgs abnd not dependent on the rest of material ui.
 
-import { useConfiguration, useExperiment } from "../core/Experiment";
+import { useConfiguration, useExperiment } from "../core/Experiment.js";
 
 const StyledCard = styled(Card)`
   display: inline-block;
@@ -39,6 +40,8 @@ const StyledSlider = styled(Slider)`
  */
 
 export const DevTools: React.FunctionComponent = () => {
+  console.log(SkipNext);
+
   const configuration = useConfiguration();
   const experiment = useExperiment();
 
@@ -102,16 +105,20 @@ export const DevTools: React.FunctionComponent = () => {
     >
       <Controls>
         <IconButton>
-          <SkipPrevious />
+          {/* @ts-ignore */}
+          <SkipPrevious.default />
         </IconButton>
         <IconButton>
-          <FastRewind />
+          {/* @ts-ignore */}
+          <FastRewind.default />
         </IconButton>
         <IconButton onClick={() => experiment.advance()}>
-          <FastForward />
+          {/* @ts-ignore */}
+          <FastForward.default />
         </IconButton>
-        <IconButton>
-          <SkipNext />
+        <IconButton size="large">
+          {/* @ts-ignore */}
+          <SkipNext.default />
         </IconButton>
       </Controls>
       <StyledSlider
@@ -121,7 +128,7 @@ export const DevTools: React.FunctionComponent = () => {
         marks={topLevelTasks}
         min={0}
         max={getTotalTasks(configuration)}
-        onChange={(_: React.ChangeEvent<{}>, value: number | Array<number>) => {
+        onChange={(_: Event, value: number | Array<number>) => {
           experiment.advance(taskNumberToIndex(configuration, value as number));
         }}
       />

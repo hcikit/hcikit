@@ -1,8 +1,8 @@
 import React from "react";
-import { Upload } from "./Upload";
+import { Upload } from "./Upload.js";
 import { screen, act } from "@testing-library/react";
 
-import { renderWithProvider } from "../test-utils";
+import { renderWithProvider } from "../test-utils.js";
 
 let err = console.error;
 describe("Upload", () => {

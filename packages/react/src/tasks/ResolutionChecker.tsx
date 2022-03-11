@@ -1,8 +1,8 @@
-import { Typography } from "@material-ui/core";
-import { noop } from "lodash";
+import { Typography } from "@mui/material";
+import { noop } from "lodash-es";
 import React, { useEffect, useMemo, useState } from "react";
-import ErrorOverlay from "../components/ErrorOverlay";
-import { ControlFunctions } from "../core/Experiment";
+import ErrorOverlay from "../components/ErrorOverlay.js";
+import { ControlFunctions } from "../core/Experiment.js";
 
 // TODO: there is a bug where if you fix one of the resoltuion problems, the view doesn't update. It's because the state doesn';t change. Need to write a repro test.
 

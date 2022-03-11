@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import chalk from "chalk";
-import { find } from "lodash";
+import { find } from "lodash-es";
 
 import {
   Capability,

@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Paper } from "@material-ui/core";
+import { Paper } from "@mui/material";
 
 const Overlay = styled.div`
   position: absolute;

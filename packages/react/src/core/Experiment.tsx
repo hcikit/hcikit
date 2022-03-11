@@ -1,4 +1,4 @@
-import { throttle, isEmpty } from "lodash";
+import { throttle, isEmpty } from "lodash-es";
 import React, {
   useState,
   createContext,
@@ -10,7 +10,7 @@ import React, {
 } from "react";
 
 import { serializeError } from "serialize-error";
-import TaskRenderer from "./TaskRenderer";
+import TaskRenderer from "./TaskRenderer.js";
 
 import {
   advanceConfiguration,
@@ -23,10 +23,10 @@ import {
   getCurrentIndex,
 } from "@hcikit/workflow";
 
-import GridLayout from "../GridLayout";
+import GridLayout from "../GridLayout.js";
 
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
-import { CenteredNicePaper } from "../components";
+import { CenteredNicePaper } from "../components/index.js";
 
 export interface ControlFunctions {
   advance: (index?: ExperimentIndex) => void;

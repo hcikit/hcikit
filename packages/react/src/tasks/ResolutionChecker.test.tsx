@@ -1,8 +1,8 @@
 import React from "react";
-import ResolutionChecker from "./ResolutionChecker";
+import ResolutionChecker from "./ResolutionChecker.js";
 import { fireEvent, screen } from "@testing-library/react";
 
-import { renderWithProvider } from "../test-utils";
+import { renderWithProvider } from "../test-utils.js";
 
 let props = {
   maxXResolution: 1000,

@@ -7,9 +7,9 @@ import {
   getLeafIndex,
 } from "@hcikit/workflow";
 
-import { withGridItem } from "../GridLayout";
+import { withGridItem } from "../GridLayout.js";
 import PropTypes from "prop-types";
-import { useConfiguration } from "../core/Experiment";
+import { useConfiguration } from "../core/Experiment.js";
 
 const ProgressTextNoGrid: React.FunctionComponent<{ depth?: number }> = ({
   depth = 0,

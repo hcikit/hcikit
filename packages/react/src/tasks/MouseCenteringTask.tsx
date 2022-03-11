@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { withGridItem } from "../GridLayout";
-import { CenteredDiv } from "../components";
+import { withGridItem } from "../GridLayout.js";
+import { CenteredDiv } from "../components/index.js";
 import PropTypes from "prop-types";
-import { useExperiment } from "../core/Experiment";
+import { useExperiment } from "../core/Experiment.js";
 
 const Content = styled.span`
   display: table-cell;

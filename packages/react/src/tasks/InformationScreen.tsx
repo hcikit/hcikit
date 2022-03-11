@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import Markdown from "markdown-to-jsx";
 
-import { Button } from "@material-ui/core";
-import { CenteredNicePaper } from "../components";
+import { Button } from "@mui/material";
+import { CenteredNicePaper } from "../components/index.js";
 import PropTypes from "prop-types";
-import { useExperiment } from "../core/Experiment";
+import { useExperiment } from "../core/Experiment.js";
 
 /**
  * Creates a screen with information or instructions and a continue button.

@@ -1,7 +1,7 @@
 import React from "react";
-import ProgressText from "./ProgressText";
+import ProgressText from "./ProgressText.js";
 import { render, screen } from "@testing-library/react";
-import Experiment, { useExperiment } from "../core/Experiment";
+import Experiment, { useExperiment } from "../core/Experiment.js";
 import { Configuration } from "@hcikit/workflow";
 
 let BlankTask: React.FunctionComponent = () => null;

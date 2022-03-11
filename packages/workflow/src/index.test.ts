@@ -15,8 +15,9 @@ import {
   flattenConfigurationWithProps,
   advanceConfiguration,
   getCurrentIndex,
-} from "./index";
+} from "./index.js";
 import deepFreeze from "deep-freeze";
+import { jest } from "@jest/globals";
 
 const configuration: Configuration = {
   configprop: "section",

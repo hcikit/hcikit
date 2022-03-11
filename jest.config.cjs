@@ -1,7 +1,7 @@
 /** @type {import('@ts-jest/dist/types').InitialOptionsTsJest} */
-module.exports = {
-  // preset: "ts-jest",
-  extensionsToTreatAsEsm: [".ts"],
+
+const testDefault = {
+  preset: "ts-jest/presets/default-esm", // or other ESM presets
   globals: {
     "ts-jest": {
       useESM: true,
@@ -9,29 +9,33 @@ module.exports = {
   },
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
-  }, // testEnvironment: "jsdom",
-  // moduleNameMapper: {
-  //   // "@hcikit/example(.*)$": "<rootDir>/./example/src/$1",
-  //   "@hcikit/workflow(.*)$": "<rootDir>/packages/./workflow/src/$1",
-  //   "@hcikit/react(.*)$": "<rootDir>/packages/./react/src/$1",
-  // },
-  // modulePathIgnorePatterns: ["/dist/", "/node_modules/"],
-  // testPathIgnorePatterns: ["/dist/", "/node_modules/"],
-  // transformIgnorePatterns: ["/dist/", "/node_modules/"],
-  projects: [
-    "<rootDir>/packages/react",
-    "<rootDir>/packages/workflow",
-    "<rootDir>/example",
-    "<rootDir>/example-typescript",
-  ],
+  },
+};
 
-  // collectCoverageFrom: [
-  //   "src/**/*.{js,jsx}",
-  //   "!/node_modules/",
-  //   "!src/registerServiceWorker.js",
-  //   "!src/stories/*",
-  //   "!src/experiments/*",
-  //   "!src/setupTests.js",
-  //   "!src/**/*.stories.js",
-  // ],
+module.exports = {
+  projects: [
+    {
+      ...testDefault,
+
+      displayName: "@hcikit/react",
+      roots: ["<rootDir>/packages/react"],
+    },
+    {
+      ...testDefault,
+
+      displayName: "@hcikit/workflow",
+      roots: ["<rootDir>/packages/workflow"],
+    },
+    {
+      ...testDefault,
+      displayName: "@hcikit/example",
+      testMatch: ["<rootDir>/example"],
+    },
+    {
+      ...testDefault,
+
+      displayName: "@hcikit/example-typescript",
+      roots: ["<rootDir>/example-typescript"],
+    },
+  ],
 };

@@ -1,9 +1,9 @@
 import React from "react";
-import { range, noop } from "lodash";
+import { range, noop } from "lodash-es";
 import styled from "styled-components";
 import PropTypes from "prop-types";
-import { withGridItem } from "../GridLayout";
-import { useExperiment } from "../core/Experiment";
+import { withGridItem } from "../GridLayout.js";
+import { useExperiment } from "../core/Experiment.js";
 
 const Target = styled.circle<{ active: boolean }>`
   fill: ${({ active }) => (active ? "#FF8080" : "#ccc")};

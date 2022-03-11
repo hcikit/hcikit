@@ -1,17 +1,17 @@
 import React, { PropsWithChildren, ReactElement } from "react";
-import { ControlFunctions } from "./core/Experiment";
-import * as allTasks from "./tasks";
+import { ControlFunctions } from "./core/Experiment.js";
+import * as allTasks from "./tasks/index.js";
 
-export * from "./tasks";
-export * from "./components";
+export * from "./tasks/index.js";
+export * from "./components/index.js";
 
 export { allTasks };
 
-export { withGridItem } from "./GridLayout";
+export { withGridItem } from "./GridLayout.js";
 
-export { default as GridLayout } from "./GridLayout";
-export { default } from "./core/Experiment";
-export * from "./core/Experiment";
+export { default as GridLayout } from "./GridLayout.js";
+export { default } from "./core/Experiment.js";
+export * from "./core/Experiment.js";
 
 export interface FunctionTask<P = {}>
   extends React.FunctionComponent<P & ControlFunctions> {

@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import PropTypes from "prop-types";
-import { useExperiment } from "../core/Experiment";
+import { useExperiment } from "../core/Experiment.js";
 
 const LeftCenter = styled.div`
   position: absolute;

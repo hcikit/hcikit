@@ -30,6 +30,9 @@ const getAnimation = (time: number) => {
   return times[time];
 };
 
+console.log(styled);
+console.log("UHMMMMMMMMMMMMMMMMMMMMMMM");
+
 const Outer = styled.div`
   background-color: rgb(240, 132, 171);
   width: 100%;

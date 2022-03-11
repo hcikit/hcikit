@@ -3,9 +3,9 @@ import Experiment, {
   saveStateToSessionStorage,
   useConfiguration,
   useExperiment,
-} from "./Experiment";
-import DevTools from "../tasks/DevTools";
-import DisplayText from "../tasks/DisplayTextTask";
+} from "./Experiment.js";
+import DevTools from "../tasks/DevTools.js";
+import DisplayText from "../tasks/DisplayTextTask.js";
 import { render, screen, cleanup } from "@testing-library/react";
 import { Configuration, Log } from "@hcikit/workflow";
 import userEvent from "@testing-library/user-event";

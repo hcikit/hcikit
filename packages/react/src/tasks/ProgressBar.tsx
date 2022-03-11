@@ -1,5 +1,5 @@
 import React from "react";
-import { LinearProgress } from "@material-ui/core";
+import { LinearProgress } from "@mui/material";
 import {
   getConfigurationAtIndex,
   indexToTaskNumber,
@@ -8,9 +8,9 @@ import {
   getLeafIndex,
 } from "@hcikit/workflow";
 
-import { withGridItem } from "../GridLayout";
+import { withGridItem } from "../GridLayout.js";
 import PropTypes from "prop-types";
-import { useConfiguration } from "../core/Experiment";
+import { useConfiguration } from "../core/Experiment.js";
 
 // BUG: I think there might be an off by one error, check the example
 

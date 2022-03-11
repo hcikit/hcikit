@@ -1,7 +1,7 @@
 import React from "react";
 import { CenteredNicePaper, useExperiment, withGridItem } from "@hcikit/react";
-import { Typography } from "@material-ui/core";
-import { Button } from "@material-ui/core";
+import { Typography } from "@mui/material";
+import { Button } from "@mui/material";
 
 const IncrementTask = ({ desiredValue, value = 0, log }) => {
   let { advance, modify } = useExperiment();

@@ -1,8 +1,8 @@
 import React from "react";
-import InformationScreen from "./InformationScreen";
+import InformationScreen from "./InformationScreen.js";
 import { fireEvent, screen } from "@testing-library/react";
 
-import { renderWithProvider } from "../test-utils";
+import { renderWithProvider } from "../test-utils.js";
 
 describe("InformationScreen", () => {
   it("renders without crashing", () => {

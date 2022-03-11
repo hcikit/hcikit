@@ -1,7 +1,7 @@
 import React from "react";
-import DisplayTextTask from "./DisplayTextTask";
+import DisplayTextTask from "./DisplayTextTask.js";
 import { screen } from "@testing-library/react";
-import { renderWithProvider } from "../test-utils";
+import { renderWithProvider } from "../test-utils.js";
 
 describe("DisplayTextTask", () => {
   it("renders without crashing", () => {

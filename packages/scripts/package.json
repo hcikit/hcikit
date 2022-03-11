@@ -23,7 +23,7 @@
     "glob": "^7.2.0",
     "glob-promise": "^4.2.2",
     "json2csv": "^5.0.7",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "mime-types": "^2.1.34",
     "s3-sync-client": "^1.5.1",
     "yargs": "^17.3.1"

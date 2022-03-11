@@ -1,7 +1,7 @@
-import { throttle, pick } from "lodash";
+import { throttle, pick } from "lodash-es";
 import { useEffect } from "react";
 // import PropTypes from "prop-types";
-import { useExperiment } from "../core/Experiment";
+import { useExperiment } from "../core/Experiment.js";
 
 /**
  * TODO:

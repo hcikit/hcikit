@@ -1,9 +1,9 @@
 import React from "react";
-import { Button } from "@material-ui/core";
-import { CenteredDiv, CenteredText } from "../components";
+import { Button } from "@mui/material";
+import { CenteredDiv, CenteredText } from "../components/index.js";
 import PropTypes from "prop-types";
-import { withGridItem } from "../GridLayout";
-import { useExperiment } from "../core/Experiment";
+import { withGridItem } from "../GridLayout.js";
+import { useExperiment } from "../core/Experiment.js";
 /**
  * Creates a simple ane small piece of text in the middle of the screen with a continue button.
  */

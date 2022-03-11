@@ -1,13 +1,13 @@
 import React from "react";
-import { Stepper, Step, StepLabel } from "@material-ui/core";
-import { withGridItem } from "../GridLayout";
+import { Stepper, Step, StepLabel } from "@mui/material";
+import { withGridItem } from "../GridLayout.js";
 import {
   getCurrentIndex,
   getConfigurationAtIndex,
   getLeafIndex,
 } from "@hcikit/workflow";
-import { useConfiguration, useExperiment } from "../core/Experiment";
-import { startCase } from "lodash";
+import { useConfiguration, useExperiment } from "../core/Experiment.js";
+import { startCase } from "lodash-es";
 
 // TODO: is labela  good name?
 const NoGridWizardProgress: React.FunctionComponent<{ depth: number }> = ({

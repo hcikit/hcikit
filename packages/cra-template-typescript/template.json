@@ -3,8 +3,11 @@
     "dependencies": {
       "@hcikit/react": "latest",
       "@hcikit/scripts": "latest",
-      "@material-ui/core": "^4.9.11",
-      "@material-ui/icons": "^4.9.1",
+      "@emotion/react": "^11.8.2",
+      "@emotion/styled": "^11.8.1",
+      "@mui/icons-material": "^5.5.0",
+      "@mui/material": "^5.5.0",
+      "@mui/styles": "^5.5.0",
       "@testing-library/jest-dom": "^5.11.4",
       "@testing-library/react": "^11.1.0",
       "@testing-library/user-event": "^12.1.10",

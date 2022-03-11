@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
-import { isEqual } from "lodash";
+import { isEqual } from "lodash-es";
 import PropTypes from "prop-types";
 
 export class ScreenFlash extends React.Component<{ times: number }> {

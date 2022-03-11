@@ -4,7 +4,7 @@ import {
   ConfigContext,
   ConfigMutatorContext,
   ControlFunctions,
-} from "./core/Experiment";
+} from "./core/Experiment.js";
 import { Configuration, ExperimentIndex } from "@hcikit/workflow";
 import React from "react";
 

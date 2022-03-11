@@ -8,12 +8,12 @@ import {
   FormControl,
   FormHelperText,
   FormGroup,
-} from "@material-ui/core";
+} from "@mui/material";
 
-import { CenteredNicePaper } from "../components";
-import { withGridItem } from "../GridLayout";
+import { CenteredNicePaper } from "../components/index.js";
+import { withGridItem } from "../GridLayout.js";
 import { useState } from "react";
-import { useExperiment } from "../core/Experiment";
+import { useExperiment } from "../core/Experiment.js";
 
 export const ConsentForm: React.FunctionComponent<{
   content: string;

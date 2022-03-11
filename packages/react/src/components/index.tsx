@@ -1,7 +1,9 @@
 import styled from "styled-components";
-import { Paper } from "@material-ui/core";
+import { Paper } from "@mui/material";
 import React from "react";
 import PropTypes from "prop-types";
+
+console.log(styled);
 
 export const NicePaper = styled(Paper)`
   max-width: 800px;
@@ -54,6 +56,6 @@ export const CenteredText = styled.div`
   text-align: center;
 `;
 
-export { LinearTimer } from "./LinearTimer";
-export { ScreenFlash } from "./ScreenFlash";
-export { default as ErrorOverlay } from "./ErrorOverlay";
+export { LinearTimer } from "./LinearTimer.js";
+export { ScreenFlash } from "./ScreenFlash.js";
+export { default as ErrorOverlay } from "./ErrorOverlay.js";
