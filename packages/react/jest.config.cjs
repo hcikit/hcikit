@@ -2,9 +2,19 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "jsdom",
-  moduleNameMapper: {
-    "@hcikit/workflow(.*)$": "<rootDir>/../workflow/src$1",
+  extensionsToTreatAsEsm: [".ts"],
+  globals: {
+    "ts-jest": {
+      useESM: true,
+    },
   },
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+  },
+
+  // moduleNameMapper: {
+  //   "@hcikit/workflow(.*)$": "<rootDir>/../workflow/src$1",
+  // },
   testMatch: ["./src/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[t]s?(x)"],
   modulePathIgnorePatterns: ["./dist/", "./node_modules/"],
   testPathIgnorePatterns: ["./dist/", "./node_modules/"],

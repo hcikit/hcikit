@@ -1,7 +1,15 @@
 /** @type {import('@ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
-  preset: "ts-jest",
-  // testEnvironment: "jsdom",
+  // preset: "ts-jest",
+  extensionsToTreatAsEsm: [".ts"],
+  globals: {
+    "ts-jest": {
+      useESM: true,
+    },
+  },
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+  }, // testEnvironment: "jsdom",
   // moduleNameMapper: {
   //   // "@hcikit/example(.*)$": "<rootDir>/./example/src/$1",
   //   "@hcikit/workflow(.*)$": "<rootDir>/packages/./workflow/src/$1",
@@ -16,6 +24,7 @@ module.exports = {
     "<rootDir>/example",
     "<rootDir>/example-typescript",
   ],
+
   // collectCoverageFrom: [
   //   "src/**/*.{js,jsx}",
   //   "!/node_modules/",
