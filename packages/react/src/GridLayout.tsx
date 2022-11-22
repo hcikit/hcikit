@@ -25,12 +25,16 @@ export function withGridItem<T extends Record<string, unknown>>(
   return GridItem;
 }
 
+interface Props {
+  children: React.ReactNode | React.ReactNode[];
+}
+
 /**
  *
  * This component is a layout component that can be passed to an Experiment
  * using <Experimnent Layout={GridLayout}/>. This is already done by default
  */
-const GridLayout: React.FunctionComponent = ({ children }) => {
+const GridLayout: React.FunctionComponent<Props> = ({ children }) => {
   return (
     <div
       id="grid-layout"
@@ -58,6 +62,7 @@ const GridLayout: React.FunctionComponent = ({ children }) => {
 };
 
 GridLayout.propTypes = {
+  // @ts-ignore
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,

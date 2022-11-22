@@ -1,7 +1,6 @@
 import React from "react";
 import { CenteredNicePaper, useExperiment, withGridItem } from "@hcikit/react";
-import { Typography } from "@material-ui/core";
-import { Button } from "@material-ui/core";
+import { Typography, Button } from "@mui/material";
 
 const IncrementTask: React.FunctionComponent<{
   desiredValue: number;

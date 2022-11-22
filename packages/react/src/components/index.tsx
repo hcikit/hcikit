@@ -3,8 +3,6 @@ import { Paper } from "@mui/material";
 import React from "react";
 import PropTypes from "prop-types";
 
-console.log(styled);
-
 export const NicePaper = styled(Paper)`
   max-width: 800px;
   margin: 20px;
@@ -27,6 +25,7 @@ FlexCenter.propTypes = {
 export const CenteredDiv: React.FunctionComponent<{
   centerX?: boolean;
   centerY?: boolean;
+  children: React.ReactNode | React.ReactNode[];
 }> = ({ children, centerX = true, centerY = false }) => (
   <FlexCenter centerX={centerX} centerY={centerY}>
     <div>{children}</div>
@@ -41,6 +40,7 @@ CenteredDiv.propTypes = {
 export const CenteredNicePaper: React.FunctionComponent<{
   centerX?: boolean;
   centerY?: boolean;
+  children: React.ReactNode | React.ReactNode[];
 }> = ({ children, centerX = true, centerY = false }) => (
   <CenteredDiv centerX={centerX} centerY={centerY}>
     <NicePaper>{children}</NicePaper>

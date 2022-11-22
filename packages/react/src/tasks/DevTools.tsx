@@ -40,8 +40,6 @@ const StyledSlider = styled(Slider)`
  */
 
 export const DevTools: React.FunctionComponent = () => {
-  console.log(SkipNext);
-
   const configuration = useConfiguration();
   const experiment = useExperiment();
 

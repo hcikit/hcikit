@@ -1,6 +1,6 @@
 import React from "react";
-import styled from "styled-components";
 import { Paper } from "@mui/material";
+import styled from "styled-components";
 
 const Overlay = styled.div`
   position: absolute;
@@ -22,7 +22,11 @@ const ErrorPane = styled(Paper)`
   padding: 50px;
 `;
 
-const ErrorOverlay: React.FunctionComponent = ({ children }) => {
+interface Props {
+  children: React.ReactNode | React.ReactNode[];
+}
+
+const ErrorOverlay: React.FunctionComponent<Props> = ({ children }) => {
   return (
     <Overlay>
       <ErrorPane>{children}</ErrorPane>

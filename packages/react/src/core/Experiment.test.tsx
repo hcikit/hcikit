@@ -90,7 +90,7 @@ const ButtonTask: React.FunctionComponent<{
         {text}
       </button>
       <p className="logs" data-testid="logs">
-        {logs}
+        {JSON.stringify(logs, null, 2)}
       </p>
       <p>{configVal}</p>
       <span onClick={() => modify({ configVal: "world" })}>Modify Config</span>
@@ -681,9 +681,8 @@ describe("Experiment", () => {
 
 describe("ErrorHandler", () => {
   it("handles errors properly", () => {
-    jest
-      .useFakeTimers("modern")
-      .setSystemTime(new Date("2020-01-01").getTime());
+    // TODO: this mighta been a bad idea because I removed the modern flag
+    jest.useFakeTimers().setSystemTime(new Date("2020-01-01").getTime());
 
     jest.spyOn(console, "error").mockImplementation(() => {
       //do nothing

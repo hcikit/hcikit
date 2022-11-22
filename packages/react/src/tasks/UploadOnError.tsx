@@ -13,6 +13,7 @@ interface UploadOnErrorProps {
   experiment: ControlFunctions;
   configuration: Configuration;
   Uploader: React.ComponentType<Record<string, unknown>>;
+  children?: React.ReactNode | React.ReactNode[];
 }
 
 // TODO: rewrite all of this to use the upload component because I changed how error handlers work.

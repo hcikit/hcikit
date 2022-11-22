@@ -1,6 +1,9 @@
 import styled, { keyframes } from "styled-components";
 import React from "react";
 
+// import _styled from '@emotion/styled';
+// const styled = _styled.default || _styled;
+
 const times: Array<React.ReactElement> = [];
 
 const createAnimation = (time: number) => {
@@ -29,9 +32,6 @@ const getAnimation = (time: number) => {
 
   return times[time];
 };
-
-console.log(styled);
-console.log("UHMMMMMMMMMMMMMMMMMMMMMMM");
 
 const Outer = styled.div`
   background-color: rgb(240, 132, 171);

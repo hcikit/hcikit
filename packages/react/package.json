@@ -47,26 +47,26 @@
   },
   "dependencies": {
     "@hcikit/workflow": "workspace:*",
-    "core-js": "^3.21.1",
+    "core-js": "^3.26.1",
     "lodash-es": "^4.17.21",
     "markdown-to-jsx": "^7.1.7",
     "prop-types": "^15.8.1",
     "react-error-boundary": "^3.1.4",
-    "react-is": "^17.0.2",
-    "serialize-error": "^8.1.0",
-    "styled-components": "^5.3.3"
+    "react-is": "^18.2.0",
+    "serialize-error": "^11.0.0",
+    "styled-components": "^5.3.6"
   },
   "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86",
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.16.2",
-    "@testing-library/react": "^12.1.4",
-    "@types/jest": "^27.4.1",
-    "@types/react": "^17.0.40",
-    "@types/styled-components": "^5.1.24",
-    "jest-diff": "^27.5.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "^5.0.0",
-    "typescript": "^4.6.2"
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@types/jest": "^29.2.3",
+    "@types/react": "^18.0.25",
+    "@types/styled-components": "^5.1.26",
+    "jest-diff": "^29.3.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "typescript": "^4.9.3"
   }
 }

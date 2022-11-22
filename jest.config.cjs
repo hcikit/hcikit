@@ -9,6 +9,8 @@ const testDefault = {
   },
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
+    "markdown-to-jsx":
+      "<rootDir>/node_modules/markdown-to-jsx/dist/index.module.js",
   },
 };
 
