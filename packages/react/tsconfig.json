@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "include": ["src/**/*"],
   // "exclude": ["node_modules", "**/*.test.ts"],
-  "exclude": ["**/*.test.ts", "**/setupTests.ts"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "**/setupTests.ts"],
 
   "compilerOptions": {
     "baseUrl": "./",

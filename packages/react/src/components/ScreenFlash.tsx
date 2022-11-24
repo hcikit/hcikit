@@ -1,7 +1,11 @@
 import React from "react";
-import styled, { keyframes } from "styled-components";
 import { isEqual } from "lodash-es";
 import PropTypes from "prop-types";
+import _styled, { keyframes } from "styled-components";
+
+const styled: typeof _styled =
+  ((_styled as unknown as { default: typeof _styled })
+    .default as typeof _styled) || _styled;
 
 export class ScreenFlash extends React.Component<{ times: number }> {
   propTypes = {

@@ -3,6 +3,7 @@ import WizardProgress from "./WizardProgress.js";
 import { render, screen } from "@testing-library/react";
 import Experiment, { useExperiment } from "../core/Experiment.js";
 import { Configuration } from "@hcikit/workflow";
+import userEvent from "@testing-library/user-event";
 
 let BlankTask: React.FunctionComponent = () => null;
 
@@ -72,14 +73,12 @@ describe("WizardProgress", () => {
       />
     );
 
-    expect(screen.getByText("hello world")).toHaveClass("MuiStepLabel-active");
-    expect(screen.getByText("Blank Task")).not.toHaveClass(
-      "MuiStepLabel-active"
-    );
-    expect(screen.getByText("labels")).not.toHaveClass("MuiStepLabel-active");
+    expect(screen.getByText("hello world")).toHaveClass("Mui-active");
+    expect(screen.getByText("Blank Task")).not.toHaveClass("Mui-active");
+    expect(screen.getByText("labels")).not.toHaveClass("Mui-active");
   });
 
-  it("Skips skipped tasks and doesn't break", () => {
+  it("Skips skipped tasks and doesn't break", async () => {
     render(
       <Experiment
         tasks={{
@@ -101,9 +100,9 @@ describe("WizardProgress", () => {
     expect(task3).not.toBeInTheDocument();
     expect(task5).not.toBeInTheDocument();
 
-    expect(screen.getByText("[0]")).toHaveClass("MuiStepLabel-active");
-    screen.getByText("advance").click();
-    screen.getByText("advance").click();
+    expect(screen.getByText("[0]")).toHaveClass("Mui-active");
+    await userEvent.click(screen.getByText("advance"));
+    await userEvent.click(screen.getByText("advance"));
 
     task2 = screen.queryByText("[2]");
     task3 = screen.queryByText("[3]");
@@ -112,15 +111,15 @@ describe("WizardProgress", () => {
     expect(task3).not.toBeInTheDocument();
     expect(task5).not.toBeInTheDocument();
 
-    expect(screen.getByText("[1]")).toHaveClass("MuiStepLabel-active");
-    screen.getByText("advance").click();
-    expect(screen.getByText("[1]")).toHaveClass("MuiStepLabel-active");
-    screen.getByText("advance").click();
-    expect(screen.getByText("[4]")).toHaveClass("MuiStepLabel-active");
-    screen.getByText("advance").click();
-    expect(screen.getByText("[4]")).toHaveClass("MuiStepLabel-active");
-    screen.getByText("advance").click();
-    expect(screen.getByText("[6]")).toHaveClass("MuiStepLabel-active");
+    expect(screen.getByText("[1]")).toHaveClass("Mui-active");
+    await userEvent.click(screen.getByText("advance"));
+    expect(screen.getByText("[1]")).toHaveClass("Mui-active");
+    await userEvent.click(screen.getByText("advance"));
+    expect(screen.getByText("[4]")).toHaveClass("Mui-active");
+    await userEvent.click(screen.getByText("advance"));
+    expect(screen.getByText("[4]")).toHaveClass("Mui-active");
+    await userEvent.click(screen.getByText("advance"));
+    expect(screen.getByText("[6]")).toHaveClass("Mui-active");
 
     task2 = screen.queryByText("[2]");
     task3 = screen.queryByText("[3]");
@@ -144,11 +143,9 @@ describe("WizardProgress", () => {
       />
     );
 
-    expect(screen.getByText("hello world")).not.toHaveClass(
-      "MuiStepLabel-active"
-    );
-    expect(screen.getByText("Blank Task")).toHaveClass("MuiStepLabel-active");
-    expect(screen.getByText("labels")).not.toHaveClass("MuiStepLabel-active");
+    expect(screen.getByText("hello world")).not.toHaveClass("Mui-active");
+    expect(screen.getByText("Blank Task")).toHaveClass("Mui-active");
+    expect(screen.getByText("labels")).not.toHaveClass("Mui-active");
   });
 
   it("renders correct depth parameter", () => {
@@ -164,8 +161,8 @@ describe("WizardProgress", () => {
         loadState={null}
       />
     );
-    expect(screen.getByText("0,0")).toHaveClass("MuiStepLabel-active");
-    expect(screen.getByText("0,1")).not.toHaveClass("MuiStepLabel-active");
+    expect(screen.getByText("0,0")).toHaveClass("Mui-active");
+    expect(screen.getByText("0,1")).not.toHaveClass("Mui-active");
   });
   it("renders correct depth parameter with second one", () => {
     render(
@@ -181,11 +178,11 @@ describe("WizardProgress", () => {
       />
     );
 
-    expect(screen.getByText("1,0")).toHaveClass("MuiStepLabel-active");
+    expect(screen.getByText("1,0")).toHaveClass("Mui-active");
     screen.getByText("1,1");
   });
 
-  it("updates properly", () => {
+  it("updates properly", async () => {
     render(
       <Experiment
         tasks={{
@@ -199,13 +196,13 @@ describe("WizardProgress", () => {
       />
     );
 
-    expect(screen.getByText("0,0")).toHaveClass("MuiStepLabel-active");
-    screen.getByText("advance").click();
-    expect(screen.getByText("0,1")).toHaveClass("MuiStepLabel-active");
-    screen.getByText("advance").click();
-    expect(screen.getByText("1,0")).toHaveClass("MuiStepLabel-active");
-    screen.getByText("advance").click();
-    expect(screen.getByText("1,1")).toHaveClass("MuiStepLabel-active");
+    expect(screen.getByText("0,0")).toHaveClass("Mui-active");
+    await userEvent.click(screen.getByText("advance"));
+    expect(screen.getByText("0,1")).toHaveClass("Mui-active");
+    await userEvent.click(screen.getByText("advance"));
+    expect(screen.getByText("1,0")).toHaveClass("Mui-active");
+    await userEvent.click(screen.getByText("advance"));
+    expect(screen.getByText("1,1")).toHaveClass("Mui-active");
   });
 
   it("renders correctly", () => {

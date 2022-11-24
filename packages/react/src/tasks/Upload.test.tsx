@@ -3,6 +3,13 @@ import { Upload } from "./Upload.js";
 import { screen, act } from "@testing-library/react";
 
 import { renderWithProvider } from "../test-utils.js";
+import userEvent from "@testing-library/user-event";
+import { jest } from "@jest/globals";
+import { Configuration } from "@hcikit/workflow";
+
+let userEventOverloaded = userEvent.setup({
+  advanceTimers: jest.advanceTimersByTime,
+});
 
 let err = console.error;
 describe("Upload", () => {
@@ -27,7 +34,7 @@ describe("Upload", () => {
         outerResolve = resolve;
       });
       return lastPromise;
-    });
+    }) as (filename: string, config: Configuration) => Promise<any>;
 
     let advance = jest.fn();
 
@@ -66,7 +73,7 @@ describe("Upload", () => {
         outerReject = reject;
       });
       return lastPromise;
-    });
+    }) as (filename: string, config: Configuration) => Promise<any>;
 
     let advance = jest.fn();
 
@@ -104,7 +111,7 @@ describe("Upload", () => {
         new Promise((resolve) => {
           outerResolve = resolve;
         })
-    );
+    ) as (filename: string, config: Configuration) => Promise<any>;
 
     let advance = jest.fn();
 
@@ -144,7 +151,7 @@ describe("Upload", () => {
         outerResolve = resolve;
       });
       return lastPromise;
-    });
+    }) as (filename: string, config: Configuration) => Promise<any>;
 
     let advance = jest.fn();
 
@@ -192,7 +199,7 @@ describe("Upload", () => {
         outerResolve = resolve;
       });
       return lastPromise;
-    });
+    }) as (filename: string, config: Configuration) => Promise<any>;
 
     let advance = jest.fn();
 
@@ -264,7 +271,7 @@ describe("Upload", () => {
         outerReject = reject;
       });
       return lastPromise;
-    });
+    }) as (filename: string, config: Configuration) => Promise<any>;
 
     let advance = jest.fn();
 
@@ -330,7 +337,7 @@ describe("Upload", () => {
 
     expect(filledConfig).toEqual({ task: "myTask", config: "config" });
 
-    screen.getByText("Continue").click();
+    await userEventOverloaded.click(screen.getByText("Continue"));
 
     expect(advance).toHaveBeenCalledWith();
   });
@@ -347,7 +354,7 @@ describe("Upload", () => {
         outerResolve = resolve;
       });
       return lastPromise;
-    });
+    }) as (filename: string, config: Configuration) => Promise<any>;
 
     renderWithProvider(
       <Upload

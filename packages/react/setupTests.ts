@@ -1,5 +1,7 @@
 import "@testing-library/jest-dom";
 
+console.log("heloo");
+
 // jest.mock("styled-components", () => {
 //   const actual = jest.requireActual(
 //     "styled-components"

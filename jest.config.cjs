@@ -1,17 +1,26 @@
 /** @type {import('@ts-jest/dist/types').InitialOptionsTsJest} */
-
 const testDefault = {
   preset: "ts-jest/presets/default-esm", // or other ESM presets
-  globals: {
-    "ts-jest": {
-      useESM: true,
-    },
+  // globals: {
+  //   "ts-jest": {
+  //     useESM: true,
+  //   },
+  // },
+  transform: {
+    // '^.+\\.[tj]sx?$' to process js/ts with `ts-jest`
+    // '^.+\\.m?[tj]sx?$' to process js/ts/mjs/mts with `ts-jest`
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        useESM: true,
+      },
+    ],
   },
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
-    "markdown-to-jsx":
-      "<rootDir>/node_modules/markdown-to-jsx/dist/index.module.js",
   },
+  testEnvironment: "jsdom",
+  setupFilesAfterEnv: ["@testing-library/jest-dom/extend-expect"],
 };
 
 module.exports = {

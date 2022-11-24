@@ -3,6 +3,7 @@ import FocusChecker from "./FocusChecker.js";
 import { fireEvent, screen } from "@testing-library/react";
 
 import { renderWithProvider } from "../test-utils.js";
+import { jest } from "@jest/globals";
 
 describe("FocusChecker", () => {
   it("renders nothing when correct", () => {

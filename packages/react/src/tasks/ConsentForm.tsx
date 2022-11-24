@@ -1,5 +1,5 @@
 import React from "react";
-import Markdown from "markdown-to-jsx";
+import ReactMarkdown from "react-markdown";
 
 import {
   Button,
@@ -40,7 +40,7 @@ export const ConsentForm: React.FunctionComponent<{
 
   return (
     <CenteredNicePaper>
-      <Markdown>{content}</Markdown>
+      <ReactMarkdown>{content}</ReactMarkdown>
       <FormControl required error={!isFormComplete()}>
         <FormGroup>
           {questions.map((question) => {

@@ -2,6 +2,8 @@ import React from "react";
 import ConsentForm from "./ConsentForm.js";
 import { screen } from "@testing-library/react";
 import { renderWithProvider } from "../test-utils.js";
+import { jest } from "@jest/globals";
+import userEvent from "@testing-library/user-event";
 
 describe("ConsentForm", () => {
   it("renders without crashing", () => {
@@ -13,7 +15,7 @@ describe("ConsentForm", () => {
     );
   });
 
-  it("doesn't advance if consent not given", () => {
+  it("doesn't advance if consent not given", async () => {
     const advance = jest.fn();
 
     renderWithProvider(
@@ -26,12 +28,12 @@ describe("ConsentForm", () => {
       }
     );
 
-    screen.getByText("Submit").click();
+    await userEvent.click(screen.getByText("Submit"));
     expect(advance).toBeCalledTimes(0);
     screen.getByText("Required consent not given.");
   });
 
-  it("advances only when all consent is given", () => {
+  it("advances only when all consent is given", async () => {
     const advance = jest.fn();
 
     renderWithProvider(
@@ -47,17 +49,17 @@ describe("ConsentForm", () => {
       }
     );
 
-    screen.getByText("* I consent").click();
-    screen.getByText("Submit").click();
+    await userEvent.click(screen.getByText("* I consent"));
+    await userEvent.click(screen.getByText("Submit"));
     expect(advance).toBeCalledTimes(0);
     screen.getByText("Required consent not given.");
 
-    screen.getByText("* I consent again").click();
-    screen.getByText("Submit").click();
+    await userEvent.click(screen.getByText("* I consent again"));
+    await userEvent.click(screen.getByText("Submit"));
     expect(advance).toBeCalledTimes(1);
   });
 
-  it("advances when optionals left blank", () => {
+  it("advances when optionals left blank", async () => {
     const advance = jest.fn();
 
     renderWithProvider(
@@ -73,12 +75,12 @@ describe("ConsentForm", () => {
       }
     );
 
-    screen.getByText("* I consent").click();
-    screen.getByText("Submit").click();
+    await userEvent.click(screen.getByText("* I consent"));
+    await userEvent.click(screen.getByText("Submit"));
     expect(advance).toBeCalledTimes(1);
   });
 
-  it("advances when consent given", () => {
+  it("advances when consent given", async () => {
     const advance = jest.fn();
 
     renderWithProvider(
@@ -90,8 +92,8 @@ describe("ConsentForm", () => {
         advance,
       }
     );
-    screen.getByText("* I consent").click();
-    screen.getByText("Submit").click();
+    await userEvent.click(screen.getByText("* I consent"));
+    await userEvent.click(screen.getByText("Submit"));
     expect(advance).toBeCalledTimes(1);
   });
 

@@ -6,7 +6,6 @@ import SkipPreviousIcon from "@mui/icons-material/SkipPrevious.js";
 import SkipPrevious from "@mui/icons-material/SkipPrevious.js";
 import FastRewind from "@mui/icons-material/FastRewind.js";
 
-import styled from "styled-components";
 import {
   taskNumberToIndex,
   indexToTaskNumber,
@@ -15,6 +14,12 @@ import {
   getTotalTasks,
   getCurrentIndex,
 } from "@hcikit/workflow";
+
+import _styled from "styled-components";
+
+const styled: typeof _styled =
+  ((_styled as unknown as { default: typeof _styled })
+    .default as typeof _styled) || _styled;
 
 // TODO: making all of material ui icons a peer dependency instead of a dependency seems silly when they're probably just svgs abnd not dependent on the rest of material ui.
 

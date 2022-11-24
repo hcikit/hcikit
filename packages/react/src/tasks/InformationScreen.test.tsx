@@ -3,6 +3,8 @@ import InformationScreen from "./InformationScreen.js";
 import { fireEvent, screen } from "@testing-library/react";
 
 import { renderWithProvider } from "../test-utils.js";
+import userEvent from "@testing-library/user-event";
+import { jest } from "@jest/globals";
 
 describe("InformationScreen", () => {
   it("renders without crashing", () => {
@@ -16,13 +18,13 @@ describe("InformationScreen", () => {
     expect(screen.queryByText("Continue")).not.toBeInTheDocument();
   });
 
-  it("advances to the next task", () => {
+  it("advances to the next task", async () => {
     const advance = jest.fn();
     renderWithProvider(<InformationScreen content="Hello World" />, {
       advance,
     });
 
-    screen.getByText("Continue").click();
+    await userEvent.click(screen.getByText("Continue"));
     expect(advance).toBeCalledTimes(1);
   });
 
@@ -38,6 +40,7 @@ describe("InformationScreen", () => {
       { advance }
     );
 
+    // TODO: this test is likely broken atm, missing an act
     fireEvent.keyDown(rendered.baseElement, { key: "Enter", code: "Enter" });
 
     expect(advance).not.toHaveBeenCalled();

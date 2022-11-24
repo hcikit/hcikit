@@ -1,8 +1,12 @@
 import React from "react";
-import styled from "styled-components";
 import { Button } from "@mui/material";
 import PropTypes from "prop-types";
 import { useExperiment } from "../core/Experiment.js";
+import _styled from "styled-components";
+
+const styled: typeof _styled =
+  ((_styled as unknown as { default: typeof _styled })
+    .default as typeof _styled) || _styled;
 
 const LeftCenter = styled.div`
   position: absolute;

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Markdown from "markdown-to-jsx";
+import Markdown from "react-markdown";
 
 import { Button } from "@mui/material";
 import { CenteredNicePaper } from "../components/index.js";

@@ -1,7 +1,11 @@
-import styled from "styled-components";
 import { Paper } from "@mui/material";
 import React from "react";
 import PropTypes from "prop-types";
+import _styled from "styled-components";
+
+const styled: typeof _styled =
+  ((_styled as unknown as { default: typeof _styled })
+    .default as typeof _styled) || _styled;
 
 export const NicePaper = styled(Paper)`
   max-width: 800px;

@@ -3,6 +3,7 @@ import ResolutionChecker from "./ResolutionChecker.js";
 import { fireEvent, screen } from "@testing-library/react";
 
 import { renderWithProvider } from "../test-utils.js";
+import { jest } from "@jest/globals";
 
 let props = {
   maxXResolution: 1000,

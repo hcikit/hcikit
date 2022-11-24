@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import { withGridItem } from "../GridLayout.js";
 import { CenteredDiv } from "../components/index.js";
 import PropTypes from "prop-types";
 import { useExperiment } from "../core/Experiment.js";
+import _styled from "styled-components";
+
+const styled: typeof _styled =
+  ((_styled as unknown as { default: typeof _styled })
+    .default as typeof _styled) || _styled;
 
 const Content = styled.span`
   display: table-cell;

@@ -4,29 +4,29 @@ exports[`WizardProgress renders correctly 1`] = `
 <DocumentFragment>
   <div
     id="grid-layout"
-    style="display: grid; width: 100%; height: 100%; grid-template-columns: 1fr; grid-template-rows: min-content 1fr min-content; grid-template-areas: \\"header\\"
-      \\"task\\"
-      \\"footer\\";"
+    style="display: grid; width: 100%; height: 100%; grid-template-columns: 1fr; grid-template-rows: min-content 1fr min-content; grid-template-areas: "header"
+      "task"
+      "footer";"
   >
     <div
       style="grid-area: header;"
     >
       <div
-        class="MuiPaper-root MuiStepper-root MuiStepper-horizontal MuiPaper-elevation0"
+        class="MuiStepper-root MuiStepper-horizontal css-m5vj9m-MuiStepper-root"
       >
         <div
-          class="MuiStep-root MuiStep-horizontal"
+          class="MuiStep-root MuiStep-horizontal css-1bw0nnu-MuiStep-root"
           style="cursor: default;"
         >
           <span
-            class="MuiStepLabel-root MuiStepLabel-horizontal"
+            class="MuiStepLabel-root MuiStepLabel-horizontal css-ascpo7-MuiStepLabel-root"
           >
             <span
-              class="MuiStepLabel-iconContainer"
+              class="MuiStepLabel-iconContainer Mui-active css-vnkopk-MuiStepLabel-iconContainer"
             >
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root MuiStepIcon-root MuiStepIcon-active"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiStepIcon-root Mui-active css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root"
                 focusable="false"
                 viewBox="0 0 24 24"
               >
@@ -36,20 +36,21 @@ exports[`WizardProgress renders correctly 1`] = `
                   r="12"
                 />
                 <text
-                  class="MuiStepIcon-text"
+                  class="MuiStepIcon-text css-117w1su-MuiStepIcon-text"
+                  dominant-baseline="central"
                   text-anchor="middle"
                   x="12"
-                  y="16"
+                  y="12"
                 >
                   1
                 </text>
               </svg>
             </span>
             <span
-              class="MuiStepLabel-labelContainer"
+              class="MuiStepLabel-labelContainer css-1vyamtt-MuiStepLabel-labelContainer"
             >
               <span
-                class="MuiTypography-root MuiStepLabel-label MuiStepLabel-active MuiTypography-body2 MuiTypography-displayBlock"
+                class="MuiStepLabel-label Mui-active css-1hv8oq8-MuiStepLabel-label"
               >
                 0,0
               </span>
@@ -57,25 +58,25 @@ exports[`WizardProgress renders correctly 1`] = `
           </span>
         </div>
         <div
-          class="MuiStepConnector-root MuiStepConnector-horizontal Mui-disabled"
+          class="MuiStepConnector-root MuiStepConnector-horizontal Mui-disabled css-j5w0w9-MuiStepConnector-root"
         >
           <span
-            class="MuiStepConnector-line MuiStepConnector-lineHorizontal"
+            class="MuiStepConnector-line MuiStepConnector-lineHorizontal css-z7uhs0-MuiStepConnector-line"
           />
         </div>
         <div
-          class="MuiStep-root MuiStep-horizontal"
+          class="MuiStep-root MuiStep-horizontal css-1bw0nnu-MuiStep-root"
           style="cursor: default;"
         >
           <span
-            class="MuiStepLabel-root MuiStepLabel-horizontal Mui-disabled"
+            class="MuiStepLabel-root MuiStepLabel-horizontal Mui-disabled css-ascpo7-MuiStepLabel-root"
           >
             <span
-              class="MuiStepLabel-iconContainer"
+              class="MuiStepLabel-iconContainer Mui-disabled css-vnkopk-MuiStepLabel-iconContainer"
             >
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root MuiStepIcon-root"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiStepIcon-root css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root"
                 focusable="false"
                 viewBox="0 0 24 24"
               >
@@ -85,20 +86,21 @@ exports[`WizardProgress renders correctly 1`] = `
                   r="12"
                 />
                 <text
-                  class="MuiStepIcon-text"
+                  class="MuiStepIcon-text css-117w1su-MuiStepIcon-text"
+                  dominant-baseline="central"
                   text-anchor="middle"
                   x="12"
-                  y="16"
+                  y="12"
                 >
                   2
                 </text>
               </svg>
             </span>
             <span
-              class="MuiStepLabel-labelContainer"
+              class="MuiStepLabel-labelContainer css-1vyamtt-MuiStepLabel-labelContainer"
             >
               <span
-                class="MuiTypography-root MuiStepLabel-label MuiTypography-body2 MuiTypography-displayBlock"
+                class="MuiStepLabel-label Mui-disabled css-1hv8oq8-MuiStepLabel-label"
               >
                 0,1
               </span>

@@ -1,9 +1,9 @@
-import styled, { keyframes } from "styled-components";
 import React from "react";
+import _styled, { keyframes } from "styled-components";
 
-// import _styled from '@emotion/styled';
-// const styled = _styled.default || _styled;
-
+const styled: typeof _styled =
+  ((_styled as unknown as { default: typeof _styled })
+    .default as typeof _styled) || _styled;
 const times: Array<React.ReactElement> = [];
 
 const createAnimation = (time: number) => {

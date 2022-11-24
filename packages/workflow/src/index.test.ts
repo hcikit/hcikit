@@ -16,6 +16,7 @@ import {
   advanceConfiguration,
   getCurrentIndex,
 } from "./index.js";
+
 import deepFreeze from "deep-freeze";
 import { jest } from "@jest/globals";
 

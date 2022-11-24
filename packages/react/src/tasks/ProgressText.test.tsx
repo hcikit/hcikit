@@ -3,6 +3,7 @@ import ProgressText from "./ProgressText.js";
 import { render, screen } from "@testing-library/react";
 import Experiment, { useExperiment } from "../core/Experiment.js";
 import { Configuration } from "@hcikit/workflow";
+import userEvent from "@testing-library/user-event";
 
 let BlankTask: React.FunctionComponent = () => null;
 
@@ -63,7 +64,7 @@ describe("ProgressText", () => {
     screen.getByText("1 / 3");
   });
 
-  it("renders correctly selected task", () => {
+  it("renders correctly selected task", async () => {
     render(
       <Experiment
         tasks={{
@@ -78,13 +79,13 @@ describe("ProgressText", () => {
     );
 
     screen.getByText("1 / 3");
-    screen.getByText("advance").click();
+    await userEvent.click(screen.getByText("advance"));
     screen.getByText("2 / 3");
-    screen.getByText("advance").click();
+    await userEvent.click(screen.getByText("advance"));
     screen.getByText("3 / 3");
   });
 
-  it("renders correct depth parameter", () => {
+  it("renders correct depth parameter", async () => {
     render(
       <Experiment
         tasks={{
@@ -98,13 +99,13 @@ describe("ProgressText", () => {
       />
     );
     screen.getByText("1 / 3");
-    screen.getByText("advance").click();
+    await userEvent.click(screen.getByText("advance"));
     screen.getByText("2 / 3");
-    screen.getByText("advance").click();
+    await userEvent.click(screen.getByText("advance"));
     screen.getByText("3 / 3");
-    screen.getByText("advance").click();
+    await userEvent.click(screen.getByText("advance"));
     screen.getByText("1 / 2");
-    screen.getByText("advance").click();
+    await userEvent.click(screen.getByText("advance"));
     screen.getByText("2 / 2");
   });
 
