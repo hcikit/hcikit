@@ -3,7 +3,7 @@ import { withGridItem } from "../GridLayout.js";
 import { CenteredDiv } from "../components/index.js";
 import PropTypes from "prop-types";
 import { useExperiment } from "../core/Experiment.js";
-import _styled from "styled-components";
+import _styled from "@emotion/styled";
 
 const styled: typeof _styled =
   ((_styled as unknown as { default: typeof _styled })

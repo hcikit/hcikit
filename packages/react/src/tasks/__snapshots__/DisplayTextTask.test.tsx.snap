@@ -6,11 +6,11 @@ exports[`DisplayTextTask renders properly 1`] = `
     style="grid-area: task;"
   >
     <div
-      class="sc-gKPRtg fzCKcq"
+      class="css-1snr84l"
     >
       <div>
         <div
-          class="sc-iBYQkv eTiYuH"
+          class="css-1yltisf"
         >
           <h1>
             hello

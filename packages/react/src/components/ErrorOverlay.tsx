@@ -1,6 +1,8 @@
 import React from "react";
+
 import { Paper } from "@mui/material";
-import _styled from "styled-components";
+
+import _styled from "@emotion/styled";
 
 const styled: typeof _styled =
   ((_styled as unknown as { default: typeof _styled })

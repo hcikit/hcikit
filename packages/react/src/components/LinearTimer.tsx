@@ -1,5 +1,6 @@
 import React from "react";
-import _styled, { keyframes } from "styled-components";
+import { keyframes } from "@mui/styled-engine";
+import _styled from "@emotion/styled";
 
 const styled: typeof _styled =
   ((_styled as unknown as { default: typeof _styled })

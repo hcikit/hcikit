@@ -1,6 +1,6 @@
 {
   "name": "@hcikit/react",
-  "version": "1.0.0-alpha.13",
+  "version": "1.0.0-alpha.14",
   "description": "An experiment runner with a set of pre-built experiment components for running hci experiments",
   "author": "blainelewis1",
   "license": "MIT",
@@ -43,10 +43,11 @@
     "@mui/material": "^5.5.0",
     "@mui/styles": "^5.5.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "styled-components": "^5.3.6"
+    "react-dom": "^18.2.0"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@hcikit/workflow": "workspace:*",
     "core-js": "^3.26.1",
     "lodash-es": "^4.17.21",
@@ -54,21 +55,21 @@
     "react-error-boundary": "^3.1.4",
     "react-is": "^18.2.0",
     "react-markdown": "^8.0.3",
-    "serialize-error": "^11.0.0",
+    "serialize-error": "^11.0.0"
   },
   "gitHead": "8d0f2af41121f70996e8b5803d006832b147fd86",
   "devDependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@types/jest": "^29.2.3",
     "@types/react": "^18.0.25",
-    "@types/styled-components": "^5.1.26",
     "@types/testing-library__jest-dom": "^5.14.5",
     "jest-diff": "^29.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
-    "typescript": "^4.9.3",
-    "styled-components": "^5.3.6"
+    "typescript": "^4.9.3"
   }
 }
