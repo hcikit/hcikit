@@ -11,6 +11,8 @@ import { withGridItem } from "../GridLayout.js";
 import PropTypes from "prop-types";
 import { useConfiguration } from "../core/Experiment.js";
 
+// TODO: I updated the depth field to make a little bit more sense in the creativity project
+
 const ProgressTextNoGrid: React.FunctionComponent<{ depth?: number }> = ({
   depth = 0,
 }) => {

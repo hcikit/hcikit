@@ -44,7 +44,9 @@ const StyledSlider = styled(Slider)`
  * add other things like a reset session or soemthing
  */
 
-export const DevTools: React.FunctionComponent = () => {
+export const DevTools: React.FunctionComponent<{
+  showInProduction: boolean;
+}> = ({ showInProduction = false }) => {
   const configuration = useConfiguration();
   const experiment = useExperiment();
 
@@ -82,7 +84,7 @@ export const DevTools: React.FunctionComponent = () => {
 
   // TODO: set the marks to the top level sections
 
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === "production" || showInProduction) {
     return null;
   }
 
