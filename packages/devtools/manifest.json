@@ -1,0 +1,7 @@
+{
+  "manifest_version": 3,
+  "name": "HCI Kit DevTools Extension",
+  "version": "1.0.0",
+  "options_page": "index.html",
+  "devtools_page": "devtools.html"
+}
