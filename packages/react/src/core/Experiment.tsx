@@ -28,6 +28,7 @@ import GridLayout from "../GridLayout.js";
 
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { CenteredNicePaper } from "../components/index.js";
+<<<<<<< HEAD
 import { BasePersistence, StoragePersistence } from "../persistence/index.js";
 
 import { Typography, CircularProgress } from "@mui/material";
@@ -41,6 +42,9 @@ type PropsOfDict<T extends Record<string, React.ComponentType<any>>> = {
 export type ConfigurationReact<
   T extends Record<string, React.ComponentType<any>>,
 > = TypedConfiguration<PropsOfDict<T>>;
+=======
+import { HCIKitPlugin } from "./Plugin.js";
+>>>>>>> 74d2766 (Tried connecting devtools up)
 
 export interface ControlFunctions {
   advance: (index?: ExperimentIndex) => void;
@@ -84,6 +88,8 @@ function isPromise<T extends object>(obj: T | Promise<T>): obj is Promise<T> {
   return "then" in obj && typeof obj.then === "function";
 }
 
+// TODO: move loadstate and savestate to be middleware instead. Well save state will be middleware and load state will just be the configuration you pass in.
+
 const Experiment: React.FunctionComponent<{
   persistence?: BasePersistence | null;
   configuration: Configuration | Promise<Configuration>;
@@ -91,7 +97,11 @@ const Experiment: React.FunctionComponent<{
   Layout?: ElementType;
   ErrorHandler?: React.ComponentType<FallbackProps>;
   forceRemountEveryTask?: boolean;
+<<<<<<< HEAD
   devOptions?: { persistInDevelopment: boolean; useIndexFromUrl: boolean };
+=======
+  plugins?: Array<HCIKitPlugin>;
+>>>>>>> 74d2766 (Tried connecting devtools up)
 }> = ({
   persistence = new StoragePersistence(window.sessionStorage, "HCIKIT_LOGS"),
   configuration: initialConfiguration,
@@ -185,6 +195,7 @@ const ExperimentInner: React.FC<{
   Layout = GridLayout,
   ErrorHandler = DefaultErrorHandler,
   forceRemountEveryTask,
+<<<<<<< HEAD
   initialConfiguration,
   loadedConfiguration,
   devOptions,
@@ -200,6 +211,17 @@ const ExperimentInner: React.FC<{
         devOptions.persistInDevelopment)
     ) {
       configurationToUse = loadedConfiguration;
+=======
+  configuration,
+  plugins,
+}) => {
+  // TODO: not sure how to create different sessions for the same task. The issue is that they'll be overwritten by the other thing. Maybe we can add a config version or session key or something to it?
+  // TODO: using config and configuration is so confusing...
+  let [config, setConfig] = useState<Configuration>(() => {
+    let initialConfig = configuration || {};
+    if (process.env.NODE_ENV !== "development" && loadState) {
+      initialConfig = loadState() || configuration;
+>>>>>>> 74d2766 (Tried connecting devtools up)
     }
 
     // This seems hacky. I think I am assigning the initial index to whatever it should be if the experiment just started, or assigning it to the proper one if we haven't started yet.
@@ -210,6 +232,15 @@ const ExperimentInner: React.FC<{
 
     return configurationToUse;
   });
+
+  // Redux does the middleware a bit different and maybe I prefer it. You instead pass in an enhancer, and that is an object with the functions like onConfigChange. This lets you version and progressively enhance your middleware without changing things.
+  useEffect(() => {
+    // TODO: this is a really lame way to do middleware because I am acting inside of an effect it does not give me a chance to change the config before it is used.
+    // A better version would give us a diff of the old and new and would give us a chance to change it beforehand..
+    for (const plugin of plugins || []) {
+      plugin.onConfigChange?.(config);
+    }
+  }, [config]);
 
   // it might be better to do this as we save state rather than waiting a render, I chose this way because it is easier to implement than adding it to each of the modifying functions below.
   // useEffect(() => {
@@ -265,7 +296,6 @@ const ExperimentInner: React.FC<{
   );
 
   // Kent says this is actually slower than just recreating it... But honestly idk if I trust that. Truth is I should test it, but this does solve the problem of unnecessary rerenders.
-
   const experiment = useMemo(
     () => ({
       advance: advance,
@@ -290,8 +320,13 @@ const ExperimentInner: React.FC<{
         return "You have some unsaved changes";
       }
     };
+    for (let plugin of plugins || []) {
+      plugin.onInit(experiment, config);
+    }
+
     // TODO: ideally we'd have a reference to this effect instead of recreating the function every time the config changes...
   }, [persistence, config]);
+
 
   if (isEmpty(config)) {
     return null;

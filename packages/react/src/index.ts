@@ -25,6 +25,8 @@ type StaticProps = {
 
 export type Task<P = {}> = React.ComponentType<TaskProps & P> & StaticProps;
 
+export { HCIKitPlugin } from "./core/Plugin.js";
+
 export interface FunctionTask<P = {}>
   extends React.FunctionComponent<P & ControlFunctions> {
   (

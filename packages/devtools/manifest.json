@@ -3,5 +3,16 @@
   "name": "HCI Kit DevTools Extension",
   "version": "1.0.0",
   "options_page": "index.html",
-  "devtools_page": "devtools.html"
+  "devtools_page": "devtools.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "src/connect.ts"
+      ],
+      "run_at": "document_start"
+    }
+  ]
 }

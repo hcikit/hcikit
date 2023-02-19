@@ -3000,6 +3000,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@extend-chrome/messages@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "@extend-chrome/messages@npm:1.2.2"
+  dependencies:
+    "@types/chrome": 0.0.99
+    "@types/node": ^13.9.0
+    rxjs: ^6.5.4 || ^7.1.0
+  checksum: 23a32b5a92b8e493298d5a0dd9079a098238776c7b5fffdc653b8d31a6834a0d0a04029992595388e80edbb796cf40213dd1fc41e820fb3de2e80ce965c45465
+  languageName: node
+  linkType: hard
+
 "@floating-ui/core@npm:^1.4.2":
   version: 1.5.0
   resolution: "@floating-ui/core@npm:1.5.0"
@@ -5551,6 +5562,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/chrome@npm:0.0.99":
+  version: 0.0.99
+  resolution: "@types/chrome@npm:0.0.99"
+  dependencies:
+    "@types/filesystem": "*"
+  checksum: b7972d068f453048d95cd998aa95eca72d929941a24800eb01a65d7102702cbc819d241766d58a7d9e9d95ba244cae18dfbeec26458373849c6537c5ba19973c
+  languageName: node
+  linkType: hard
+
 "@types/chrome@npm:^0.0.213":
   version: 0.0.213
   resolution: "@types/chrome@npm:0.0.213"
@@ -5903,6 +5923,13 @@ __metadata:
   version: 20.8.2
   resolution: "@types/node@npm:20.8.2"
   checksum: 3da73e25d821bfcdb7de98589027e08bb4848e55408671c4a83ec0341e124b5313a0b20e1e4b4eff1168ea17a86f622ad73fcb04b761abd77496b9a27cbd5de5
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^13.9.0":
+  version: 13.13.52
+  resolution: "@types/node@npm:13.13.52"
+  checksum: 8f1afff497ebeba209e2dc340d823284e087a47632afe99a7daa30eaff80893e520f222ad400cd1f2d3b8288e93cf3eaded52a8e64eaefb8aacfe6c35de98f42
   languageName: node
   linkType: hard
 
@@ -9261,12 +9288,16 @@ __metadata:
   resolution: "devtools@workspace:packages/devtools"
   dependencies:
     "@crxjs/vite-plugin": ^1.0.14
+    "@extend-chrome/messages": ^1.2.2
     "@types/chrome": ^0.0.213
     "@types/react": ^18.0.27
     "@types/react-dom": ^18.0.10
     "@vitejs/plugin-react": ^3.1.0
+    autoprefixer: ^10.4.13
+    postcss: ^8.4.21
     react: ^18.2.0
     react-dom: ^18.2.0
+    tailwindcss: ^3.2.7
     typescript: ^4.9.3
     vite: ^4.1.0
   languageName: unknown
@@ -18279,7 +18310,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^7.5.5":
+"rxjs@npm:^6.5.4 || ^7.1.0, rxjs@npm:^7.5.5":
   version: 7.8.1
   resolution: "rxjs@npm:7.8.1"
   dependencies:
@@ -19407,7 +19438,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:^3.0.2":
+"tailwindcss@npm:^3.0.2, tailwindcss@npm:^3.2.7":
   version: 3.3.3
   resolution: "tailwindcss@npm:3.3.3"
   dependencies:
