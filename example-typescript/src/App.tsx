@@ -14,7 +14,7 @@ import CustomTask from "./CustomTask";
 
 import configuration from "./configuration";
 
-let tasks = {
+export let tasks = {
   CustomTask,
   ConsentForm,
   InformationScreen,

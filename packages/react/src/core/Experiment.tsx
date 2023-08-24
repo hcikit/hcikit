@@ -28,6 +28,11 @@ import GridLayout from "../GridLayout.js";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { CenteredNicePaper } from "../components/index.js";
 
+
+type PropsOfDict<T extends Record<string, React.ComponentType<any>>> = {[Task in keyof T] : React.ComponentProps<T[Task]>}
+
+export type ConfigurationReact<T extends Record<string,React.ComponentType<any>>>  = Configuration<PropsOfDict<T>>;
+
 export interface ControlFunctions {
   advance: (index?: ExperimentIndex) => void;
   log: (log: UnfilledLog) => void;
@@ -88,15 +93,19 @@ export const saveStateToSessionStorage = throttle((state: Configuration) => {
   }
 }, 3000);
 
-const Experiment: React.FunctionComponent<{
-  saveState?: ((config: Configuration) => void) | null;
-  loadState?: (() => Configuration) | null;
-  configuration: Configuration;
-  tasks: Record<string, ElementType>;
-  Layout?: ElementType;
-  ErrorHandler?: React.ComponentType<FallbackProps>;
-  forceRemountEveryTask?: boolean;
-}> = ({
+type ExperimentProps<T> = {
+
+    saveState?: ((config: Configuration<T>) => void) | null;
+    loadState?: (() => Configuration<T>) | null;
+    configuration: Configuration<T>;
+    tasks: T;
+    Layout?: ElementType;
+    ErrorHandler?: React.ComponentType<FallbackProps>;
+    forceRemountEveryTask?: boolean;
+  
+}
+
+const Experiment: React.FunctionComponent<ExperimentProps> = ({
   saveState = saveStateToSessionStorage,
   loadState = loadStateFromSessionStorage,
   tasks,

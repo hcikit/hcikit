@@ -23,7 +23,9 @@ export * from "./types.js";
  * @param {Configuration} configuration
  * @returns {boolean} indicates whether an experiment is complete or not.
  */
-export function experimentComplete(configuration: Configuration): boolean {
+export function experimentComplete<
+  T extends Record<string, Record<string, unknown>>
+>(configuration: Configuration<T>): boolean {
   return configuration[__INDEX__]?.length === 0;
 }
 
@@ -43,12 +45,12 @@ export function getTotalTasks(configuration: Configuration): number {
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function scopePropsForTask(
-  props: Record<string, unknown>,
+  props: Configuration,
   task: string
 ): Configuration {
   return merge(
     pickBy(props, (_: unknown, k: string) => k[0] === k[0].toLowerCase()),
-    props[task] as Record<string, unknown>
+    props[task] as Configuration
   );
 }
 
@@ -123,12 +125,14 @@ export function getPropsFor(
  * @param {Configuration} initialConfiguration
  * @returns {Configuration} the requested level of config
  */
-export function getConfigurationAtIndex(
-  initialConfiguration: Configuration,
+export function getConfigurationAtIndex<
+  T extends Record<string, Record<string, unknown>>
+>(
+  initialConfiguration: Configuration<T>,
   index: ExperimentIndex
-): Configuration {
+): Configuration<T> {
   return (
-    index.reduce<Configuration | undefined>((config, value) => {
+    index.reduce<Configuration<T> | undefined>((config, value) => {
       return config?.children?.[value];
     }, initialConfiguration) || {}
   );
@@ -141,8 +145,8 @@ export function getConfigurationAtIndex(
  * @param {Configuration} configuration
  * @returns {ExperimentIndex} the nearest leaf index.
  */
-export function getLeafIndex(
-  configuration: Configuration,
+export function getLeafIndex<T extends Record<string, Record<string, unknown>>>(
+  configuration: Configuration<T>,
   index: ExperimentIndex
 ): ExperimentIndex {
   if (index.length === 0) {
@@ -164,7 +168,9 @@ export function getLeafIndex(
  * @param {Configuration} configuration
  * @returns {ExperimentIndex} the current experiment index, or [0] if there is none.
  */
-export function getCurrentIndex(configuration: Configuration): ExperimentIndex {
+export function getCurrentIndex<
+  T extends Record<string, Record<string, unknown>>
+>(configuration: Configuration<T>): ExperimentIndex {
   let index: ExperimentIndex = [0];
 
   const myInd: ExperimentIndex | undefined = configuration[__INDEX__];
@@ -230,10 +236,9 @@ export function taskNumberToIndex(
  * @param {Configuration} configuration
  * @returns {ExperimentIndex}
  */
-export function advanceConfiguration(
-  configuration: Configuration,
-  index?: ExperimentIndex
-): Configuration {
+export function advanceConfiguration<
+  T extends Record<string, Record<string, unknown>>
+>(configuration: Configuration<T>, index?: ExperimentIndex): Configuration<T> {
   if (experimentComplete(configuration)) {
     return configuration;
   }
@@ -412,10 +417,9 @@ export function flattenConfigurationWithProps(
   );
 }
 
-export function mergeArraysSpecial(
-  object: Record<string, unknown>,
-  source: Record<string, unknown>
-): Record<string, unknown> {
+export function mergeArraysSpecial<
+  T extends Record<string, Record<string, unknown>>
+>(object: Configuration<T>, source: Configuration<T>): Configuration<T> {
   return mergeWith(object, source, (value: unknown, srcValue: unknown) => {
     if (Array.isArray(value)) {
       return srcValue;

@@ -20,7 +20,22 @@ import {
 import deepFreeze from "deep-freeze";
 import { jest } from "@jest/globals";
 
-const configuration: Configuration = {
+type ConfigType = {
+  "real task without children": {
+    stimulus: string;
+    configprop:string;
+    blockprop: string;
+    inheritance: string;
+    sectionprop:string;
+  };
+  StimulusResponse: {hello: string; yolo: string; you: string};
+  hello: {};
+  world: {};
+  foo: {};
+  bar: {};
+}
+
+const configuration: Configuration<ConfigType> = {
   configprop: "section",
   StimulusResponse: {
     hello: "world",
@@ -92,7 +107,7 @@ describe("scopePropsForTask", () => {
           StimulusResponse: {
             you: "too",
           },
-        },
+        } as Configuration<ConfigType>,
         "StimulusResponse"
       )
     ).toEqual({
@@ -127,7 +142,7 @@ describe("scopePropsForTask", () => {
           WrongScope: {
             hello: "dude",
           },
-        },
+        } as Configuration<ConfigType>,
         "StimulusResponse"
       )
     ).toEqual({
@@ -200,7 +215,7 @@ describe("getCurrentProps", () => {
   });
 
   it("lists get over written", () => {
-    const config: Configuration = {
+    const config: Configuration<ConfigType> = {
       tasks: ["hello", "world"],
       children: [{ tasks: ["foo", "bar"] }],
     };
