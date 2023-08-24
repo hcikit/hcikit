@@ -7,7 +7,7 @@ import {
   __INDEX__,
 } from "./types.js";
 
-export { default as schema } from "./schemas.json";
+// export { default as schema } from "./schemas.json";
 
 export * from "./utils.js";
 
