@@ -20,7 +20,7 @@ const testDefault = {
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
   testEnvironment: "jsdom",
-  setupFilesAfterEnv: ["@testing-library/jest-dom/extend-expect"],
+  setupFilesAfterEnv: ["@testing-library/jest-dom/jest-globals"],
 };
 
 module.exports = {

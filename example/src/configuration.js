@@ -6,7 +6,7 @@ const configuration = {
     maxYResolution: 2000,
     maxXResolution: 2000,
   },
-  participant: "yo",
+  participant: "P1",
   children: [
     {
       task: "InformationScreen",

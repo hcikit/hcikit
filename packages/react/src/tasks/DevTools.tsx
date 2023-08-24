@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { IconButton, Slider, Card } from "@mui/material";
 import FastForward from "@mui/icons-material/FastForward.js";
 import SkipNext from "@mui/icons-material/SkipNext.js";
-import SkipPreviousIcon from "@mui/icons-material/SkipPrevious.js";
 import SkipPrevious from "@mui/icons-material/SkipPrevious.js";
 import FastRewind from "@mui/icons-material/FastRewind.js";
 
@@ -15,15 +14,17 @@ import {
   getCurrentIndex,
 } from "@hcikit/workflow";
 
+import { useConfiguration, useExperiment } from "../index.js";
+
 import _styled from "@emotion/styled";
+
+console.log(FastForward, SkipNext, SkipPrevious, FastRewind);
 
 const styled: typeof _styled =
   ((_styled as unknown as { default: typeof _styled })
     .default as typeof _styled) || _styled;
 
 // TODO: making all of material ui icons a peer dependency instead of a dependency seems silly when they're probably just svgs abnd not dependent on the rest of material ui.
-
-import { useConfiguration, useExperiment } from "../core/Experiment.js";
 
 const StyledCard = styled(Card)`
   display: inline-block;
@@ -53,7 +54,19 @@ export const DevTools: React.FunctionComponent<{
   const [isDragging, setIsDragging] = useState(false);
   const [relativePosition, setRelativePosition] = useState({ x: 0, y: 0 });
 
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [position, setPosition] = useState({ bottom: 0, right: 0 });
+
+  const [isShowing, setIsShowing] = useState(true);
+
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "escape") {
+        setIsShowing((prev) => !prev);
+      }
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
 
   // TODO: I broke dragging
   useEffect(() => {
@@ -61,8 +74,8 @@ export const DevTools: React.FunctionComponent<{
       if (isDragging) {
         // TODO: use bottom right instead.
         setPosition({
-          top: e.pageY - relativePosition.y,
-          left: e.pageX - relativePosition.x,
+          bottom: e.pageY - relativePosition.y,
+          right: e.pageX - relativePosition.x,
         });
       }
     }
@@ -84,7 +97,10 @@ export const DevTools: React.FunctionComponent<{
 
   // TODO: set the marks to the top level sections
 
-  if (process.env.NODE_ENV === "production" || showInProduction) {
+  if (
+    (process.env.NODE_ENV === "production" && !showInProduction) ||
+    !isShowing
+  ) {
     return null;
   }
 
@@ -97,32 +113,88 @@ export const DevTools: React.FunctionComponent<{
     }));
   }
 
+  // return null;
   return (
     <StyledCard
       onMouseDown={(e: React.MouseEvent) => {
-        setIsDragging(true);
-        setRelativePosition({
-          x: e.pageX - position.left,
-          y: e.pageY - position.top,
-        });
+        // setIsDragging(true);
+        // setRelativePosition({
+        //   x: e.pageX - position.left,
+        //   y: e.pageY - position.top,
+        // });
       }}
-      style={position}
+      style={{ ...position, zIndex: 1000 }}
     >
       <Controls>
-        <IconButton>
-          {/* @ts-ignore */}
+        <IconButton
+          onClick={() => {
+            let currentIndex = getCurrentIndex(configuration);
+            let newIndex = currentIndex.slice(
+              0,
+              currentIndex.length > 1 ? currentIndex.length - 1 : 1
+            );
+
+            experiment.log({
+              type: "DEVTOOLS_CHANGE",
+              subtype: "prev_section",
+            });
+
+            newIndex[newIndex.length - 1] = newIndex[newIndex.length - 1] - 1;
+            experiment.advance(getLeafIndex(configuration, newIndex));
+          }}
+        >
           <SkipPrevious.default />
         </IconButton>
-        <IconButton>
-          {/* @ts-ignore */}
+        <IconButton
+          onClick={() => {
+            experiment.log({
+              type: "DEVTOOLS_CHANGE",
+              subtype: "prev_trial",
+            });
+
+            experiment.advance(
+              taskNumberToIndex(
+                configuration,
+                indexToTaskNumber(
+                  configuration,
+                  getCurrentIndex(configuration)
+                ) - 1
+              )
+            );
+          }}
+        >
           <FastRewind.default />
         </IconButton>
-        <IconButton onClick={() => experiment.advance()}>
-          {/* @ts-ignore */}
+        <IconButton
+          onClick={() => {
+            experiment.log({
+              type: "DEVTOOLS_CHANGE",
+              subtype: "next_trial",
+            });
+            experiment.advance();
+          }}
+        >
           <FastForward.default />
+          {/* <div className="cursor-pointer" onClick={() => experiment.advance()}>
+            Next &gt;
+          </div> */}
         </IconButton>
-        <IconButton size="large">
-          {/* @ts-ignore */}
+        <IconButton
+          onClick={() => {
+            let currentIndex = getCurrentIndex(configuration);
+            let newIndex = currentIndex.slice(
+              0,
+              currentIndex.length > 1 ? currentIndex.length - 1 : 1
+            );
+
+            newIndex[newIndex.length - 1] = newIndex[newIndex.length - 1] + 1;
+            experiment.log({
+              type: "DEVTOOLS_CHANGE",
+              subtype: "next_section",
+            });
+            experiment.advance(getLeafIndex(configuration, newIndex));
+          }}
+        >
           <SkipNext.default />
         </IconButton>
       </Controls>
@@ -134,6 +206,10 @@ export const DevTools: React.FunctionComponent<{
         min={0}
         max={getTotalTasks(configuration)}
         onChange={(_: Event, value: number | Array<number>) => {
+          experiment.log({
+            type: "DEVTOOLS_CHANGE",
+            subtype: "slider_tool",
+          });
           experiment.advance(taskNumberToIndex(configuration, value as number));
         }}
       />

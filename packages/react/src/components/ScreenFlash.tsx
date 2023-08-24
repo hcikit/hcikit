@@ -14,7 +14,7 @@ export class ScreenFlash extends React.Component<{ times: number }> {
   };
 
   state = { displayed: false };
-  interval?: NodeJS.Timer;
+  interval?: NodeJS.Timeout;
   UNSAFE_componentWillReceiveProps(newProps: { times: number }): void {
     if (!isEqual(newProps.times, this.props.times)) {
       this.interval = setInterval(this.resetState, 500);
