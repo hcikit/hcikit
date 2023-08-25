@@ -23,17 +23,17 @@ import { jest } from "@jest/globals";
 type ConfigType = {
   "real task without children": {
     stimulus: string;
-    configprop:string;
+    configprop: string;
     blockprop: string;
     inheritance: string;
-    sectionprop:string;
+    sectionprop: string;
   };
-  StimulusResponse: {hello: string; yolo: string; you: string};
+  StimulusResponse: { hello: string; yolo: string; you: string };
   hello: {};
   world: {};
   foo: {};
   bar: {};
-}
+};
 
 const configuration: Configuration<ConfigType> = {
   configprop: "section",
@@ -519,7 +519,7 @@ describe("getTotalTasks", () => {
       nextLevel: "section",
       fullProgress: true,
       CustomTask: { text: "Click to continue" },
-      participant: "yo",
+      participant: "P1",
       children: [
         {
           task: "InformationScreen",
