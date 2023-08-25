@@ -32,6 +32,6 @@
     "@aws-sdk/credential-provider-cognito-identity": "^3.395.0"
   },
   "devDependencies": {
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   }
 }

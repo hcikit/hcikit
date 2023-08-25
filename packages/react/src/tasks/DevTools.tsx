@@ -143,6 +143,7 @@ export const DevTools: React.FunctionComponent<{
             experiment.advance(getLeafIndex(configuration, newIndex));
           }}
         >
+          {/* @ts-ignore */}
           <SkipPrevious.default />
         </IconButton>
         <IconButton
@@ -163,6 +164,7 @@ export const DevTools: React.FunctionComponent<{
             );
           }}
         >
+          {/* @ts-ignore */}
           <FastRewind.default />
         </IconButton>
         <IconButton
@@ -174,6 +176,7 @@ export const DevTools: React.FunctionComponent<{
             experiment.advance();
           }}
         >
+          {/* @ts-ignore */}
           <FastForward.default />
           {/* <div className="cursor-pointer" onClick={() => experiment.advance()}>
             Next &gt;
@@ -195,6 +198,7 @@ export const DevTools: React.FunctionComponent<{
             experiment.advance(getLeafIndex(configuration, newIndex));
           }}
         >
+          {/* @ts-ignore */}
           <SkipNext.default />
         </IconButton>
       </Controls>

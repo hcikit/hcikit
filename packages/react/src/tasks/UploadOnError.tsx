@@ -55,6 +55,7 @@ export class UploadOnError extends React.Component<
                 can also email
                 {/* TODO: this experimenter is wrong. It should come from wherever the propsm say is an experimenter but it only comes from the top level. */}
                 <a href={`mailto:${this.props.configuration.experimenter}`}>
+                  {/* @ts-ignore */}
                   {this.props.configuration.experimenter as string}
                 </a>
               </p>
