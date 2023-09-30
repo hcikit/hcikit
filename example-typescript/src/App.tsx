@@ -11,7 +11,7 @@ import Experiment, {
 } from "@hcikit/react";
 import IncrementTask from "./IncrementTask";
 import CustomTask from "./CustomTask";
-
+import { ConfigVisualiser } from "./ConfigVisualiser";
 import configuration from "./configuration";
 
 export let tasks = {
@@ -25,9 +25,11 @@ export let tasks = {
   IncrementTask,
   ResolutionChecker,
   FocusChecker,
+  ConfigVisualiser,
 };
 
 const App: React.FunctionComponent = () => {
+  //@ts-ignore
   return <Experiment tasks={tasks} configuration={configuration} />;
 };
 

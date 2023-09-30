@@ -2,7 +2,12 @@ import { ConfigurationReact } from "@hcikit/react";
 import { tasks } from "./App";
 
 const configuration: ConfigurationReact<typeof tasks> = {
-  tasks: ["DevTools", "WizardProgress", "ResolutionChecker", "FocusChecker"],
+  tasks: [
+    "DevTools",
+    "WizardProgress",
+    "ResolutionChecker",
+    // "FocusChecker"
+  ],
   ResolutionChecker: {
     minXResolution: 800,
     minYResolution: 400,
@@ -12,6 +17,7 @@ const configuration: ConfigurationReact<typeof tasks> = {
   // @ts-ignore
   participant: "P1",
   children: [
+    { task: "ConfigVisualiser" },
     {
       task: "InformationScreen",
       label: "Information",
