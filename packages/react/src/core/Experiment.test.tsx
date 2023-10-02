@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import Experiment, {
-  saveStateToSessionStorage,
-  useConfiguration,
-  useExperiment,
-} from "./Experiment.js";
+import Experiment, { useConfiguration, useExperiment } from "./Experiment.js";
 import DevTools from "../tasks/DevTools.js";
 import DisplayText from "../tasks/DisplayTextTask.js";
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup, act } from "@testing-library/react";
 import { Configuration, Log } from "@hcikit/workflow";
 import userEvent from "@testing-library/user-event";
 import { FallbackProps } from "react-error-boundary";
 import { jest } from "@jest/globals";
+import { StoragePersistence } from "../persistence/index.js";
 
 const config = {
   tasks: ["AuxTask"],
@@ -126,8 +123,7 @@ describe("Experiment", () => {
   it("renders the proper task", () => {
     render(
       <Experiment
-        loadState={null}
-        saveState={null}
+        persistence={null}
         tasks={{ ButtonTask, AuxTask }}
         configuration={{ ...config }}
       />
@@ -139,8 +135,7 @@ describe("Experiment", () => {
   it("advances to the next task", async () => {
     render(
       <Experiment
-        loadState={null}
-        saveState={null}
+        persistence={null}
         tasks={{ ButtonTask, AuxTask }}
         configuration={{ ...config }}
       />
@@ -154,8 +149,7 @@ describe("Experiment", () => {
   it("advances to an arbitrary task", async () => {
     render(
       <Experiment
-        loadState={null}
-        saveState={null}
+        persistence={null}
         tasks={{
           FarIndexTask: () => {
             let { advance } = useExperiment();
@@ -193,8 +187,7 @@ describe("Experiment", () => {
     render(
       <Experiment
         tasks={{ DisplayText }}
-        loadState={null}
-        saveState={null}
+        persistence={null}
         configuration={{ ...config }}
       />
     );
@@ -205,8 +198,7 @@ describe("Experiment", () => {
     render(
       <Experiment
         tasks={{ ButtonTask, AuxTask }}
-        loadState={null}
-        saveState={null}
+        persistence={null}
         configuration={{ ...config }}
       />
     );
@@ -248,8 +240,7 @@ describe("Experiment", () => {
     render(
       <Experiment
         tasks={{ Extender, DisplayText, Blank }}
-        loadState={null}
-        saveState={null}
+        persistence={null}
         configuration={{ ...config }}
       />
     );
@@ -273,8 +264,7 @@ describe("Experiment", () => {
     render(
       <Experiment
         tasks={{ InfiniteRenderer, DevTools, DisplayText, RenderCounter }}
-        loadState={null}
-        saveState={null}
+        persistence={null}
         configuration={{ ...config }}
       />
     );
@@ -294,8 +284,7 @@ describe("Experiment", () => {
     render(
       <Experiment
         tasks={{ RenderCounter, LogOnClick }}
-        loadState={null}
-        saveState={null}
+        persistence={null}
         configuration={{ ...config }}
       />
     );
@@ -323,12 +312,7 @@ describe("Experiment", () => {
     };
 
     render(
-      <Experiment
-        loadState={null}
-        saveState={null}
-        configuration={{ ...config }}
-        tasks={{}}
-      />
+      <Experiment persistence={null} configuration={{ ...config }} tasks={{}} />
     );
 
     screen.getByText(
@@ -339,46 +323,97 @@ describe("Experiment", () => {
     jest.restoreAllMocks();
   });
 
-  describe("uses sessionStorage properly", () => {
-    it("loads from empty localStorage", async () => {
+  fdescribe("persists properly", () => {
+    it("doesn't show loading when no persistence is given", async () => {
       render(
         <Experiment
           tasks={{ ButtonTask, AuxTask }}
           configuration={{ ...config }}
+          persistence={null}
+        />
+      );
+
+      // TODO: make sure we only see the loading screen.
+      // resolve the promise
+      // test to make sure we can advance through the experiment
+      screen.getByText("button task 1");
+    });
+
+    it("only persists in production", async () => {
+      fail();
+    });
+
+    fit("shows a loading screen while loadin that goes away after loading", async () => {
+      let resolveLoad: (config: Configuration) => void;
+      class PersistenceTester extends StoragePersistence {
+        load = () => {
+          return new Promise<Configuration>((resolve) => {
+            resolveLoad = resolve;
+          });
+        };
+      }
+
+      let persistence = new PersistenceTester();
+      let configToUse = { ...config };
+      render(
+        <Experiment
+          tasks={{ ButtonTask, AuxTask }}
+          configuration={configToUse}
+          persistence={persistence}
+        />
+      );
+
+      // TODO: make sure we only see the loading screen.
+      // resolve the promise
+      // test to make sure we can advance through the experiment
+      screen.getByText("Loading experiment configuration...");
+      // @ts-ignore
+      await act(async () => await resolveLoad(configToUse));
+      screen.getByText("button task 1");
+    });
+
+    it("loads from empty localStorage", async () => {
+      let persistence = new StoragePersistence();
+      render(
+        <Experiment
+          tasks={{ ButtonTask, AuxTask }}
+          configuration={{ ...config }}
+          persistence={persistence}
         />
       );
 
       await userEvent.click(screen.getByText("button task 1"));
 
-      saveStateToSessionStorage.flush();
+      persistence.flush();
 
       cleanup();
       render(
         <Experiment
           tasks={{ ButtonTask, AuxTask }}
           configuration={{ ...config }}
+          persistence={persistence}
         />
       );
       screen.getByText(config.children[1].text);
     });
 
     it("doesn't load when no loadstate is given", async () => {
+      let persistence = new StoragePersistence();
+
       render(
         <Experiment
           tasks={{ ButtonTask, AuxTask }}
           configuration={{ ...config }}
+          persistence={null}
         />
       );
 
       await userEvent.click(screen.getByText("button task 1"));
-      saveStateToSessionStorage.flush();
 
       cleanup();
 
       render(
         <Experiment
-          loadState={null}
-          saveState={null}
           tasks={{ ButtonTask, AuxTask }}
           configuration={{ ...config }}
         />
@@ -389,8 +424,7 @@ describe("Experiment", () => {
     it("doesn't save when no savestate is given", async () => {
       render(
         <Experiment
-          saveState={null}
-          loadState={null}
+          persistence={null}
           tasks={{ ButtonTask, AuxTask }}
           configuration={{ ...config }}
         />
@@ -423,8 +457,7 @@ describe("Experiment", () => {
 
       render(
         <Experiment
-          loadState={null}
-          saveState={null}
+          persistence={null}
           forceRemountEveryTask
           tasks={{ MultiTask }}
           configuration={{ ...config }}
@@ -454,8 +487,7 @@ describe("Experiment", () => {
 
       render(
         <Experiment
-          loadState={null}
-          saveState={null}
+          persistence={null}
           forceRemountEveryTask={false}
           tasks={{ MultiTask }}
           configuration={{ ...config }}
@@ -471,8 +503,7 @@ describe("Experiment", () => {
   it("two tasks with button don't go to the end", async () => {
     render(
       <Experiment
-        loadState={null}
-        saveState={null}
+        persistence={null}
         tasks={{ ButtonTask }}
         configuration={{
           children: [
@@ -540,8 +571,7 @@ describe("Experiment", () => {
 
     render(
       <Experiment
-        loadState={null}
-        saveState={null}
+        persistence={null}
         tasks={{ Logger, AdvanceTask }}
         configuration={configuration}
       />
@@ -588,8 +618,7 @@ describe("Experiment", () => {
   it("doesn't pass logs to components", async () => {
     render(
       <Experiment
-        loadState={null}
-        saveState={null}
+        persistence={null}
         tasks={{ ButtonTask, AuxTask }}
         configuration={{ ...config }}
       />
@@ -603,8 +632,7 @@ describe("Experiment", () => {
   it("modifies config properly", async () => {
     render(
       <Experiment
-        loadState={null}
-        saveState={null}
+        persistence={null}
         tasks={{ ButtonTask, AuxTask }}
         configuration={{ ...config }}
       />
@@ -642,8 +670,7 @@ describe("Experiment", () => {
 
     render(
       <Experiment
-        loadState={null}
-        saveState={null}
+        persistence={null}
         tasks={{ AdvanceTask, AddChildren }}
         configuration={{
           tasks: ["AddChildren", "AdvanceTask"],
@@ -667,8 +694,7 @@ describe("Experiment", () => {
 
     render(
       <Experiment
-        loadState={null}
-        saveState={null}
+        persistence={null}
         tasks={{ Index, AdvanceTask }}
         configuration={{
           tasks: ["Index", "AdvanceTask"],
@@ -724,8 +750,7 @@ describe("ErrorHandler", () => {
     let elem = render(
       <Experiment
         ErrorHandler={ErrorHandler}
-        loadState={null}
-        saveState={null}
+        persistence={null}
         tasks={{ ErrorTask, ButtonTask }}
         configuration={{
           children: [

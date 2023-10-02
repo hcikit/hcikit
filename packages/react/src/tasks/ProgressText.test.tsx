@@ -56,8 +56,7 @@ describe("ProgressText", () => {
           BlankTask,
         }}
         configuration={{ ...basicConfig }}
-        saveState={null}
-        loadState={null}
+        persistence={null}
       />
     );
 
@@ -73,8 +72,7 @@ describe("ProgressText", () => {
           BlankTask,
         }}
         configuration={{ ...basicConfig }}
-        saveState={null}
-        loadState={null}
+        persistence={null}
       />
     );
 
@@ -94,8 +92,7 @@ describe("ProgressText", () => {
           BlankTask,
         }}
         configuration={{ ...advancedConfig }}
-        saveState={null}
-        loadState={null}
+        persistence={null}
       />
     );
     screen.getByText("1 / 3");
@@ -119,8 +116,7 @@ describe("ProgressText", () => {
             BlankTask,
           }}
           configuration={{ ...advancedConfig }}
-          saveState={null}
-          loadState={null}
+          persistence={null}
         />
       ).asFragment()
     ).toMatchSnapshot();

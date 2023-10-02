@@ -7,6 +7,22 @@ import {
 } from "./core/Experiment.js";
 import { Configuration, ExperimentIndex } from "@hcikit/workflow";
 import React from "react";
+import { BasePersistence } from "./persistence/index.js";
+
+class DoNothingPersistence extends BasePersistence {
+  load(): Promise<Configuration | undefined> {
+    return Promise.resolve(undefined);
+  }
+  save(state: Configuration): Promise<void> {
+    return Promise.resolve();
+  }
+  clear(): Promise<void> {
+    return Promise.resolve();
+  }
+  init(): Promise<void> {
+    return Promise.resolve();
+  }
+}
 
 const identities: ControlFunctions = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -25,6 +41,7 @@ const identities: ControlFunctions = {
   ) => {
     // do nothing.
   },
+  persistence: new DoNothingPersistence(),
 };
 
 export const renderWithProvider = (

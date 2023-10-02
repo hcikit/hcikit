@@ -27,7 +27,8 @@ export let tasks = {
   FocusChecker,
 };
 
-const App: React.FunctionComponent = () => {
+const App: React.FC = () => {
+  // @ts-ignore
   return <Experiment tasks={tasks} configuration={configuration} />;
 };
 

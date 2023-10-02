@@ -68,8 +68,7 @@ describe("WizardProgress", () => {
           BlankTask,
         }}
         configuration={{ ...basicConfig }}
-        saveState={null}
-        loadState={null}
+        persistence={null}
       />
     );
 
@@ -87,8 +86,7 @@ describe("WizardProgress", () => {
           BlankTask,
         }}
         configuration={{ ...skipConfig }}
-        saveState={null}
-        loadState={null}
+        persistence={null}
       />
     );
 
@@ -138,8 +136,7 @@ describe("WizardProgress", () => {
           BlankTask,
         }}
         configuration={{ ...basicConfig, __INDEX__: [1] }}
-        saveState={null}
-        loadState={null}
+        persistence={null}
       />
     );
 
@@ -157,8 +154,7 @@ describe("WizardProgress", () => {
           BlankTask,
         }}
         configuration={{ ...advancedConfig }}
-        saveState={null}
-        loadState={null}
+        persistence={null}
       />
     );
     expect(screen.getByText("0,0")).toHaveClass("Mui-active");
@@ -173,8 +169,7 @@ describe("WizardProgress", () => {
           BlankTask,
         }}
         configuration={{ ...advancedConfig, __INDEX__: [1, 0] }}
-        saveState={null}
-        loadState={null}
+        persistence={null}
       />
     );
 
@@ -191,8 +186,7 @@ describe("WizardProgress", () => {
           BlankTask,
         }}
         configuration={{ ...advancedConfig }}
-        saveState={null}
-        loadState={null}
+        persistence={null}
       />
     );
 
@@ -215,8 +209,7 @@ describe("WizardProgress", () => {
             BlankTask,
           }}
           configuration={{ ...advancedConfig }}
-          saveState={null}
-          loadState={null}
+          persistence={null}
         />
       ).asFragment()
     ).toMatchSnapshot();
