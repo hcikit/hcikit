@@ -10,12 +10,17 @@ import {
   __INDEX__,
 } from "@hcikit/workflow";
 
-import { useConfiguration, useExperiment } from "./Experiment.js";
+import {
+  ControlFunctions,
+  useConfiguration,
+  useExperiment,
+} from "./Experiment.js";
+import { Task } from "../index.js";
 
 // If there's ever a usecase for logs to get passed then we can add another provider they can subscribe to.
 
 const TaskRenderer: React.FunctionComponent<{
-  tasks: Record<string, ElementType>;
+  tasks: Record<string, Task>;
   forceRemountEveryTask?: boolean;
 }> = ({ tasks, forceRemountEveryTask = true }) => {
   const configuration = useConfiguration();
@@ -55,7 +60,7 @@ const TaskRenderer: React.FunctionComponent<{
 
         return (
           <SingleTaskRenderer
-            Task={Task}
+            TaskComponent={Task}
             key={key}
             log={log}
             advance={advance}
@@ -69,9 +74,9 @@ const TaskRenderer: React.FunctionComponent<{
 };
 
 let SingleTaskRenderer: React.FunctionComponent<
-  { Task: React.ElementType } & Record<string, unknown>
-> = ({ Task, ...props }) => {
-  return <Task {...props} />;
+  { TaskComponent: Task } & ControlFunctions & Record<string, unknown>
+> = ({ TaskComponent, ...props }) => {
+  return <TaskComponent {...props} />;
 };
 
 // Deep equals is needed here or the tests fail, I think I make some objects above like the tasks that get recreated every time.

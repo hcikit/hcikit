@@ -36,7 +36,7 @@ describe("storage persistence", () => {
   });
 });
 
-// Skipping because this is not currently mocked
+// Skipping because this is not currently mocked in jsdom
 xdescribe("origin private file system", () => {
   it("saves, loads, and clears storage properly", async () => {
     const storage = new FileSystemPersistence();

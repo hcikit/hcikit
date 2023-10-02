@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactElement } from "react";
+import { PropsWithChildren, ReactElement, Component } from "react";
 import { ControlFunctions } from "./core/Experiment.js";
 import * as allTasks from "./tasks/index.js";
 
@@ -18,6 +18,13 @@ export {
   FileSystemPersistence,
 } from "./persistence/index.js";
 
+type TaskProps = ControlFunctions;
+type StaticProps = {
+  layoutProps?: Record<string, any>;
+};
+
+export type Task<P = {}> = React.ComponentType<TaskProps & P> & StaticProps;
+
 export interface FunctionTask<P = {}>
   extends React.FunctionComponent<P & ControlFunctions> {
   (
@@ -26,8 +33,8 @@ export interface FunctionTask<P = {}>
   ): ReactElement<any, any> | null;
 }
 
-export abstract class Task<P = {}, S = {}, SS = any> extends React.Component<
-  P & ControlFunctions,
+export abstract class ClassTask<P = {}, S = {}, SS = any> extends Component<
+  P & TaskProps,
   S,
   SS
 > {}

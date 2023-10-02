@@ -31,6 +31,7 @@ import { CenteredNicePaper } from "../components/index.js";
 import { BasePersistence, StoragePersistence } from "../persistence/index.js";
 
 import { Button, Typography, CircularProgress } from "@mui/material";
+import { Task } from "../index.js";
 
 type PropsOfDict<T extends Record<string, React.ComponentType<any>>> = {
   [Task in keyof T]: React.ComponentProps<T[Task]>;
@@ -81,12 +82,13 @@ export { useConfiguration, useExperiment };
 const Experiment: React.FunctionComponent<{
   persistence?: BasePersistence | null;
   configuration: Configuration;
-  tasks: Record<string, ElementType>;
+  tasks: Record<string, Task<any>>;
   Layout?: ElementType;
   ErrorHandler?: React.ComponentType<FallbackProps>;
   forceRemountEveryTask?: boolean;
 }> = ({
   persistence = new StoragePersistence(window.sessionStorage, "HCIKIT_LOGS"),
+  configuration: initialConfiguration,
   ...props
 }) => {
   const [state, setState] = useState(
@@ -121,6 +123,7 @@ const Experiment: React.FunctionComponent<{
     return (
       <ExperimentInner
         {...props}
+        initialConfiguration={initialConfiguration}
         loadedConfiguration={loadedConfiguration}
         persistence={persistence}
       />
@@ -130,9 +133,9 @@ const Experiment: React.FunctionComponent<{
 
 const ExperimentInner: React.FC<{
   persistence?: BasePersistence | null;
-  configuration: Configuration;
+  initialConfiguration: Configuration;
   loadedConfiguration: Configuration | undefined;
-  tasks: Record<string, ElementType>;
+  tasks: Record<string, Task>;
   Layout?: ElementType;
   ErrorHandler?: React.ComponentType<FallbackProps>;
   forceRemountEveryTask?: boolean;
@@ -142,7 +145,7 @@ const ExperimentInner: React.FC<{
   Layout = GridLayout,
   ErrorHandler = DefaultErrorHandler,
   forceRemountEveryTask,
-  configuration: initialConfiguration,
+  initialConfiguration,
   loadedConfiguration,
 }) => {
   // TODO: not sure how to create different sessions for the same task. The issue is that they'll be overwritten by the other thing. Maybe we can add a config version or session key or something to it?
