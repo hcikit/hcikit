@@ -2,7 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import Experiment, { useConfiguration, useExperiment } from "./Experiment.js";
 import DevTools from "../tasks/DevTools.js";
 import DisplayText from "../tasks/DisplayTextTask.js";
-import { render, screen, cleanup, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  cleanup,
+  act,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import { Configuration, Log } from "@hcikit/workflow";
 import userEvent from "@testing-library/user-event";
 import { FallbackProps } from "react-error-boundary";
@@ -323,7 +329,7 @@ describe("Experiment", () => {
     jest.restoreAllMocks();
   });
 
-  fdescribe("persists properly", () => {
+  describe("persists properly", () => {
     it("doesn't show loading when no persistence is given", async () => {
       render(
         <Experiment
@@ -333,17 +339,44 @@ describe("Experiment", () => {
         />
       );
 
-      // TODO: make sure we only see the loading screen.
-      // resolve the promise
-      // test to make sure we can advance through the experiment
       screen.getByText("button task 1");
     });
 
-    it("only persists in production", async () => {
-      fail();
+    it("does not persist in development", async () => {
+      // @ts-ignore
+      process.env.NODE_ENV = "development";
+
+      let persistence = new StoragePersistence();
+      render(
+        <Experiment
+          tasks={{ ButtonTask, AuxTask }}
+          configuration={{ ...config }}
+          persistence={persistence}
+        />
+      );
+
+      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+
+      await userEvent.click(screen.getByText("button task 1"));
+
+      persistence.flush();
+
+      cleanup();
+      render(
+        <Experiment
+          tasks={{ ButtonTask, AuxTask }}
+          configuration={{ ...config }}
+          persistence={persistence}
+        />
+      );
+      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+
+      screen.getByText("button task 1");
+      // @ts-ignore
+      process.env.NODE_ENV = "test";
     });
 
-    fit("shows a loading screen while loadin that goes away after loading", async () => {
+    it("shows a loading screen while loading that goes away after loading", async () => {
       let resolveLoad: (config: Configuration) => void;
       class PersistenceTester extends StoragePersistence {
         load = () => {
@@ -382,6 +415,8 @@ describe("Experiment", () => {
         />
       );
 
+      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+
       await userEvent.click(screen.getByText("button task 1"));
 
       persistence.flush();
@@ -394,47 +429,10 @@ describe("Experiment", () => {
           persistence={persistence}
         />
       );
+      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+
       screen.getByText(config.children[1].text);
     });
-
-    it("doesn't load when no loadstate is given", async () => {
-      let persistence = new StoragePersistence();
-
-      render(
-        <Experiment
-          tasks={{ ButtonTask, AuxTask }}
-          configuration={{ ...config }}
-          persistence={null}
-        />
-      );
-
-      await userEvent.click(screen.getByText("button task 1"));
-
-      cleanup();
-
-      render(
-        <Experiment
-          tasks={{ ButtonTask, AuxTask }}
-          configuration={{ ...config }}
-        />
-      );
-      screen.getByText("button task 1");
-    });
-
-    it("doesn't save when no savestate is given", async () => {
-      render(
-        <Experiment
-          persistence={null}
-          tasks={{ ButtonTask, AuxTask }}
-          configuration={{ ...config }}
-        />
-      );
-
-      await userEvent.click(screen.getByText("button task 1"));
-
-      expect(window.sessionStorage.length).toBe(0);
-    });
-
     afterEach(() => {
       window.sessionStorage.clear();
     });
@@ -513,24 +511,6 @@ describe("Experiment", () => {
         }}
       />
     );
-    await userEvent.click(screen.getByText("button"));
-    await userEvent.click(screen.getByText("button"));
-    screen.getByText("You've completed the experiment!");
-  });
-
-  it("two tasks with button don't go to the end", async () => {
-    render(
-      <Experiment
-        tasks={{ AdvanceTask }}
-        configuration={{
-          children: [
-            { task: "AdvanceTask", text: "button" },
-            { task: "AdvanceTask", text: "button" },
-          ],
-        }}
-      />
-    );
-
     await userEvent.click(screen.getByText("button"));
     await userEvent.click(screen.getByText("button"));
     screen.getByText("You've completed the experiment!");

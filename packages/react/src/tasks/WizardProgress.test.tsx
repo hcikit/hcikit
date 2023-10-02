@@ -1,6 +1,6 @@
 import React from "react";
 import WizardProgress from "./WizardProgress.js";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import Experiment, { useExperiment } from "../core/Experiment.js";
 import { Configuration } from "@hcikit/workflow";
 import userEvent from "@testing-library/user-event";

@@ -45,7 +45,7 @@ xdescribe("origin private file system", () => {
     storage.save(obj);
 
     const received = await storage.load();
-    console.log(received);
+
     expect(received).toEqual(obj);
     storage.clear();
 

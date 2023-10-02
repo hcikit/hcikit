@@ -1,6 +1,11 @@
 import React from "react";
 import App from "./App";
-import { render, screen, fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { jest } from "@jest/globals";
 
@@ -10,6 +15,7 @@ it("renders without crashing", async () => {
 
   render(<App />);
   fireEvent(window, new Event("focus"));
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
   await userEvent.click(screen.getByText(/continue/i));
   await userEvent.click(screen.getByText(/continue/i));
   await userEvent.click(screen.getByRole("checkbox"));

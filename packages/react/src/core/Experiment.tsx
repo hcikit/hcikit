@@ -142,13 +142,13 @@ const ExperimentInner: React.FC<{
   Layout = GridLayout,
   ErrorHandler = DefaultErrorHandler,
   forceRemountEveryTask,
-  configuration,
+  configuration: initialConfiguration,
   loadedConfiguration,
 }) => {
   // TODO: not sure how to create different sessions for the same task. The issue is that they'll be overwritten by the other thing. Maybe we can add a config version or session key or something to it?
   // TODO: using config and configuration is so confusing...
   const [config, setConfig] = useState<Configuration>(() => {
-    let configurationToUse: Configuration = configuration;
+    let configurationToUse: Configuration = initialConfiguration;
 
     if (loadedConfiguration && process.env.NODE_ENV !== "development") {
       configurationToUse = loadedConfiguration;
@@ -228,6 +228,14 @@ const ExperimentInner: React.FC<{
     experiment.log({ type: "START" });
     // This is on purpose, we actually never want to rerun this. But also experiment should never actually change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    window.onbeforeunload = (e) => {
+      persistence?.save(config);
+      persistence?.flush();
+      return "You have some unsaved changes";
+    };
   }, []);
 
   if (isEmpty(config)) {

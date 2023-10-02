@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IconButton, Slider, Card } from "@mui/material";
+import { IconButton, Slider, Card, Button } from "@mui/material";
 import FastForward from "@mui/icons-material/FastForward.js";
 import SkipNext from "@mui/icons-material/SkipNext.js";
 import SkipPrevious from "@mui/icons-material/SkipPrevious.js";
@@ -17,8 +17,6 @@ import {
 import { useConfiguration, useExperiment } from "../index.js";
 
 import _styled from "@emotion/styled";
-
-console.log(FastForward, SkipNext, SkipPrevious, FastRewind);
 
 const styled: typeof _styled =
   ((_styled as unknown as { default: typeof _styled })
@@ -217,6 +215,9 @@ export const DevTools: React.FunctionComponent<{
           experiment.advance(taskNumberToIndex(configuration, value as number));
         }}
       />
+      <Button onClick={() => experiment.persistence?.flush()}>
+        Clear Storage
+      </Button>
     </StyledCard>
   );
 };
