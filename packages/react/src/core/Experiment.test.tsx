@@ -13,7 +13,7 @@ import { Configuration, Log } from "@hcikit/workflow";
 import userEvent from "@testing-library/user-event";
 import { FallbackProps } from "react-error-boundary";
 import { jest } from "@jest/globals";
-import { StoragePersistence } from "../persistence/index.js";
+import { BasePersistence, StoragePersistence } from "../persistence/index.js";
 
 const config = {
   tasks: ["AuxTask"],
@@ -28,6 +28,25 @@ const config = {
     },
   ],
 };
+
+class PersistenceTester extends BasePersistence {
+  resolve = (config: Configuration | undefined) => {};
+  config: Configuration | undefined = {};
+  load = () => {
+    return new Promise<Configuration | undefined>((resolve) => {
+      this.resolve = resolve;
+    });
+  };
+  async save(configuration: Configuration) {
+    this.config = configuration;
+  }
+  async clear(): Promise<void> {
+    this.config = undefined;
+  }
+  async init(): Promise<void> {
+    this.config = undefined;
+  }
+}
 
 const RenderCounter: React.FunctionComponent<{
   numRendersBeforeContinue: number;
@@ -329,6 +348,33 @@ describe("Experiment", () => {
     jest.restoreAllMocks();
   });
 
+  describe("loads config from promise", () => {
+    it("shows a loading screen while loading that goes away after loading", async () => {
+      let resolveLoad: (config: Configuration) => void;
+
+      let configPromise = new Promise<Configuration>((resolve) => {
+        resolveLoad = resolve;
+      });
+
+      let configToUse = { ...config };
+      render(
+        <Experiment
+          tasks={{ ButtonTask, AuxTask }}
+          configuration={configPromise}
+          persistence={null}
+        />
+      );
+
+      // TODO: make sure we only see the loading screen.
+      // resolve the promise
+      // test to make sure we can advance through the experiment
+      screen.getByText("Loading experiment configuration...");
+      // @ts-ignore
+      await act(async () => await resolveLoad(configToUse));
+      screen.getByText("button task 1");
+    });
+  });
+
   describe("persists properly", () => {
     it("doesn't show loading when no persistence is given", async () => {
       render(
@@ -340,6 +386,41 @@ describe("Experiment", () => {
       );
 
       screen.getByText("button task 1");
+    });
+
+    it("persists in development when asked", async () => {
+      // @ts-ignore
+      process.env.NODE_ENV = "development";
+      let persistence = new StoragePersistence();
+      render(
+        <Experiment
+          tasks={{ ButtonTask, AuxTask }}
+          configuration={{ ...config }}
+          persistence={persistence}
+          devOptions={{ persistInDevelopment: true, useIndexFromUrl: true }}
+        />
+      );
+
+      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+
+      await userEvent.click(screen.getByText("button task 1"));
+
+      persistence.flush();
+
+      cleanup();
+      render(
+        <Experiment
+          tasks={{ ButtonTask, AuxTask }}
+          configuration={{ ...config }}
+          persistence={persistence}
+          devOptions={{ persistInDevelopment: true, useIndexFromUrl: true }}
+        />
+      );
+      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+
+      screen.getByText(config.children[1].text);
+      // @ts-ignore
+      process.env.NODE_ENV = "test";
     });
 
     it("does not persist in development", async () => {
@@ -355,8 +436,6 @@ describe("Experiment", () => {
         />
       );
 
-      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-
       await userEvent.click(screen.getByText("button task 1"));
 
       persistence.flush();
@@ -369,7 +448,6 @@ describe("Experiment", () => {
           persistence={persistence}
         />
       );
-      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 
       screen.getByText("button task 1");
       // @ts-ignore
@@ -377,15 +455,6 @@ describe("Experiment", () => {
     });
 
     it("shows a loading screen while loading that goes away after loading", async () => {
-      let resolveLoad: (config: Configuration) => void;
-      class PersistenceTester extends StoragePersistence {
-        load = () => {
-          return new Promise<Configuration>((resolve) => {
-            resolveLoad = resolve;
-          });
-        };
-      }
-
       let persistence = new PersistenceTester();
       let configToUse = { ...config };
       render(
@@ -400,13 +469,12 @@ describe("Experiment", () => {
       // resolve the promise
       // test to make sure we can advance through the experiment
       screen.getByText("Loading experiment configuration...");
-      // @ts-ignore
-      await act(async () => await resolveLoad(configToUse));
+      await act(async () => await persistence.resolve(configToUse));
       screen.getByText("button task 1");
     });
 
     it("loads from empty localStorage", async () => {
-      let persistence = new StoragePersistence();
+      let persistence = new PersistenceTester();
       render(
         <Experiment
           tasks={{ ButtonTask, AuxTask }}
@@ -414,10 +482,11 @@ describe("Experiment", () => {
           persistence={persistence}
         />
       );
-
-      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+      screen.queryByText(/loading/i);
+      await act(async () => await persistence.resolve({ ...config }));
 
       await userEvent.click(screen.getByText("button task 1"));
+      screen.getByText(config.children[1].text);
 
       persistence.flush();
 
@@ -429,10 +498,12 @@ describe("Experiment", () => {
           persistence={persistence}
         />
       );
-      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+      screen.queryByText(/loading/i);
+      await act(async () => await persistence.resolve(persistence.config));
 
       screen.getByText(config.children[1].text);
     });
+
     afterEach(() => {
       window.sessionStorage.clear();
     });
