@@ -30,7 +30,7 @@ import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { CenteredNicePaper } from "../components/index.js";
 import { BasePersistence, StoragePersistence } from "../persistence/index.js";
 
-import { Button, Typography, CircularProgress } from "@mui/material";
+import { Typography, CircularProgress } from "@mui/material";
 import { Task } from "../index.js";
 
 type PropsOfDict<T extends Record<string, React.ComponentType<any>>> = {
@@ -139,6 +139,9 @@ const Experiment: React.FunctionComponent<{
     }
 
     loadConfigs();
+    // NOTE: we only want to set load and set the configurations once, this is on purpose. Otherwise we need to
+    // define what the behaviour of changing the config outside of our component is and I think that's difficult.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (
@@ -235,11 +238,15 @@ const ExperimentInner: React.FC<{
   const log = useCallback(
     (log: UnfilledLog): void =>
       setConfig((c) => {
-        const newConfig: Configuration = logToConfiguration(c, log);
+        try {
+          const newConfig: Configuration = logToConfiguration(c, log);
 
-        persistence?.saveThrottled(c);
-
-        return newConfig;
+          persistence?.saveThrottled(c);
+          return newConfig;
+        } catch (e) {
+          console.error(log);
+          return c;
+        }
       }),
     [persistence]
   );
@@ -265,7 +272,7 @@ const ExperimentInner: React.FC<{
       modify,
       persistence,
     }),
-    [advance, log, modify]
+    [advance, log, modify, persistence]
   );
 
   useEffect(() => {
@@ -278,9 +285,12 @@ const ExperimentInner: React.FC<{
     window.onbeforeunload = (e) => {
       persistence?.save(config);
       persistence?.flush();
-      return "You have some unsaved changes";
+      if (process.env.NODE_ENV !== "development") {
+        return "You have some unsaved changes";
+      }
     };
-  }, []);
+    // TODO: ideally we'd have a reference to this effect instead of recreating the function every time the config changes...
+  }, [persistence, config]);
 
   if (isEmpty(config)) {
     return null;

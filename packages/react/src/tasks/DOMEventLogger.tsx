@@ -1,6 +1,5 @@
 import { throttle, pick } from "lodash-es";
 import { useEffect } from "react";
-// import PropTypes from "prop-types";
 import { useExperiment } from "../core/Experiment.js";
 
 /**
@@ -57,13 +56,14 @@ const defaultEventMapping = {
 //     screenHeight: window.screen.height,
 //   };
 // }
-// TODO: this is fine for pulling some stuff out of the event but maybe not fine if you ened to augment it
+// TODO: this is fine for pulling some stuff out of the event but maybe not fine if you need to augment it
+
 const DOMEventLogger: React.FunctionComponent<{
-  delay?: number;
+  fps?: number;
   events?: Array<keyof WindowEventMap>;
   eventMapping?: Record<keyof WindowEventMap, Array<string>>;
 }> = ({
-  delay = 200,
+  fps = 30,
   events = ["click", "mousemove", "keydown", "keyup", "keypress", "resize"],
   eventMapping = defaultEventMapping,
 }) => {
@@ -77,6 +77,8 @@ const DOMEventLogger: React.FunctionComponent<{
 
       let keys = (eventMapping as Record<string, Array<string>>)[event.type];
       let neededProps = pick(event, keys);
+      // @ts-ignore
+      neededProps.eventType = neededProps.type;
       // }
       log({ ...neededProps, type: "DOMEvent" });
     };
@@ -87,55 +89,31 @@ const DOMEventLogger: React.FunctionComponent<{
       allEvents = Object.keys(eventMapping) as Array<keyof WindowEventMap>;
     }
 
-    const listeners = allEvents.reduce<
-      Record<keyof WindowEventMap, EventListener>
-    >((listeners, event) => {
-      /**
-       * log original size.
-       * this really needs a flush call I think. It is unlikely to cause problems but it could. I could just flush in a useEffect return value
-       * what happens if this gets called after the task is over? Maybe we need to be able to sign up for events before changing to the next task?
-       */
-      const func = throttle(logEvent, delay, {
+    let listeners: Record<string, EventListener> = {};
+    const options: AddEventListenerOptions = {
+      passive: true,
+      capture: true,
+    };
+
+    for (let event of allEvents) {
+      const func = throttle(logEvent, 1000 / fps, {
         trailing: true,
       });
 
-      // log({ type: "initialSize" });
-
-      window.addEventListener(event, func, {
-        passive: true,
-        capture: true,
-      });
+      window.addEventListener(event, func, options);
 
       listeners[event] = func;
-
-      return listeners;
-    }, {} as Record<keyof WindowEventMap, EventListener>);
+    }
 
     return () => {
       Object.keys(listeners).forEach((event) => {
-        window.removeEventListener(
-          event as keyof WindowEventMap,
-          listeners[event as keyof WindowEventMap]
-        );
+        window.removeEventListener(event, listeners[event], options);
       });
     };
-  });
+  }, [eventMapping, fps, events, log]);
   // }, [eventMapping, delay, events]);
 
   return null;
 };
-
-// DOMEventLogger.propTypes = {
-//   /** How often events should be logged */
-//   delay: PropTypes.number,
-
-//   /** A list of events to listen for globally. If both events and eventMapping are passed then events are used as a subset of the entire eventMapping. */
-//   events: PropTypes.arrayOf(PropTypes.string.isRequired),
-
-//   /** an object where the keys are the event to watch, and the values are the properties from each event to keep. If both events and eventMapping are passed then events are used as a subset of the entire eventMapping. */
-//   eventMapping: PropTypes.objectOf(
-//     PropTypes.arrayOf(PropTypes.string.isRequired)
-//   ),
-// };
 
 export default DOMEventLogger;

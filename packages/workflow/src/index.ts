@@ -24,7 +24,7 @@ export * from "./types.js";
  * @returns {boolean} indicates whether an experiment is complete or not.
  */
 export function experimentComplete<
-  T extends Record<string, Record<string, unknown>>
+  T extends Record<string, Record<string, unknown>>,
 >(configuration: Configuration<T>): boolean {
   return configuration[__INDEX__]?.length === 0;
 }
@@ -126,7 +126,7 @@ export function getPropsFor(
  * @returns {Configuration} the requested level of config
  */
 export function getConfigurationAtIndex<
-  T extends Record<string, Record<string, unknown>>
+  T extends Record<string, Record<string, unknown>>,
 >(
   initialConfiguration: Configuration<T>,
   index: ExperimentIndex
@@ -169,7 +169,7 @@ export function getLeafIndex<T extends Record<string, Record<string, unknown>>>(
  * @returns {ExperimentIndex} the current experiment index, or [0] if there is none.
  */
 export function getCurrentIndex<
-  T extends Record<string, Record<string, unknown>>
+  T extends Record<string, Record<string, unknown>>,
 >(configuration: Configuration<T>): ExperimentIndex {
   let index: ExperimentIndex = [0];
 
@@ -237,7 +237,7 @@ export function taskNumberToIndex(
  * @returns {ExperimentIndex}
  */
 export function advanceConfiguration<
-  T extends Record<string, Record<string, unknown>>
+  T extends Record<string, Record<string, unknown>>,
 >(configuration: Configuration<T>, index?: ExperimentIndex): Configuration<T> {
   if (experimentComplete(configuration)) {
     return configuration;
@@ -418,7 +418,7 @@ export function flattenConfigurationWithProps(
 }
 
 export function mergeArraysSpecial<
-  T extends Record<string, Record<string, unknown>>
+  T extends Record<string, Record<string, unknown>>,
 >(object: Configuration<T>, source: Configuration<T>): Configuration<T> {
   return mergeWith(object, source, (value: unknown, srcValue: unknown) => {
     if (Array.isArray(value)) {
