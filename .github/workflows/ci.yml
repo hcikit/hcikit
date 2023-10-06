@@ -6,10 +6,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 16
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
       - run: yarn
       - run: yarn build
       - run: yarn test
