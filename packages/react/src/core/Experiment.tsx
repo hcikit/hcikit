@@ -10,7 +10,7 @@ import React, {
 } from "react";
 
 import { serializeError } from "serialize-error";
-import TaskRenderer from "./TaskRenderer.js";
+import TaskRenderer, { SingleTaskRenderer } from "./TaskRenderer.js";
 
 import {
   advanceConfiguration,
@@ -32,6 +32,7 @@ import { BasePersistence, StoragePersistence } from "../persistence/index.js";
 
 import { Typography, CircularProgress } from "@mui/material";
 import { Task } from "../index.js";
+import { DownloadLogs } from "../tasks/DownloadLogs.js";
 
 type PropsOfDict<T extends Record<string, React.ComponentType<any>>> = {
   [Task in keyof T]: React.ComponentProps<T[Task]>;
@@ -316,19 +317,12 @@ const ExperimentInner: React.FC<{
                 forceRemountEveryTask={forceRemountEveryTask}
               />
             ) : (
-              <div style={{ gridArea: "task" }}>
-                <CenteredNicePaper>
-                  <h2>You&apos;ve completed the experiment!</h2>
-                  <a
-                    download={`${config.participant || "log"}.json`}
-                    href={`data:text/json;charset=utf-8,${encodeURIComponent(
-                      JSON.stringify(config)
-                    )}`}
-                  >
-                    Download experiment log
-                  </a>
-                </CenteredNicePaper>
-              </div>
+              <SingleTaskRenderer
+                TaskComponent={DownloadLogs}
+                title={`You've completed the experiment!`}
+                message={""}
+                {...experiment}
+              />
             )}
           </Layout>
         </ErrorBoundary>
@@ -340,26 +334,36 @@ const ExperimentInner: React.FC<{
 const DefaultErrorHandler: React.FunctionComponent<FallbackProps> = ({
   error,
 }) => {
-  const configuration = useConfiguration();
+  const noopControls = {
+    advance: () => {},
+    log: () => {},
+    modify: () => {},
+    persistence: null,
+  };
   return (
-    <CenteredNicePaper>
-      <div style={{ gridArea: "task" }}>
-        <h2>An error occurred in the experiment.</h2>
-        <p style={{ fontStyle: "italic" }}>
-          ({error.name}: {error.message})
-        </p>
-        <br />
+    <DownloadLogs
+      title={`An error occurred in the experiment.`}
+      message={`(${error.name}: ${error.message})`}
+      {...noopControls}
+    />
+    // <CenteredNicePaper>
+    //   <div style={{ gridArea: "task" }}>
+    //     <h2>An error occurred in the experiment.</h2>
+    //     <p style={{ fontStyle: "italic" }}>
+    //       ({error.name}: {error.message})
+    //     </p>
+    //     <br />
 
-        <a
-          download={`${configuration.participant || "log"}.json`}
-          href={`data:text/json;charset=utf-8,${encodeURIComponent(
-            JSON.stringify(configuration)
-          )}`}
-        >
-          Download experiment log
-        </a>
-      </div>
-    </CenteredNicePaper>
+    //     <a
+    //       download={`${configuration.participant || "log"}.json`}
+    //       href={`data:text/json;charset=utf-8,${encodeURIComponent(
+    //         JSON.stringify(configuration)
+    //       )}`}
+    //     >
+    //       Download experiment log
+    //     </a>
+    //   </div>
+    // </CenteredNicePaper>
   );
 };
 

@@ -1,6 +1,6 @@
 // import { diff } from "jest-diff";
 
-import React, { ElementType } from "react";
+import React from "react";
 import { isEqual } from "lodash-es";
 
 import {
@@ -18,7 +18,6 @@ import {
 import { Task } from "../index.js";
 
 // If there's ever a usecase for logs to get passed then we can add another provider they can subscribe to.
-
 const TaskRenderer: React.FunctionComponent<{
   tasks: Record<string, Task>;
   forceRemountEveryTask?: boolean;
@@ -74,7 +73,7 @@ const TaskRenderer: React.FunctionComponent<{
 };
 
 let SingleTaskRenderer: React.FunctionComponent<
-  { TaskComponent: Task } & ControlFunctions & Record<string, unknown>
+  { TaskComponent: Task<any> } & ControlFunctions & Record<string, unknown>
 > = ({ TaskComponent, ...props }) => {
   return <TaskComponent {...props} />;
 };
@@ -82,6 +81,8 @@ let SingleTaskRenderer: React.FunctionComponent<
 // Deep equals is needed here or the tests fail, I think I make some objects above like the tasks that get recreated every time.
 // could think about memoising those or something.
 SingleTaskRenderer = React.memo(SingleTaskRenderer, isEqual);
+
+export { SingleTaskRenderer };
 //   (prevProps, nextProps) => {
 //     console.log("outside", diff(prevProps, nextProps), nextProps);
 
