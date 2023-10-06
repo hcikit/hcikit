@@ -79,39 +79,73 @@ function useExperiment(): ControlFunctions {
 
 export { useConfiguration, useExperiment };
 
+function isPromise<T extends object>(obj: T | Promise<T>): obj is Promise<T> {
+  return "then" in obj && typeof obj.then === "function";
+}
+
 const Experiment: React.FunctionComponent<{
   persistence?: BasePersistence | null;
-  configuration: Configuration;
+  configuration: Configuration | Promise<Configuration>;
   tasks: Record<string, Task<any>>;
   Layout?: ElementType;
   ErrorHandler?: React.ComponentType<FallbackProps>;
   forceRemountEveryTask?: boolean;
+  devOptions?: { persistInDevelopment: boolean; useIndexFromUrl: boolean };
 }> = ({
   persistence = new StoragePersistence(window.sessionStorage, "HCIKIT_LOGS"),
   configuration: initialConfiguration,
+  devOptions = { persistInDevelopment: false, useIndexFromUrl: true },
   ...props
 }) => {
-  const [state, setState] = useState(
-    persistence != null ? "loading" : "loaded"
-  );
-  const [loadedConfiguration, setLoadedConfiguration] = useState<
-    Configuration | undefined
-  >();
+  const shouldPersistConfiguration =
+    (process.env.NODE_ENV !== "development" ||
+      devOptions.persistInDevelopment) &&
+    persistence !== null;
+
+  const [configurations, setConfigurations] = useState<{
+    loadedConfiguration: Configuration | undefined;
+    initialConfiguration: Configuration | undefined;
+    doneLoadingPersisted: boolean;
+    doneLoadingInitial: boolean;
+  }>({
+    loadedConfiguration: undefined,
+    initialConfiguration: isPromise(initialConfiguration)
+      ? undefined
+      : initialConfiguration,
+    doneLoadingPersisted: !shouldPersistConfiguration,
+    doneLoadingInitial: !isPromise(initialConfiguration),
+  });
 
   useEffect(() => {
-    async function handleConfigLoad() {
-      if (persistence) {
-        const loadedConfiguration = await persistence.load();
-
-        setLoadedConfiguration(loadedConfiguration);
-        setState("loaded");
+    async function loadConfigs() {
+      if (shouldPersistConfiguration) {
+        persistence?.load().then((loadedConfig) => {
+          setConfigurations((c) => ({
+            ...c,
+            loadedConfiguration: loadedConfig,
+            doneLoadingPersisted: true,
+          }));
+        });
+      }
+      if (isPromise(initialConfiguration)) {
+        initialConfiguration.then((loadedConfig) => {
+          setConfigurations((c) => ({
+            ...c,
+            initialConfiguration: loadedConfig,
+            doneLoadingInitial: true,
+          }));
+        });
       }
     }
 
-    handleConfigLoad();
+    loadConfigs();
   }, []);
 
-  if (state === "loading") {
+  if (
+    !configurations.doneLoadingInitial ||
+    !configurations.doneLoadingPersisted ||
+    !configurations.initialConfiguration
+  ) {
     return (
       <CenteredNicePaper>
         <Typography>Loading experiment configuration...</Typography>
@@ -123,8 +157,9 @@ const Experiment: React.FunctionComponent<{
     return (
       <ExperimentInner
         {...props}
-        initialConfiguration={initialConfiguration}
-        loadedConfiguration={loadedConfiguration}
+        devOptions={devOptions}
+        initialConfiguration={configurations.initialConfiguration}
+        loadedConfiguration={configurations.loadedConfiguration}
         persistence={persistence}
       />
     );
@@ -139,6 +174,7 @@ const ExperimentInner: React.FC<{
   Layout?: ElementType;
   ErrorHandler?: React.ComponentType<FallbackProps>;
   forceRemountEveryTask?: boolean;
+  devOptions: { persistInDevelopment: boolean; useIndexFromUrl: boolean };
 }> = ({
   persistence,
   tasks,
@@ -147,13 +183,18 @@ const ExperimentInner: React.FC<{
   forceRemountEveryTask,
   initialConfiguration,
   loadedConfiguration,
+  devOptions,
 }) => {
   // TODO: not sure how to create different sessions for the same task. The issue is that they'll be overwritten by the other thing. Maybe we can add a config version or session key or something to it?
   // TODO: using config and configuration is so confusing...
   const [config, setConfig] = useState<Configuration>(() => {
     let configurationToUse: Configuration = initialConfiguration;
 
-    if (loadedConfiguration && process.env.NODE_ENV !== "development") {
+    if (
+      loadedConfiguration &&
+      (process.env.NODE_ENV !== "development" ||
+        devOptions.persistInDevelopment)
+    ) {
       configurationToUse = loadedConfiguration;
     }
 
