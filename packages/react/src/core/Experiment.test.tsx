@@ -489,6 +489,7 @@ describe("Experiment", () => {
       screen.getByText(config.children[1].text);
 
       persistence.flush();
+      console.log(persistence.config);
 
       cleanup();
       render(
