@@ -8,6 +8,7 @@ const configuration: ConfigurationReact<typeof tasks> = {
     "ResolutionChecker",
     "FocusChecker",
     "DOMEventLogger",
+    "DevToolsConnector",
   ],
   ResolutionChecker: {
     minXResolution: 800,

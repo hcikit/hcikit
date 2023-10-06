@@ -9,6 +9,7 @@ import Experiment, {
   ResolutionChecker,
   FocusChecker,
   DOMEventLogger,
+  DevToolsConnector,
 } from "@hcikit/react";
 import IncrementTask from "./IncrementTask";
 import CustomTask from "./CustomTask";
@@ -27,6 +28,7 @@ export let tasks = {
   ResolutionChecker,
   FocusChecker,
   DOMEventLogger,
+  DevToolsConnector,
 };
 
 const App: React.FC = () => {

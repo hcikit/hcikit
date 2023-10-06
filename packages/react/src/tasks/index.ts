@@ -1,5 +1,6 @@
 export { default as ConsentForm } from "./ConsentForm.js";
 export { default as DevTools } from "./DevTools.js";
+export * from "./DevToolsConnector.js";
 export { default as DisplayText } from "./DisplayTextTask.js";
 export { default as ProgressText } from "./ProgressText.js";
 export { default as ProgressBar } from "./ProgressBar.js";
