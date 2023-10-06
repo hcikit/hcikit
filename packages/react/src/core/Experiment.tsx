@@ -28,12 +28,12 @@ import GridLayout from "../GridLayout.js";
 
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { CenteredNicePaper } from "../components/index.js";
-<<<<<<< HEAD
 import { BasePersistence, StoragePersistence } from "../persistence/index.js";
 
 import { Typography, CircularProgress } from "@mui/material";
 import { Task } from "../index.js";
 import { DownloadLogs } from "../tasks/DownloadLogs.js";
+import { HCIKitPlugin } from "./Plugin.js";
 
 type PropsOfDict<T extends Record<string, React.ComponentType<any>>> = {
   [Task in keyof T]: React.ComponentProps<T[Task]>;
@@ -42,9 +42,6 @@ type PropsOfDict<T extends Record<string, React.ComponentType<any>>> = {
 export type ConfigurationReact<
   T extends Record<string, React.ComponentType<any>>,
 > = TypedConfiguration<PropsOfDict<T>>;
-=======
-import { HCIKitPlugin } from "./Plugin.js";
->>>>>>> 74d2766 (Tried connecting devtools up)
 
 export interface ControlFunctions {
   advance: (index?: ExperimentIndex) => void;
@@ -97,11 +94,8 @@ const Experiment: React.FunctionComponent<{
   Layout?: ElementType;
   ErrorHandler?: React.ComponentType<FallbackProps>;
   forceRemountEveryTask?: boolean;
-<<<<<<< HEAD
   devOptions?: { persistInDevelopment: boolean; useIndexFromUrl: boolean };
-=======
   plugins?: Array<HCIKitPlugin>;
->>>>>>> 74d2766 (Tried connecting devtools up)
 }> = ({
   persistence = new StoragePersistence(window.sessionStorage, "HCIKIT_LOGS"),
   configuration: initialConfiguration,
@@ -189,16 +183,17 @@ const ExperimentInner: React.FC<{
   ErrorHandler?: React.ComponentType<FallbackProps>;
   forceRemountEveryTask?: boolean;
   devOptions: { persistInDevelopment: boolean; useIndexFromUrl: boolean };
+  plugins?: Array<HCIKitPlugin>;
 }> = ({
   persistence,
   tasks,
   Layout = GridLayout,
   ErrorHandler = DefaultErrorHandler,
   forceRemountEveryTask,
-<<<<<<< HEAD
   initialConfiguration,
   loadedConfiguration,
   devOptions,
+  plugins,
 }) => {
   // TODO: not sure how to create different sessions for the same task. The issue is that they'll be overwritten by the other thing. Maybe we can add a config version or session key or something to it?
   // TODO: using config and configuration is so confusing...
@@ -211,24 +206,7 @@ const ExperimentInner: React.FC<{
         devOptions.persistInDevelopment)
     ) {
       configurationToUse = loadedConfiguration;
-=======
-  configuration,
-  plugins,
-}) => {
-  // TODO: not sure how to create different sessions for the same task. The issue is that they'll be overwritten by the other thing. Maybe we can add a config version or session key or something to it?
-  // TODO: using config and configuration is so confusing...
-  let [config, setConfig] = useState<Configuration>(() => {
-    let initialConfig = configuration || {};
-    if (process.env.NODE_ENV !== "development" && loadState) {
-      initialConfig = loadState() || configuration;
->>>>>>> 74d2766 (Tried connecting devtools up)
     }
-
-    // This seems hacky. I think I am assigning the initial index to whatever it should be if the experiment just started, or assigning it to the proper one if we haven't started yet.
-    configurationToUse = advanceConfiguration(
-      configurationToUse,
-      getCurrentIndex(configurationToUse)
-    );
 
     return configurationToUse;
   });
@@ -326,7 +304,6 @@ const ExperimentInner: React.FC<{
 
     // TODO: ideally we'd have a reference to this effect instead of recreating the function every time the config changes...
   }, [persistence, config]);
-
 
   if (isEmpty(config)) {
     return null;
