@@ -5,8 +5,7 @@
   "workspaces": [
     "packages/*",
     "example",
-    "example-typescript",
-    "docs"
+    "example-typescript"
   ],
   "nohoist": [
     "**/html-minifier-terser"
